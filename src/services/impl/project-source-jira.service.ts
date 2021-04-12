@@ -1,25 +1,37 @@
 import {inject, injectable} from 'inversify';
 import {TYPES} from '../../inversify.types';
 import winston from 'winston';
-import {ProjectGroup, ProjectSourceService} from '../project-source.service';
+import {Project, ProjectGroup, ProjectSourceService} from '../project-source.service';
+import JiraApi from 'jira-client';
 
 @injectable()
 /**
- * A file based group import implementation
+ * Service for getting group data based on a project in Jira.
  */
 export class ProjectSourceJiraService implements ProjectSourceService {
   /**
    * @param filePath The path to a JSON file to import from.
    */
   constructor(
+    @inject(TYPES.JiraClient) private jira: JiraApi,
     @inject(TYPES.Logger) private logger: winston.Logger,
-  ) {}
+  ) { }
 
+  /**
+   * Returns the Jira project
+   * @param projectName The key of the project to fetch
+   */
+  public async getProject(projectName: string): Promise<Project> {
+    const project = await this.jira.getProject(projectName);
+    return {
+      name: project.key.toLowerCase(),
+    };
+  }
 
   /**
    * Returns an array of projects.
    */
-  async getProjects(): Promise<string[]> {
+  public async getProjects(): Promise<Project[]> {
     // TODO: Return list of projects
     return [];
   }
@@ -27,9 +39,30 @@ export class ProjectSourceJiraService implements ProjectSourceService {
   /**
    * Returns an array of Scopes/Groups.
    */
-  async getGroups(projectName: string): Promise<ProjectGroup[]> {
-    // TODO: Return list of groups
-    this.logger.info(projectName);
-    return [];
+  public async getGroups(project: Project): Promise<ProjectGroup[]> {
+    const devGroupName = `${project.name}-developers`;
+    const leadDevGroupName = `${project.name}-lead-developers`;
+    return [
+      {
+        archetype: 'developer',
+        name: devGroupName,
+        projectName: project.name,
+        users: await this.getUsersInGroup(devGroupName),
+      },
+      {
+        archetype: 'developer-lead',
+        name: leadDevGroupName,
+        projectName: project.name,
+        users: await this.getUsersInGroup(leadDevGroupName),
+      },
+    ];
+  }
+
+  /**
+   * Returns a list group of users in a group
+   * @param groupName The key of the project
+   */
+  private async getUsersInGroup(groupName: string): Promise<string[]> {
+    return this.jira.getUsersInGroup(groupName).then((data) => data.users.items.map((obj: any) => obj.key));
   }
 }

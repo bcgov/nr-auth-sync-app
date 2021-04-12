@@ -5,22 +5,26 @@ let keycloakAuthPromise: Promise<any>;
 
 /**
  * Keycloak api factory
- * @param keycloakAddr The keycloak server address
- * @param keycloakUsername The keycloak username
- * @param keycloakPassword The keycloak password
+ * @param addr The keycloak server address
+ * @param realm The keycloak realm
+ * @param clientId The keycloak client ID
+ * @param clientSecret The keycloak client secret
  */
 export async function keycloakFactory(
-  keycloakAddr: string,
-  keycloakUsername: string,
-  keycloakPassword: string): Promise<KeycloakAdminClient> {
+  addr: string,
+  realm: string,
+  clientId: string,
+  clientSecret: string): Promise<KeycloakAdminClient> {
   if (!keycloakAuthPromise) {
-    keycloak = new KeycloakAdminClient({baseUrl: keycloakAddr});
+    keycloak = new KeycloakAdminClient({
+      baseUrl: addr,
+      realmName: realm,
+    });
 
     keycloakAuthPromise = keycloak.auth({
-      username: keycloakUsername,
-      password: keycloakPassword,
-      grantType: 'password',
-      clientId: 'admin-cli',
+      clientSecret,
+      grantType: 'client_credentials',
+      clientId,
     });
   }
   await keycloakAuthPromise;
