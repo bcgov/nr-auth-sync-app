@@ -54,7 +54,7 @@ $ npm install -g authtool
 $ authtool COMMAND
 running command...
 $ authtool (-v|--version|version)
-authtool/1.0.0 win32-x64 node-v12.16.2
+authtool/1.0.0 linux-x64 node-v12.20.0
 $ authtool --help [COMMAND]
 USAGE
   $ authtool COMMAND
@@ -103,7 +103,7 @@ USAGE
 
 OPTIONS
   -h, --help                                       show CLI help
-  --jira-base-url=jira-base-url                    [default: https://bwa.nrs.gov.bc.ca/int/jira] The Jira Base URL
+  --jira-base-url=jira-base-url                    [default: /int/jira] The Jira Base URL
   --jira-host=jira-host                            [default: bwa.nrs.gov.bc.ca] The Jira host
   --jira-password=jira-password                    [default: password] The Jira password
   --jira-username=jira-username                    [default: admin] The Jira user

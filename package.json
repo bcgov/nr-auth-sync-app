@@ -4,7 +4,7 @@
   "author": "Matthew Bystedt <matthew.bystedt@gov.bc.ca>",
   "description": "Auth sync tool for IIT",
   "bin": {
-    "vstool": "./bin/run"
+    "authtool": "./bin/run"
   },
   "dependencies": {
     "@oclif/command": "^1.8.0",
