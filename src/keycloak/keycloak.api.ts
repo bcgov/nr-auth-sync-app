@@ -105,25 +105,38 @@ export class KeycloakApi {
   public async syncGroupUsers(groupId: string, users: string[]) {
     const members = await this.keycloak.groups.listMembers({id: groupId});
 
-    // delete existing keycloak group members
+    const curMemberIdSet = new Set<string>();
     for (const member of members) {
       if (member.id) {
-        await this.keycloak.users.delFromGroup({id: member.id, groupId});
+        curMemberIdSet.add(member.id);
       }
     }
 
-    // add current devs
+    const newMemberIdSet = new Set<string>();
     for (const user of users) {
       try {
         const kcUser = await this.getUser(user);
         if (kcUser && kcUser.id) {
-          await this.keycloak.users.addToGroup({id: kcUser.id, groupId});
+          newMemberIdSet.add(kcUser.id);
         } else {
           this.logger.debug(`Unknown user: ${user} (skipped)`);
         }
       } catch (error) {
         this.logger.error(error);
       }
+    }
+
+    const userIdsToRemove = [...curMemberIdSet].filter((x) => !newMemberIdSet.has(x));
+    const userIdsToAdd = [...newMemberIdSet].filter((x) => !curMemberIdSet.has(x));
+
+    // delete existing keycloak group members
+    for (const id of userIdsToRemove) {
+      await this.keycloak.users.delFromGroup({id, groupId});
+    }
+
+    // add new current devs
+    for (const id of userIdsToAdd) {
+      await this.keycloak.users.addToGroup({id, groupId});
     }
   }
 

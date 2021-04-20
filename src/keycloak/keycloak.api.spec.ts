@@ -151,4 +151,31 @@ describe('keycloak.api', () => {
     expect(mockKeycloakAdminClient.groups.find).toBeCalledTimes(2);
     expect(rVal).toBe(undefined);
   });
+
+  it('syncGroupUsers: deletes and adds users', async () => {
+    const mockKac = {
+      groups: {
+        listMembers: jest.fn(() => [{id: 'in'}, {id: 'up'}, {id: 'down'}]),
+      },
+      users: {
+        delFromGroup: jest.fn(),
+        addToGroup: jest.fn(),
+      },
+    } as unknown as KeycloakAdminClient;
+
+    const keycloakApi = new KeycloakApi(mockKac, mockLogger);
+    jest.spyOn(keycloakApi, 'getUser').mockImplementation(async (username) => {
+      // pretend username is id
+      return {id: username};
+    });
+
+    await keycloakApi.syncGroupUsers('bob', ['in', 'out', 'up', 'me']);
+
+    expect(mockKac.groups.listMembers).toBeCalledTimes(1);
+    expect(mockKac.groups.listMembers).toBeCalledWith({id: 'bob'});
+
+    expect(mockKac.users.delFromGroup).toBeCalledWith({id: 'down', groupId: 'bob'});
+    expect(mockKac.users.addToGroup).toBeCalledWith({id: 'out', groupId: 'bob'});
+    expect(mockKac.users.addToGroup).toBeCalledWith({id: 'me', groupId: 'bob'});
+  });
 });
