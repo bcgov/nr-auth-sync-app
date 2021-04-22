@@ -1,23 +1,35 @@
 /**
- * Application details
+ * Project group details
  */
 export interface ProjectGroup {
   archetype: 'developer' | 'developer-lead'
   name: string;
+  projectName: string;
   users: string[];
 }
 
+
+export interface Project {
+  name: string;
+}
+
 /**
- * Service for getting group data based on
+ * Service for getting group data based on a project in the implementing service.
  */
 export interface ProjectSourceService {
   /**
+   * Returns a project
+   * @param projectName
+   */
+  getProject(projectName: string): Promise<Project>;
+
+  /**
    * Returns an array of projects.
    */
-  getProjects(): Promise<string[]>;
+  getProjects(): Promise<Project[]>;
 
   /**
    * Returns an array of Scopes/Groups.
    */
-  getGroups(projectName: string): Promise<ProjectGroup[]>;
+  getGroups(project: Project): Promise<ProjectGroup[]>;
 }

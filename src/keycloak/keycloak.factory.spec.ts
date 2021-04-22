@@ -17,18 +17,18 @@ describe('keycloak.factory', () => {
     });
 
     // Test command
-    const rVal = await keycloakFactory('addr', 'user', 'pass');
+    const rVal = await keycloakFactory('addr', 'realm', 'clientId', 'clientSecret');
 
     expect(mockKeyClient).toBeCalledTimes(1);
     expect(mockKeyClient).toBeCalledWith({
       baseUrl: 'addr',
+      realmName: 'realm',
     });
 
     expect(mockKeyClientInstance.auth).toBeCalledWith({
-      username: 'user',
-      password: 'pass',
-      grantType: 'password',
-      clientId: 'admin-cli',
+      clientSecret: 'clientSecret',
+      grantType: 'client_credentials',
+      clientId: 'clientId',
     });
     expect(rVal).toEqual(mockKeyClientInstance);
   });

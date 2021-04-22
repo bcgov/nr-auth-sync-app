@@ -9,20 +9,61 @@ export const keycloakAddr = {
     default: 'http://127.0.0.1:8080/auth',
     description: 'The keycloak address',
     env: 'KEYCLOAK_ADDR',
-  })};
-
-export const keycloakUsername = {
-  'keycloak-username': flags.string({
-    default: 'admin',
-    description: 'The keycloak username',
-    env: 'KEYCLOAK_USER',
   }),
 };
 
-export const keycloakPassword = {
-  'keycloak-password': flags.string({
+export const keycloakRealm = {
+  'keycloak-realm': flags.string({
+    default: 'master',
+    description: 'The keycloak realm',
+    env: 'KEYCLOAK_REALM',
+  }),
+};
+
+export const keycloakClientId = {
+  'keycloak-client-id': flags.string({
+    default: 'admin',
+    description: 'The keycloak client ID',
+    env: 'KEYCLOAK_CLIENT_ID',
+  }),
+};
+
+export const keycloakClientSecret = {
+  'keycloak-client-secret': flags.string({
     default: 'password',
-    description: 'The keycloak password',
-    env: 'KEYCLOAK_PASS',
+    description: 'The keycloak client secret',
+    env: 'KEYCLOAK_CLIENT_SECRET',
+  }),
+};
+
+export const jiraHost = {
+  'jira-host': flags.string({
+    default: 'bwa.nrs.gov.bc.ca',
+    description: 'The Jira host',
+    env: 'JIRA_HOST',
+  }),
+};
+
+export const jiraBaseUrl = {
+  'jira-base-url': flags.string({
+    default: '/int/jira',
+    description: 'The Jira Base URL',
+    env: 'JIRA_BASE_URL',
+  }),
+};
+
+export const jiraUsername = {
+  'jira-username': flags.string({
+    default: 'admin',
+    description: 'The Jira user',
+    env: 'JIRA_USERNAME',
+  }),
+};
+
+export const jiraPassword = {
+  'jira-password': flags.string({
+    default: 'password',
+    description: 'The Jira password',
+    env: 'JIRA_PASSWORD',
   }),
 };
