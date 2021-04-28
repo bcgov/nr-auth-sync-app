@@ -1,4 +1,4 @@
-# Auth Sync Tool #
+# Auth Sync Tool
 
 The auth sync tool takes user group and "privilege information" from federated systems to generate client roles and group membership (and what roles those groups have) in KeyCloak.
 
@@ -6,7 +6,7 @@ See: [Confluence Documentation](https://apps.nrs.gov.bc.ca/int/confluence/x/LpZv
 
 
 <!-- toc -->
-* [Auth Sync Tool #](#auth-sync-tool-)
+* [Auth Sync Tool](#auth-sync-tool)
 * [Usage](#usage)
 * [Commands](#commands)
 <!-- tocstop -->
