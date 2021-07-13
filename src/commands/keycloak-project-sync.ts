@@ -25,7 +25,7 @@ export default class KeycloakProjectSync extends Command {
   };
 
   static args = [
-    {name: 'projectname'},
+    {name: 'projectName'},
   ];
 
   /**
@@ -33,6 +33,8 @@ export default class KeycloakProjectSync extends Command {
    */
   async run() {
     const {args, flags} = this.parse(KeycloakProjectSync);
+    // Type conversion from any to string as library does not type args
+    const projectName = args.projectName as string;
 
     await bindKeycloak(
       flags['keycloak-addr'],
@@ -40,19 +42,19 @@ export default class KeycloakProjectSync extends Command {
       flags['keycloak-client-id'],
       flags['keycloak-client-secret']);
 
-    await bindJira(
+    bindJira(
       flags['jira-host'],
       flags['jira-base-url'],
       flags['jira-username'],
       flags['jira-password']);
 
-    if (!args.projectname) {
+    if (!projectName) {
       // TODO: print help
       return;
-    };
+    }
 
-    this.log(`Syncing project \'${args.projectname}\' in Keycloak.`);
+    this.log(`Syncing project \'${projectName}\' in Keycloak.`);
 
-    await vsContainer.get<KeycloakSyncController>(TYPES.KeycloakSyncController).syncProjectSources(args.projectname);
+    await vsContainer.get<KeycloakSyncController>(TYPES.KeycloakSyncController).syncProjectSources(projectName);
   }
 }

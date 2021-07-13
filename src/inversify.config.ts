@@ -56,8 +56,8 @@ export async function bindKeycloak(keycloakAddr: string,
  * @param username The Jira username
  * @param password The Jira password
  */
-export async function bindJira(host: string, basePath: string, username: string, password: string) {
-  const client = await jiraFactory(host, basePath, username, password);
+export function bindJira(host: string, basePath: string, username: string, password: string) {
+  const client = jiraFactory(host, basePath, username, password);
 
   vsContainer.bind<JiraApi>(TYPES.JiraClient).toConstantValue(client);
 }

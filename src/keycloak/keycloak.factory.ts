@@ -1,7 +1,7 @@
 import KeycloakAdminClient from 'keycloak-admin';
 
 let keycloak: KeycloakAdminClient;
-let keycloakAuthPromise: Promise<any>;
+let keycloakAuthPromise: Promise<KeycloakAdminClient>;
 
 /**
  * Keycloak api factory
@@ -10,12 +10,12 @@ let keycloakAuthPromise: Promise<any>;
  * @param clientId The keycloak client ID
  * @param clientSecret The keycloak client secret
  */
-export async function keycloakFactory(
+export function keycloakFactory(
   addr: string,
   realm: string,
   clientId: string,
   clientSecret: string): Promise<KeycloakAdminClient> {
-  if (!keycloakAuthPromise) {
+  if (!keycloak) {
     keycloak = new KeycloakAdminClient({
       baseUrl: addr,
       realmName: realm,
@@ -25,8 +25,7 @@ export async function keycloakFactory(
       clientSecret,
       grantType: 'client_credentials',
       clientId,
-    });
+    }).then(() => keycloak);
   }
-  await keycloakAuthPromise;
-  return keycloak;
+  return keycloakAuthPromise;
 }

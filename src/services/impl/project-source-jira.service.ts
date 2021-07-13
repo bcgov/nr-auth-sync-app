@@ -24,7 +24,7 @@ export class ProjectSourceJiraService implements ProjectSourceService {
   public async getProject(projectName: string): Promise<Project> {
     const project = await this.jira.getProject(projectName);
     return {
-      name: project.key.toLowerCase(),
+      name: (project.key as string).toLowerCase(),
     };
   }
 
@@ -33,7 +33,7 @@ export class ProjectSourceJiraService implements ProjectSourceService {
    */
   public async getProjects(): Promise<Project[]> {
     // TODO: Return list of projects
-    return [];
+    return Promise.resolve([]);
   }
 
   /**
@@ -63,6 +63,7 @@ export class ProjectSourceJiraService implements ProjectSourceService {
    * @param groupName The key of the project
    */
   private async getUsersInGroup(groupName: string): Promise<string[]> {
+    // eslint-disable-next-line -- No typing available for Jira objects
     return this.jira.getUsersInGroup(groupName).then((data) => data.users.items.map((obj: any) => obj.key));
   }
 }

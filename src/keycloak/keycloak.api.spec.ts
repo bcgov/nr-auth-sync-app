@@ -166,7 +166,7 @@ describe('keycloak.api', () => {
     const keycloakApi = new KeycloakApi(mockKac, mockLogger);
     jest.spyOn(keycloakApi, 'getUser').mockImplementation(async (username) => {
       // pretend username is id
-      return {id: username};
+      return Promise.resolve({id: username});
     });
 
     await keycloakApi.syncGroupUsers('bob', ['in', 'out', 'up', 'me']);

@@ -21,8 +21,8 @@ describe('group sync command', () => {
     const mockBindKeycloak = mocked(bindKeycloak);
     mockBindKeycloak.mockResolvedValue();
 
-    const mockBindJira= mocked(bindJira);
-    mockBindJira.mockResolvedValue();
+    const mockBindJira = mocked(bindJira);
+    mockBindJira.mockReturnValue();
 
     const mockVsContainer = mocked(vsContainer);
     mockVsContainer.get.mockReturnValueOnce(mockKcInstance);

@@ -13,7 +13,7 @@ jest.mock('jira-client', () => {
 describe('jira.factory', () => {
   afterEach(() => jest.restoreAllMocks());
 
-  it('Returns a Jira client', async () => {
+  it('Returns a Jira client', () => {
     const mockJiraApi = mocked(JiraApi);
 
     // Test command
