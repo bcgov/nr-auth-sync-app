@@ -2,10 +2,10 @@ import JiraApi from 'jira-client';
 
 /**
  * Jira API factory
- * @param host
- * @param basePath
- * @param username
- * @param password
+ * @param host The Jira address
+ * @param basePath The base url
+ * @param username The Jira username
+ * @param password The Jira password
  * @returns
  */
 export function jiraFactory(host: string, basePath: string, username: string, password: string): JiraApi {

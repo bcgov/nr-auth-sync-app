@@ -1,16 +1,16 @@
 import {Command} from '@oclif/command';
 import 'reflect-metadata';
 import {help, keycloakAddr, keycloakRealm, keycloakClientId, keycloakClientSecret,
-  jiraHost, jiraBaseUrl, jiraUsername, jiraPassword} from '../flags';
+  jiraHost, jiraBaseUrl, jiraUsername, jiraPassword, ldapPassword, ldapUrl, ldapUsername} from '../flags';
 import {TYPES} from '../inversify.types';
 import {KeycloakSyncController} from '../keycloak/keycloak-sync.controller';
-import {bindJira, bindKeycloak, vsContainer} from '../inversify.config';
+import {bindJira, bindKeycloak, bindLdap, vsContainer} from '../inversify.config';
 
 /**
  * Syncs project to Keycloak command
  */
-export default class KeycloakProjectSync extends Command {
-  static description = 'Syncs project to Keycloak';
+export default class KeycloakSync extends Command {
+  static description = 'Syncs projects and gorups to Keycloak';
 
   static flags = {
     ...help,
@@ -22,19 +22,16 @@ export default class KeycloakProjectSync extends Command {
     ...jiraBaseUrl,
     ...jiraUsername,
     ...jiraPassword,
+    ...ldapUrl,
+    ...ldapUsername,
+    ...ldapPassword,
   };
-
-  static args = [
-    {name: 'projectName'},
-  ];
 
   /**
    * Run the command
    */
-  async run() {
-    const {args, flags} = this.parse(KeycloakProjectSync);
-    // Type conversion from any to string as library does not type args
-    const projectName = args.projectName as string;
+  async run(): Promise<void> {
+    const {flags} = this.parse(KeycloakSync);
 
     await bindKeycloak(
       flags['keycloak-addr'],
@@ -48,13 +45,14 @@ export default class KeycloakProjectSync extends Command {
       flags['jira-username'],
       flags['jira-password']);
 
-    if (!projectName) {
-      // TODO: print help
-      return;
-    }
+    await bindLdap(
+      flags['ldap-url'],
+      flags['ldap-username'],
+      flags['ldap-password']);
 
-    this.log(`Syncing project \'${projectName}\' in Keycloak.`);
+    this.log(`Syncing to Keycloak.`);
 
-    await vsContainer.get<KeycloakSyncController>(TYPES.KeycloakSyncController).syncProjectSources(projectName);
+    await vsContainer.get<KeycloakSyncController>(TYPES.KeycloakSyncController)
+      .syncSources();
   }
 }

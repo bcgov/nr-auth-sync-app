@@ -23,7 +23,7 @@ $ npm install -g authtool
 $ authtool COMMAND
 running command...
 $ authtool (-v|--version|version)
-authtool/1.0.0 win32-x64 node-v12.16.2
+authtool/1.0.0 darwin-x64 node-v16.6.2
 $ authtool --help [COMMAND]
 USAGE
   $ authtool COMMAND
@@ -43,7 +43,7 @@ $ ./bin/run (-v|--version|version)
 # Commands
 <!-- commands -->
 * [`authtool help [COMMAND]`](#authtool-help-command)
-* [`authtool keycloak-project-sync [PROJECTNAME]`](#authtool-keycloak-project-sync-projectname)
+* [`authtool keycloak-sync`](#authtool-keycloak-sync)
 
 ## `authtool help [COMMAND]`
 
@@ -62,13 +62,13 @@ OPTIONS
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.2/src/commands/help.ts)_
 
-## `authtool keycloak-project-sync [PROJECTNAME]`
+## `authtool keycloak-sync`
 
-Syncs project to Keycloak
+Syncs projects and gorups to Keycloak
 
 ```
 USAGE
-  $ authtool keycloak-project-sync [PROJECTNAME]
+  $ authtool keycloak-sync
 
 OPTIONS
   -h, --help                                       show CLI help
@@ -80,5 +80,8 @@ OPTIONS
   --keycloak-client-id=keycloak-client-id          [default: admin] The keycloak client ID
   --keycloak-client-secret=keycloak-client-secret  [default: password] The keycloak client secret
   --keycloak-realm=keycloak-realm                  [default: master] The keycloak realm
+  --ldap-password=ldap-password                    [default: password] The ldap password
+  --ldap-url=ldap-url                              [default: ldaps://idir.bcgov] The LDAP URL
+  --ldap-username=ldap-username                    [default: admin] The ldap user
 ```
 <!-- commandsstop -->

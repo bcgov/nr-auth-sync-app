@@ -14,15 +14,22 @@ import {OutletService} from './services/outlet.service';
 import {OutletJenkinsService} from './services/impl/outlet-jenkins.service';
 import {OutletVaultService} from './services/impl/outlet-vault.service';
 import {KeycloakApi} from './keycloak/keycloak.api';
+import {ldapFactory} from './ldap/ldap.factory';
+import {Client} from 'ldapjs';
+import {LdapApi} from './ldap/ldap.api';
+import {ConfigService} from './services/config.service';
+import {ConfigFileService} from './services/impl/config-file.service';
 
 const vsContainer = new Container();
 // Services
+vsContainer.bind<ConfigService>(TYPES.ConfigService).to(ConfigFileService);
 vsContainer.bind<ProjectSourceService>(TYPES.ProjectSourceService).to(ProjectSourceJiraService);
 vsContainer.bind<OutletService>(TYPES.OutletService).to(OutletJenkinsService);
 vsContainer.bind<OutletService>(TYPES.OutletService).to(OutletVaultService);
 
 // Controllers
 vsContainer.bind<KeycloakApi>(TYPES.KeycloakApi).to(KeycloakApi);
+vsContainer.bind<LdapApi>(TYPES.LdapApi).to(LdapApi);
 vsContainer.bind<KeycloakSyncController>(TYPES.KeycloakSyncController).to(KeycloakSyncController);
 
 // Util
@@ -43,7 +50,7 @@ export {vsContainer};
 export async function bindKeycloak(keycloakAddr: string,
   keycloakRealm: string,
   keycloakClientId: string,
-  keycloakClientSecret: string) {
+  keycloakClientSecret: string): Promise<void> {
   const client = await keycloakFactory(keycloakAddr, keycloakRealm, keycloakClientId, keycloakClientSecret);
 
   vsContainer.bind<KeycloakAdminClient>(TYPES.KeycloakAdminClient).toConstantValue(client);
@@ -56,9 +63,20 @@ export async function bindKeycloak(keycloakAddr: string,
  * @param username The Jira username
  * @param password The Jira password
  */
-export function bindJira(host: string, basePath: string, username: string, password: string) {
+export function bindJira(host: string, basePath: string, username: string, password: string): void {
   const client = jiraFactory(host, basePath, username, password);
 
   vsContainer.bind<JiraApi>(TYPES.JiraClient).toConstantValue(client);
 }
 
+/**
+ * The LDAP factory
+ * @param url The LDAP address
+ * @param username The LDAP username
+ * @param password The LDAP password
+ */
+export async function bindLdap(url: string, username: string, password: string): Promise<void> {
+  const client = await ldapFactory(url, username, password);
+
+  vsContainer.bind<Client>(TYPES.LdapClient).toConstantValue(client);
+}

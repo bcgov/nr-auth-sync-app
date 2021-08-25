@@ -156,6 +156,9 @@ describe('keycloak.api', () => {
     const mockKac = {
       groups: {
         listMembers: jest.fn(() => [{id: 'in'}, {id: 'up'}, {id: 'down'}]),
+        findOne: jest.fn(() => {
+          return Promise.resolve({name: 'something-developers'});
+        }),
       },
       users: {
         delFromGroup: jest.fn(),
