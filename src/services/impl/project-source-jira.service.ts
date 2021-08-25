@@ -10,7 +10,7 @@ import JiraApi from 'jira-client';
  */
 export class ProjectSourceJiraService implements ProjectSourceService {
   /**
-   * @param filePath The path to a JSON file to import from.
+   * Construct the Jira source service
    */
   constructor(
     @inject(TYPES.JiraClient) private jira: JiraApi,

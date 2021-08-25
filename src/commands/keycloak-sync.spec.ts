@@ -1,11 +1,12 @@
 import 'reflect-metadata';
-import KeycloakDevSync from './keycloak-project-sync';
+import KeycloakSync from './keycloak-sync';
 import {mocked} from 'ts-jest/utils';
-import {bindKeycloak, bindJira, vsContainer} from '../inversify.config';
+import {bindKeycloak, bindJira, bindLdap, vsContainer} from '../inversify.config';
 
 jest.mock('../inversify.config');
 
 describe('group sync command', () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let stdoutSpy: any;
   beforeEach(() => {
     stdoutSpy = jest.spyOn(process.stdout, 'write')
@@ -15,7 +16,7 @@ describe('group sync command', () => {
 
   it('runs', async () => {
     const mockKcInstance = {
-      syncProjectSources: jest.fn().mockResolvedValue('bob'),
+      syncSources: jest.fn().mockResolvedValue('bob'),
     };
 
     const mockBindKeycloak = mocked(bindKeycloak);
@@ -24,12 +25,14 @@ describe('group sync command', () => {
     const mockBindJira = mocked(bindJira);
     mockBindJira.mockReturnValue();
 
+    const mockBindLdap = mocked(bindLdap);
+    mockBindLdap.mockResolvedValue();
+
     const mockVsContainer = mocked(vsContainer);
     mockVsContainer.get.mockReturnValueOnce(mockKcInstance);
 
     // Test command
-    await KeycloakDevSync.run([
-      'group-name',
+    await KeycloakSync.run([
       '--keycloak-addr', 'kaddr',
       '--keycloak-realm', 'realm',
       '--keycloak-client-id', 'clientId',
@@ -38,6 +41,9 @@ describe('group sync command', () => {
       '--jira-base-url', 'jbase',
       '--jira-username', 'jusername',
       '--jira-password', 'jpassword',
+      '--ldap-url', 'jbase',
+      '--ldap-username', 'jusername',
+      '--ldap-password', 'jpassword',
     ]);
 
     expect(mockBindKeycloak).toBeCalledTimes(1);
@@ -46,9 +52,11 @@ describe('group sync command', () => {
     expect(mockBindJira).toBeCalledTimes(1);
     expect(mockBindJira).toBeCalledWith('jaddr', 'jbase', 'jusername', 'jpassword');
 
-    expect(mockKcInstance.syncProjectSources).toBeCalledTimes(1);
-    expect(mockKcInstance.syncProjectSources).toBeCalledWith('group-name');
+    expect(mockBindLdap).toBeCalledTimes(1);
+    expect(mockBindLdap).toBeCalledWith('jbase', 'jusername', 'jpassword');
 
-    expect(stdoutSpy).toHaveBeenCalledWith('Syncing project \'group-name\' in Keycloak.\n');
+    expect(mockKcInstance.syncSources).toBeCalledTimes(1);
+
+    expect(stdoutSpy).toHaveBeenCalledWith('Syncing to Keycloak.\n');
   });
 });

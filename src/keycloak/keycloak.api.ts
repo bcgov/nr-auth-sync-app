@@ -2,6 +2,9 @@ import {inject, injectable} from 'inversify';
 import {TYPES} from '../inversify.types';
 import winston from 'winston';
 import KeycloakAdminClient from 'keycloak-admin';
+import GroupRepresentation from 'keycloak-admin/lib/defs/groupRepresentation';
+import ClientRepresentation from 'keycloak-admin/lib/defs/clientRepresentation';
+import UserRepresentation from 'keycloak-admin/lib/defs/userRepresentation';
 
 @injectable()
 /**
@@ -20,7 +23,7 @@ export class KeycloakApi {
    * Get the client by name if it exists.
    * @param name
    */
-  public async getClientByName(name: string) {
+  public async getClientByName(name: string): Promise<ClientRepresentation | undefined> {
     return (await this.keycloak.clients.find())
       .find((client) => client.clientId === name);
   }
@@ -29,7 +32,7 @@ export class KeycloakApi {
    * Get user id by name
    * @param username
    */
-  public async getUser(username: string) {
+  public async getUser(username: string): Promise<UserRepresentation> {
     // build UserQuery (required for API)
     const userQuery = {
       username: `${username}@idir`,
@@ -42,7 +45,7 @@ export class KeycloakApi {
    * Get group by name
    * @param name
    */
-  public async getGroupByName(name: string) {
+  public async getGroupByName(name: string): Promise<GroupRepresentation | undefined> {
     return (await this.keycloak.groups.find())
       .find((group) => group.name === name);
   }
@@ -52,7 +55,7 @@ export class KeycloakApi {
    * @param name
    * @param subName
    */
-  public async getSubgroupByName(name: string, subName: string) {
+  public async getSubgroupByName(name: string, subName: string): Promise<GroupRepresentation | undefined> {
     const group = await this.getGroupByName(name);
     if (!group || !group.subGroups) {
       return undefined;
@@ -66,7 +69,7 @@ export class KeycloakApi {
    * @param subName The optional name of the subgroup
    * @returns
    */
-  public async makeGroups(name: string, subName: string | undefined = undefined) {
+  public async makeGroups(name: string, subName: string | undefined = undefined): Promise<GroupRepresentation> {
     if (!name) {
       throw new Error('Name cannot be empty');
     }
@@ -102,7 +105,7 @@ export class KeycloakApi {
    * @param groupId
    * @param users
    */
-  public async syncGroupUsers(groupId: string, users: string[]) {
+  public async syncGroupUsers(groupId: string, users: string[]): Promise<void> {
     const members = await this.keycloak.groups.listMembers({id: groupId});
 
     const curMemberIdSet = new Set<string>();
@@ -129,12 +132,14 @@ export class KeycloakApi {
     const userIdsToRemove = [...curMemberIdSet].filter((x) => !newMemberIdSet.has(x));
     const userIdsToAdd = [...newMemberIdSet].filter((x) => !curMemberIdSet.has(x));
 
-    // delete existing keycloak group members
-    for (const id of userIdsToRemove) {
-      await this.keycloak.users.delFromGroup({id, groupId});
+    // delete old members -- Skip if group does not end with developers for now
+    const group = await this.keycloak.groups.findOne({id: groupId});
+    if (group.name?.endsWith('developers')) {
+      for (const id of userIdsToRemove) {
+        await this.keycloak.users.delFromGroup({id, groupId});
+      }
     }
-
-    // add new current devs
+    // add new members
     for (const id of userIdsToAdd) {
       await this.keycloak.users.addToGroup({id, groupId});
     }
@@ -146,14 +151,29 @@ export class KeycloakApi {
    * @param clientName
    * @param roles
    */
-  public async syncGroupClientRoles(groupId: string, clientName: string, roles: string[]) {
+  public async syncGroupClientRoles(groupId: string, clientName: string, roles: string[]): Promise<void> {
     const client = await this.getClientByName(clientName);
     if (!client || !client.id) {
       throw new Error('Client not found!');
     }
 
+    // existing roles
+    const curRoleSet = new Set<string>();
+    const clientRoleMappings = await this.keycloak.groups.listClientRoleMappings({
+      id: groupId,
+      clientUniqueId: client.id,
+    });
+    for (const clientRoleMap of clientRoleMappings) {
+      if (clientRoleMap.name) {
+        curRoleSet.add(clientRoleMap.name);
+      }
+    }
+
     for (const roleName of roles) {
-      // add client role for dev group
+      if (curRoleSet.has(roleName)) {
+        continue;
+      }
+      // add client role to group
       let kcRole = await this.keycloak.clients.findRole({
         id: client.id,
         roleName,
@@ -182,5 +202,6 @@ export class KeycloakApi {
         ],
       });
     }
+    // TODO: Delete old client roles from groups
   }
 }

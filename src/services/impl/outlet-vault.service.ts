@@ -23,7 +23,7 @@ export class OutletVaultService implements OutletService {
     case 'developer-lead':
       return [{
         group: {
-          path: ['Developers', `${projectGroup.projectName}-developers`],
+          path: ['developers', `${projectGroup.projectName}-developers`],
         },
         roles: [`${projectGroup.projectName}-developer`],
       }];
