@@ -1,0 +1,5 @@
+export CSS_TOKEN_URL=$(jq -r '.tokenUrl' ./config/service-account.json)
+export CSS_CLIENT_ID=$(jq -r '.clientId' ./config/service-account.json)
+export CSS_CLIENT_SECRET=$(jq -r '.clientSecret' ./config/service-account.json)
+export JIRA_USERNAME=matthew.bystedt@gov.bc.ca
+export JIRA_PASSWORD=
