@@ -2,16 +2,19 @@
 
 const TYPES = {
   ConfigService: Symbol.for('ConfigService'),
+  CssAdminClient: Symbol.for('CssAdminClient'),
+  CssAdminApi: Symbol.for('CssAdminApi'),
+  CssAdminSyncController: Symbol.for('CssAdminSyncController'),
   EnvironmentUtil: Symbol.for('EnvironmentUtil'),
+  JiraBasePath: Symbol.for('JiraBasePath'),
   JiraClient: Symbol.for('JiraClient'),
+  JiraHost: Symbol.for('JiraHost'),
+  JiraUsername: Symbol.for('JiraUsername'),
+  JiraPassword: Symbol.for('JiraPassword'),
   LdapApi: Symbol.for('LdapApi'),
   LdapClient: Symbol.for('LdapClient'),
-  KeycloakAdminClient: Symbol.for('KeycloakAdminClient'),
-  KeycloakApi: Symbol.for('KeycloakApi'),
-  KeycloakSyncController: Symbol.for('KeycloakSyncController'),
   Logger: Symbol.for('Logger'),
-  OutletService: Symbol.for('OutletService'),
-  ProjectSourceService: Symbol.for('ProjectSourceService'),
+  SourceService: Symbol.for('SourceService'),
 };
 
 export {TYPES};

@@ -1,6 +1,6 @@
 # Auth Sync Tool
 
-The auth sync tool takes user group and "privilege information" from federated systems to generate client roles and group membership (and what roles those groups have) in KeyCloak.
+The auth sync tool takes user group and "privilege information" from federated systems to generate client roles and group membership (and what roles those groups have) in CSS (KeyCloak).
 
 See: [Confluence Documentation](https://apps.nrs.gov.bc.ca/int/confluence/x/LpZvBQ)
 
@@ -22,8 +22,8 @@ See: [Confluence Documentation](https://apps.nrs.gov.bc.ca/int/confluence/x/LpZv
 $ npm install -g authtool
 $ authtool COMMAND
 running command...
-$ authtool (-v|--version|version)
-authtool/1.0.0 darwin-x64 node-v16.6.2
+$ authtool (--version)
+authtool/1.0.0 darwin-x64 node-v16.17.1
 $ authtool --help [COMMAND]
 USAGE
   $ authtool COMMAND
@@ -43,45 +43,73 @@ $ ./bin/run (-v|--version|version)
 # Commands
 <!-- commands -->
 * [`authtool help [COMMAND]`](#authtool-help-command)
-* [`authtool keycloak-sync`](#authtool-keycloak-sync)
+* [`authtool member-sync`](#authtool-member-sync)
+* [`authtool role-sync`](#authtool-role-sync)
 
 ## `authtool help [COMMAND]`
 
-display help for authtool
+Display help for authtool.
 
 ```
 USAGE
-  $ authtool help [COMMAND]
+  $ authtool help [COMMAND] [-n]
 
 ARGUMENTS
-  COMMAND  command to show help for
+  COMMAND  Command to show help for.
 
-OPTIONS
-  --all  see all commands in CLI
+FLAGS
+  -n, --nested-commands  Include all nested commands in the output.
+
+DESCRIPTION
+  Display help for authtool.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.2/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.19/src/commands/help.ts)_
 
-## `authtool keycloak-sync`
+## `authtool member-sync`
 
-Syncs projects and gorups to Keycloak
+Syncs Developers from Jira projects to Css
 
 ```
 USAGE
-  $ authtool keycloak-sync
+  $ authtool member-sync [-h] [--css-token-url <value>] [--css-client-id <value>] [--css-client-secret <value>]
+    [--jira-host <value>] [--jira-base-url <value>] [--jira-username <value>] [--jira-password <value>]
 
-OPTIONS
-  -h, --help                                       show CLI help
-  --jira-base-url=jira-base-url                    [default: /int/jira] The Jira Base URL
-  --jira-host=jira-host                            [default: bwa.nrs.gov.bc.ca] The Jira host
-  --jira-password=jira-password                    [default: password] The Jira password
-  --jira-username=jira-username                    [default: admin] The Jira user
-  --keycloak-addr=keycloak-addr                    [default: http://127.0.0.1:8080/auth] The keycloak address
-  --keycloak-client-id=keycloak-client-id          [default: admin] The keycloak client ID
-  --keycloak-client-secret=keycloak-client-secret  [default: password] The keycloak client secret
-  --keycloak-realm=keycloak-realm                  [default: master] The keycloak realm
-  --ldap-password=ldap-password                    [default: password] The ldap password
-  --ldap-url=ldap-url                              [default: ldaps://idir.bcgov] The LDAP URL
-  --ldap-username=ldap-username                    [default: admin] The ldap user
+FLAGS
+  -h, --help                   show CLI help
+  --css-client-id=<value>      [default: id] The css keycloak client id
+  --css-client-secret=<value>  [default: password] The css keycloak client secret
+  --css-token-url=<value>      [default: url] The css token url
+  --jira-base-url=<value>      [default: /int/jira] The Jira Base URL
+  --jira-host=<value>          [default: bwa.nrs.gov.bc.ca] The Jira host
+  --jira-password=<value>      [default: password] The Jira password
+  --jira-username=<value>      [default: admin] The Jira user
+
+DESCRIPTION
+  Syncs Developers from Jira projects to Css
+
+EXAMPLES
+  $ authtool member-sync
+```
+
+## `authtool role-sync`
+
+Syncs roles to Css
+
+```
+USAGE
+  $ authtool role-sync [-h] [--css-token-url <value>] [--css-client-id <value>] [--css-client-secret <value>]
+
+FLAGS
+  -h, --help                   show CLI help
+  --css-client-id=<value>      [default: id] The css keycloak client id
+  --css-client-secret=<value>  [default: password] The css keycloak client secret
+  --css-token-url=<value>      [default: url] The css token url
+
+DESCRIPTION
+  Syncs roles to Css
+
+EXAMPLES
+  $ authtool role-sync
 ```
 <!-- commandsstop -->

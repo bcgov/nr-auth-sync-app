@@ -4,35 +4,27 @@ export const help = {
   help: flags.help({char: 'h'}),
 };
 
-export const keycloakAddr = {
-  'keycloak-addr': flags.string({
-    default: 'http://127.0.0.1:8080/auth',
-    description: 'The keycloak address',
-    env: 'KEYCLOAK_ADDR',
+export const cssTokenUrl = {
+  'css-token-url': flags.string({
+    default: 'url',
+    description: 'The css token url',
+    env: 'CSS_TOKEN_URL',
   }),
 };
 
-export const keycloakRealm = {
-  'keycloak-realm': flags.string({
-    default: 'master',
-    description: 'The keycloak realm',
-    env: 'KEYCLOAK_REALM',
+export const cssClientId = {
+  'css-client-id': flags.string({
+    default: 'id',
+    description: 'The css keycloak client id',
+    env: 'CSS_CLIENT_ID',
   }),
 };
 
-export const keycloakClientId = {
-  'keycloak-client-id': flags.string({
-    default: 'admin',
-    description: 'The keycloak client ID',
-    env: 'KEYCLOAK_CLIENT_ID',
-  }),
-};
-
-export const keycloakClientSecret = {
-  'keycloak-client-secret': flags.string({
+export const cssClientSecret = {
+  'css-client-secret': flags.string({
     default: 'password',
-    description: 'The keycloak client secret',
-    env: 'KEYCLOAK_CLIENT_SECRET',
+    description: 'The css keycloak client secret',
+    env: 'CSS_CLIENT_SECRET',
   }),
 };
 

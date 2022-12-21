@@ -3,7 +3,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {inject, injectable} from 'inversify';
 import {TYPES} from '../inversify.types';
-import winston from 'winston';
 import {Client} from 'ldapjs';
 
 @injectable()
@@ -16,7 +15,6 @@ export class LdapApi {
    */
   constructor(
     @inject(TYPES.LdapClient) private ldapClient: Client,
-    @inject(TYPES.Logger) private logger: winston.Logger,
   ) {}
 
   /**

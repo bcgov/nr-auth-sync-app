@@ -1,0 +1,24 @@
+{
+  "files.exclude": {
+    "**/.git": false,
+    "**/.svn": false,
+    "**/.hg": false,
+    "**/CVS": false,
+    "**/.DS_Store": false,
+    "**/Thumbs.db": false,
+    "setenv-dev.sh": false,
+    "setenv-prod.sh": false,
+    "setenv-test.sh": false
+  },
+  "explorerExclude.backup": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "setenv-dev.sh": true,
+    "setenv-prod.sh": true,
+    "setenv-test.sh": true
+  }
+}
