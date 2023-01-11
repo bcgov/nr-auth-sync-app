@@ -4,7 +4,9 @@
       {"group": "developer", "name": "cfsweb", "members": {
         "jira": {"project": "CFSWEB", "groups": ["cfsweb-developers", "cfsweb-lead-developers"]
       }}},
-      {"group": "developer", "name": "client"},
+      {"group": "developer", "name": "client", "members": {
+        "jira": {"project": "FSADT1", "groups": ["fsadt1-developers", "fsadt1-lead-developers"]
+      }}},
       {"group": "developer", "name": "ffs", "members": {
         "jira": {"project": "FFS", "groups": ["ffs-developers", "ffs-lead-developers"]
       }}},
