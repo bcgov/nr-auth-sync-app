@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 import {Command} from '@oclif/command';
-import {help, cssTokenUrl, cssClientId, cssClientSecret} from '../flags';
+import {help, cssTokenUrl, cssClientId, cssClientSecret, configPath} from '../flags';
 import {TYPES} from '../inversify.types';
-import {bindCss, vsContainer} from '../inversify.config';
+import {bindConfigPath, bindCss, vsContainer} from '../inversify.config';
 import {CssAdminSyncController} from '../css/css-admin-sync.controller';
 
 /**
@@ -17,6 +17,7 @@ export default class RoleSync extends Command {
 
   static flags = {
     ...help,
+    ...configPath,
     ...cssTokenUrl,
     ...cssClientId,
     ...cssClientSecret,
@@ -27,6 +28,8 @@ export default class RoleSync extends Command {
    */
   async run(): Promise<void> {
     const {flags} = this.parse(RoleSync);
+
+    bindConfigPath(flags['config-path']);
 
     await bindCss(
       flags['css-token-url'],

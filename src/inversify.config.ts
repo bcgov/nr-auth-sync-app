@@ -27,6 +27,10 @@ vsContainer.bind<EnvironmentUtil>(TYPES.EnvironmentUtil).to(EnvironmentUtil);
 
 export {vsContainer};
 
+export function bindConfigPath(path: string) {
+  vsContainer.bind<string>(TYPES.IntegrationRolesPath).toConstantValue(path);
+}
+
 /**
  *
  * @param cssTokenUrl

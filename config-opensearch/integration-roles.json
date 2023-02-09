@@ -1,0 +1,323 @@
+{
+  "APM - OpenSearch": {
+    "roles": [
+      {
+        "name": "alerting_ack_alerts",
+        "description": "Grants permissions to view and acknowledge alerts, but not modify destinations or monitors.",
+        "members": {
+          "static": []
+        }
+      },
+      {
+        "name": "alerting_full_access",
+        "description": "Grants full permissions to all alerting actions",
+        "members": {
+          "static": [
+            "lucas.montebello@gov.bc.ca",
+            "sanjay.babu@gov.bc.ca",
+            "tolulope.agbaje@gov.bc.ca",
+            "tbell@selkirksystems.com",
+            "will.robins@gov.bc.ca",
+            "cary.nukina@gov.bc.ca",
+            "dave.kumka@gov.bc.ca",
+            "grace.ruan@gov.bc.ca",
+            "joseph.montebello@gov.bc.ca",
+            "kris.clarke@gov.bc.ca"
+          ]
+        }
+      },
+      {
+        "name": "alerting_read_access",
+        "description": "Grants permissions to view alerts, destinations, and monitors, but not acknowledge alerts or modify destinations or monitors",
+        "members": {
+          "static": []
+        }
+      },
+      {
+        "name": "all_access",
+        "description": "The keycloak group 'AWS Elastic Search/Administrators' maps to this client role",
+        "members": {
+          "static": [
+            "andreas.wilson@gov.bc.ca",
+            "chris.cocker@gov.bc.ca",
+            "dana.diotte@gov.bc.ca",
+            "grace.ruan@gov.bc.ca",
+            "matthew.bystedt@gov.bc.ca",
+            "mary.carrigan@gov.bc.ca",
+            "michelle.douville@gov.bc.ca",
+            "nisarg.vadgama@gov.bc.ca"
+          ]
+        }
+      },
+      {
+        "name": "anomaly_full_access",
+        "description": "",
+        "members": {
+          "copy": [
+            "wf-write-all"
+          ]
+        }
+      },
+      {
+        "name": "anomaly_read_access",
+        "description": "",
+        "members": {
+          "static": []
+        }
+      },
+      {
+        "name": "csst-write-all",
+        "description": "Users provided with this role can EDIT the csst tenant space on OpenSearch",
+        "members": {
+          "static": [
+            "christian.w.evans@gov.bc.ca",
+            "jeremy.ho@gov.bc.ca",
+            "kyle.morel@gov.bc.ca",
+            "lucas.oneil@gov.bc.ca",
+            "michael.chung@avocette.com",
+            "sharolyn.hurley@gov.bc.ca",
+            "tim.csaky@gov.bc.ca"
+          ]
+        }
+      },
+      {
+        "name": "epsilon-write-all",
+        "description": "Users provided with this role can EDIT the epsilon tenant space on OpenSearch",
+        "members": {
+          "static": [
+            "chris.cocker@gov.bc.ca",
+            "james.gagan@gov.bc.ca",
+            "joseph.montebello@gov.bc.ca",
+            "kristal.lowe@gov.bc.ca",
+            "tanya.mckinney@gov.bc.ca"
+          ]
+        }
+      },
+      {
+        "name": "fingerprint-write-all",
+        "description": "Users provided with this role can EDIT the Fingerprint tenant space on OpenSearch",
+        "members": {
+          "static": [
+            "catherine.meng@gov.bc.ca",
+            "c.gustafson@cgi.com",
+            "gbola.atitebi@gov.bc.ca",
+            "pete.tollestrup@gov.bc.ca"
+          ]
+        }
+      },
+      {
+        "name": "fsamp-write-all",
+        "description": "Users provided with this role can EDIT the fsamp tenant space on OpenSearch",
+        "members": {
+          "static": [
+            "andrea.kolot@gov.bc.ca",
+            "annibal.silva@encora.com",
+            "chantelle.abanilla@gov.bc.ca",
+            "catherine.meng@gov.bc.ca",
+            "dogival.silva@encora.com",
+            "diego.silva@encora.com",
+            "edson.souza@encora.com",
+            "ivan.eggers@gov.bc.ca",
+            "igor.melo@encora.com",
+            "isac.souza@encora.com",
+            "kevin.ginley@gov.bc.ca",
+            "lkilpatr@myra.com",
+            "leslie.kilpatrick@gov.bc.ca",
+            "mary.carrigan@gov.bc.ca",
+            "maria.martinez@gov.bc.ca",
+            "mary.carrigan@gov.bc.ca",
+            "matheus.gaseta@encora.com",
+            "michelly.marsoleta@encora.com",
+            "michelle.douville@gov.bc.ca",
+            "pete.tollestrup@gov.bc.ca",
+            "peter.wehrell@gov.bc.ca",
+            "ricardo.decampos@gov.bc.ca",
+            "richard.pardo-figueroa@gov.bc.ca",
+            "sabina.donnelly@gov.bc.ca",
+            "thiago.sanchez@encora.com",
+            "ziad.bhunnoo@gov.bc.ca"
+          ]
+        }
+      },
+      {
+        "name": "nrm-read-all",
+        "description": "All NRM users can READ all shared tenant spaces on OpenSearch, and EDIT their own private space.",
+        "members": {
+          "static": [
+            "adam.dewey@gov.bc.ca",
+            "alan.bullen@gov.bc.ca",
+            "alix.cote@gov.bc.ca",
+            "amanda.lowe@gov.bc.ca",
+            "andrew.g.wong@gov.bc.ca",
+            "annibal.silva@encora.com",
+            "anton.coetzer@gov.bc.ca",
+            "baldeep.pal@gov.bc.ca",
+            "bill.zborowski@gov.bc.ca",
+            "brett@qedsystems.ca",
+            "brian.j.gillespie@gov.bc.ca",
+            "chris.m.smith@gov.bc.ca",
+            "chris.p.norman@gov.bc.ca",
+            "chris.robinson@gov.bc.ca",
+            "christiane.lenz@gov.bc.ca",
+            "chunying.dong@gov.bc.ca",
+            "clecio.varjao@gov.bc.ca",
+            "colin.bussanich@gov.bc.ca",
+            "darrell.scott@gov.bc.ca",
+            "dave.donovan@gov.bc.ca",
+            "david.kelsey@gov.bc.ca",
+            "dona.stapley@gov.bc.ca",
+            "dylan.dawson@gov.bc.ca",
+            "dylan.legebokow@gov.bc.ca",
+            "etoaxen@pacificgeotech.com",
+            "harry.miller@gov.bc.ca",
+            "heather.hay@gov.bc.ca",
+            "hsaldyga@vividsolutions.com",
+            "jason.kubian@gov.bc.ca",
+            "jeff.card@gov.bc.ca",
+            "jeremy.balliston@gov.bc.ca",
+            "joel.trischuk@gov.bc.ca",
+            "joey.lovett@gov.bc.ca",
+            "jonathan.charlton@gov.bc.ca",
+            "karen.samuelson@gov.bc.ca",
+            "kirsten.smestad@gov.bc.ca",
+            "kristin.thurston@gov.bc.ca",
+            "laura.l.butler@gov.bc.ca",
+            "lizette.monteiro@gov.bc.ca",
+            "lolanda.emerson@gov.bc.ca",
+            "lucas.montebello@gov.bc.ca",
+            "marcus.c.murphy@gov.bc.ca",
+            "micha.maxwelllake@gov.bc.ca",
+            "michael.macrae@gov.bc.ca",
+            "mike.lytwynuk@gov.bc.ca",
+            "olga.liberchuk@gov.bc.ca",
+            "omprakash.2.mishra@gov.bc.ca",
+            "peter.platten@gov.bc.ca",
+            "praveen.raju@gov.bc.ca",
+            "raja.pethanasamy@gov.bc.ca",
+            "ricky.yee@gov.bc.ca",
+            "rizwana.rahman@gov.bc.ca",
+            "sanjay.babu@gov.bc.ca",
+            "sasha.brkic@gov.bc.ca",
+            "sashi.das@gov.bc.ca",
+            "scott.griffiths@gov.bc.ca",
+            "scott.sharp@gov.bc.ca",
+            "soumen.rana@gov.bc.ca",
+            "stephen.bamford@gov.bc.ca",
+            "stephen.simonds@gov.bc.ca",
+            "tina.qin@gov.bc.ca",
+            "tolulope.agbaje@gov.bc.ca",
+            "travis.schwantje@gov.bc.ca"
+          ],
+          "copy": [
+            "/.*(-write-all)$/"
+          ],
+          "exclude": [
+            "nrm-security",
+            "all_access"
+          ]
+        }
+      },
+      {
+        "name": "nrm-security",
+        "description": "Access to unmasked ip addresses. Members should not be in nrm-read-all.",
+        "members": {
+          "static": [
+            "annie.goodwin@gov.bc.ca",
+            "eileen.padgett@gov.bc.ca",
+            "eric.valikoski@gov.bc.ca",
+            "kevin.mcneil@gov.bc.ca",
+            "kyle.eggleston@gov.bc.ca",
+            "louis.kraak@gov.bc.ca",
+            "quinn.hatherly@gov.bc.ca",
+            "suzanne.tyler@gov.bc.ca"
+          ],
+          "exclude": [
+            "all_access"
+          ]
+        }
+      },
+      {
+        "name": "ppm-write-all",
+        "description": "Users provided with this role can EDIT the PPM tenant space on OpenSearch",
+        "members": {
+          "static": [
+            "alexander.filonovych@gov.bc.ca",
+            "bob.nicholson@gov.bc.ca",
+            "bryan.dixon@gov.bc.ca",
+            "clover.mohr@gov.bc.ca",
+            "chris.ngui@gov.bc.ca",
+            "darren.mckellar@gov.bc.ca",
+            "david.rittenhouse@gov.bc.ca",
+            "daryl.twist@gov.bc.ca",
+            "doug.westlake@gov.bc.ca",
+            "joey.lundgren@gov.bc.ca",
+            "kiran.bagha@gov.bc.ca",
+            "kimberly.juda@gov.bc.ca",
+            "linda.thomson@gov.bc.ca",
+            "manik.malhotra@gov.bc.ca",
+            "rajesh.jain@gov.bc.ca",
+            "shannon.achtzner@gov.bc.ca",
+            "shyam.chandran@gov.bc.ca",
+            "timothy.sine@gov.bc.ca"
+          ]
+        }
+      },
+      {
+        "name": "saber-write-all",
+        "description": "Users provided with this role can EDIT the Saber tenant space on OpenSearch",
+        "members": {
+          "static": [
+            "don.murphy@dxcas.com",
+            "harry.bekkema@dxcas.com",
+            "kristal.lowe@gov.bc.ca",
+            "louis.kraak@gov.bc.ca",
+            "paul.walker@dxcas.com"
+          ]
+        }
+      },
+      {
+        "name": "wf-write-all",
+        "description": "Users provided with this role can EDIT the WF tenant space on OpenSearch",
+        "members": {
+          "static": [
+            "anmol.arora@gov.bc.ca",
+            "ben.jubb@gov.bc.ca",
+            "beverley.moysey@gov.bc.ca",
+            "cbergin@vividsolutions.com",
+            "cboreen@vividsolutions.com",
+            "cpreston@vividsolutions.com",
+            "cary.nukina@gov.bc.ca",
+            "dave.kumka@gov.bc.ca",
+            "dash@vividsolutions.com",
+            "dhemsworth@vividsolutions.com",
+            "dolsen@selkirksystems.com",
+            "denise.x.howden@gov.bc.ca",
+            "fxie@vividsolutions.com",
+            "jessica.byers@gov.bc.ca",
+            "jlarter@selkirksystems.com",
+            "jordan.armstrong@gov.bc.ca",
+            "james.parry@gov.bc.ca",
+            "kanderson@selkirksystems.com",
+            "kbisley@selkirksystems.com",
+            "ksmith@vividsolutions.com",
+            "kevin.guise@gov.bc.ca",
+            "khaukaas@selkirksystems.com",
+            "katie.menke@gov.bc.ca",
+            "kris.clarke@gov.bc.ca",
+            "lli@vividsolutions.com",
+            "matt.gladysz@gov.bc.ca",
+            "matthew.barnes@gov.bc.ca",
+            "mjunkin@vividsolutions.com",
+            "martin.torn@gov.bc.ca",
+            "odysseus.1.chiu@gov.bc.ca",
+            "rmcmillan@selkirksystems.com",
+            "sasha.brkic@gov.bc.ca",
+            "ssylver@vividsolutions.com",
+            "tbell@selkirksystems.com",
+            "will.robins@gov.bc.ca"
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -6,6 +6,7 @@ const TYPES = {
   CssAdminApi: Symbol.for('CssAdminApi'),
   CssAdminSyncController: Symbol.for('CssAdminSyncController'),
   EnvironmentUtil: Symbol.for('EnvironmentUtil'),
+  IntegrationRolesPath: Symbol.for('IntegrationRolesPath'),
   JiraBasePath: Symbol.for('JiraBasePath'),
   JiraClient: Symbol.for('JiraClient'),
   JiraHost: Symbol.for('JiraHost'),

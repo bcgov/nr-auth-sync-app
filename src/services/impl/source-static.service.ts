@@ -4,7 +4,7 @@ import {SourceService} from '../source.service';
 
 @injectable()
 /**
- * Service for getting staic group users
+ * Service for getting static group users
  */
 export class SourceStaticService implements SourceService {
   /**

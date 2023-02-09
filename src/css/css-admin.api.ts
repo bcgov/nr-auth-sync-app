@@ -3,6 +3,7 @@ import {injectable} from 'inversify';
 
 const CSS_SSO_API_URL = 'https://api.loginproxy.gov.bc.ca/api/v1';
 const EMAIL_IGNORE = new Set(['nrids.tier2@gov.bc.ca', 'nrcda001@gov.bc.ca']);
+const ROLE_USER_MAX = 50;
 @injectable()
 /**
  *
@@ -98,16 +99,7 @@ export class CssAdminApi {
     for (const roleName of Object.keys(userRoles)) {
       const roleSet: Set<string> = userRoles[roleName];
       console.log(`${integration.id} ${environment} ${roleName}`);
-      const existingUsers = (await axios.get(
-        `/integrations/${integration.id}/${environment}/user-role-mappings`, {
-          params: {
-            roleName,
-          },
-          ...this.axiosOptions})).data.users;
-      const existingUsernames = new Set<string>();
-      for (const user of existingUsers) {
-        existingUsernames.add(user.email);
-      }
+      const existingUsernames = await this.getRoleUsernameSet(integration.id, environment, roleName);
 
       const usersToRemove = [...existingUsernames].filter((email) => !roleSet.has(email));
       const usersToAdd = [...roleSet].filter((email) =>
@@ -115,6 +107,27 @@ export class CssAdminApi {
       await this.postIntegrationRoleUserChanges(integration.id, environment, roleName, 'add', usersToAdd);
       await this.postIntegrationRoleUserChanges(integration.id, environment, roleName, 'del', usersToRemove);
     }
+  }
+
+  private async getRoleUsernameSet(integrationId: string, environment: string, roleName: string) {
+    const usernameSet = new Set<string>();
+    for (let page = 1; true; page++) {
+      const fetchedUsers = (await axios.get(
+        `/integrations/${integrationId}/${environment}/roles/${roleName}/users`, {
+          params: {
+            page,
+            max: ROLE_USER_MAX,
+          },
+          ...this.axiosOptions,
+        })).data.data;
+      for (const user of fetchedUsers) {
+        usernameSet.add(user.email);
+      }
+      if (fetchedUsers.length < ROLE_USER_MAX) {
+        break;
+      }
+    }
+    return usernameSet;
   }
 
   private async postIntegrationRoleUserChanges(
@@ -135,14 +148,18 @@ export class CssAdminApi {
       }
       const username = userData.data[0].username;
       console.log(`${operation}: ${username} [${email}]`);
-      await axios.post(
-        `/integrations/${integrationId}/${environment}/user-role-mappings`,
-        {
-          roleName,
-          username,
-          operation,
-        },
-        this.axiosOptions);
+      if (operation === 'add') {
+        await axios.post(
+          `/integrations/${integrationId}/${environment}/users/${username}/roles`,
+          [{
+            name: roleName,
+          }],
+          this.axiosOptions);
+      } else if (operation === 'del') {
+        await axios.delete(
+          `/integrations/${integrationId}/${environment}/users/${username}/roles/${roleName}`,
+          this.axiosOptions);
+      }
     }
   }
 

@@ -4,6 +4,14 @@ export const help = {
   help: flags.help({char: 'h'}),
 };
 
+export const configPath = {
+  'config-path': flags.string({
+    default: './config',
+    description: 'The path to the config directory',
+    env: 'AUTH_SYNC_CONFIG_PATH',
+  }),
+};
+
 export const cssTokenUrl = {
   'css-token-url': flags.string({
     default: 'url',
