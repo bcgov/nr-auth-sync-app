@@ -27,6 +27,7 @@ vsContainer.bind<EnvironmentUtil>(TYPES.EnvironmentUtil).to(EnvironmentUtil);
 
 export {vsContainer};
 
+<<<<<<< HEAD
 /**
  *
  * @param cssTokenUrl
@@ -39,6 +40,24 @@ export async function bindCss(
   cssClientSecret: string): Promise<void> {
   const client = await cssAdminApiFactory(cssTokenUrl, cssClientId, cssClientSecret);
 
+=======
+export function bindConfigPath(path: string) {
+  vsContainer.bind<string>(TYPES.IntegrationRolesPath).toConstantValue(path);
+}
+
+/**
+ *
+ * @param cssTokenUrl
+ * @param cssClientId
+ * @param cssClientSecret
+ */
+export async function bindCss(
+  cssTokenUrl: string,
+  cssClientId: string,
+  cssClientSecret: string): Promise<void> {
+  const client = await cssAdminApiFactory(cssTokenUrl, cssClientId, cssClientSecret);
+
+>>>>>>> 0dca13f5f16b4497dd36ee3b0238936fb7735e4d
   vsContainer.bind<CssAdminApi>(TYPES.CssAdminApi).toConstantValue(client);
 }
 
