@@ -29,12 +29,23 @@ export class SourceJiraService implements SourceService {
     if (!roleConfig?.members?.jira) {
       return [];
     }
+<<<<<<< HEAD
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const project = await this.getProject(roleConfig.members.jira.project);
     const groups = roleConfig.members.jira.groups;
     const users: string[] = [];
     for (const group of groups) {
       users.push(...await this.getUsersInGroup(group));
+=======
+    const jiraArray = Array.isArray(roleConfig.members.jira) ? roleConfig.members.jira : [roleConfig.members.jira];
+    const users: string[] = [];
+    for (const jira of jiraArray) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const project = await this.getProject(jira.project);
+      for (const group of jira.groups) {
+        users.push(...await this.getUsersInGroup(group));
+      }
+>>>>>>> 0dca13f5f16b4497dd36ee3b0238936fb7735e4d
     }
     return users;
   }
@@ -56,6 +67,7 @@ export class SourceJiraService implements SourceService {
    */
   private async getUsersInGroup(groupName: string): Promise<string[]> {
     // eslint-disable-next-line -- No typing available for Jira objects
+<<<<<<< HEAD
     const users: string[] = await this.jira.getUsersInGroup(groupName).then((data) => data.users.items.map((obj: any) => obj.key));
     return Promise.all(users.map(async (user) => {
       return (await axios.get(`https://bwa.nrs.gov.bc.ca/int/jira/rest/api/2/user?key=${user}`,
@@ -70,5 +82,28 @@ export class SourceJiraService implements SourceService {
           },
         })).data.emailAddress.toLowerCase();
     }));
+=======
+
+    try {
+      const users: string[] =
+        await this.jira.getUsersInGroup(groupName).then((data) => data.users.items.map((obj: any) => obj.key));
+      return Promise.all(users.map(async (user) => {
+        return (await axios.get(`https://bwa.nrs.gov.bc.ca/int/jira/rest/api/2/user?key=${user}`,
+          {
+            responseEncoding: 'utf8',
+            headers: {
+              'Accept-Encoding': 'identity',
+            },
+            auth: {
+              username: this.jiraUsername,
+              password: this.jiraPassword,
+            },
+          })).data.emailAddress.toLowerCase();
+      }));
+    } catch (e) {
+      // No group?
+      return Promise.resolve([]);
+    }
+>>>>>>> 0dca13f5f16b4497dd36ee3b0238936fb7735e4d
   }
 }
