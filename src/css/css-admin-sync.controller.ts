@@ -1,17 +1,10 @@
 import {inject, injectable, multiInject} from 'inversify';
-<<<<<<< HEAD
-import path from 'path';
-import fs from 'fs';
-=======
 import fs from 'fs';
 import path from 'path';
->>>>>>> 0dca13f5f16b4497dd36ee3b0238936fb7735e4d
 import {TYPES} from '../inversify.types';
 import {CssAdminApi} from './css-admin.api';
 import {SourceService} from '../services/source.service';
 
-<<<<<<< HEAD
-=======
 interface OutletMap {
   [key: string]: Set<string>;
 }
@@ -45,30 +38,17 @@ interface IntegrationConfig {
   roles: RoleConfig[]
 }
 
->>>>>>> 0dca13f5f16b4497dd36ee3b0238936fb7735e4d
 @injectable()
 /**
  * Css sync controller
  */
 export class CssAdminSyncController {
-<<<<<<< HEAD
-  private static readonly integrationRolesPath
-  = path.join(__dirname, '../../config', 'integration-roles.json');
-  private static readonly integrationRoles
-    = JSON.parse(fs.readFileSync(CssAdminSyncController.integrationRolesPath, 'utf8'));
-=======
   private readonly integrationRoles: IntegrationRoles;
->>>>>>> 0dca13f5f16b4497dd36ee3b0238936fb7735e4d
 
   /**
    * Constructor
    */
   constructor(
-<<<<<<< HEAD
-    @inject(TYPES.CssAdminApi) private cssAdminApi: CssAdminApi,
-    @multiInject(TYPES.SourceService) private sourceServices: SourceService[],
-  ) {}
-=======
     @inject(TYPES.IntegrationRolesPath) private readonly integrationRolesPath: string,
     @inject(TYPES.CssAdminApi) private cssAdminApi: CssAdminApi,
     @multiInject(TYPES.SourceService) private sourceServices: SourceService[],
@@ -76,7 +56,6 @@ export class CssAdminSyncController {
     this.integrationRoles =
       JSON.parse(fs.readFileSync(path.join(integrationRolesPath, 'integration-roles.json'), 'utf8'));
   }
->>>>>>> 0dca13f5f16b4497dd36ee3b0238936fb7735e4d
 
   /**
    *
@@ -84,15 +63,9 @@ export class CssAdminSyncController {
    */
   public async roleSync(): Promise<void> {
     const parsedIntegrationRoles: any = {};
-<<<<<<< HEAD
-    for (const integrationName of Object.keys(CssAdminSyncController.integrationRoles)) {
-      const parsedRoles: string[] = [];
-      const roleConfigs = CssAdminSyncController.integrationRoles[integrationName].roles;
-=======
     for (const integrationName of Object.keys(this.integrationRoles)) {
       const parsedRoles: string[] = [];
       const roleConfigs = this.integrationRoles[integrationName].roles;
->>>>>>> 0dca13f5f16b4497dd36ee3b0238936fb7735e4d
       for (const roleConfig of roleConfigs) {
         parsedRoles.push(this.roleFromConfig(roleConfig));
       }
@@ -102,39 +75,14 @@ export class CssAdminSyncController {
   }
 
   public async memberSync() {
-<<<<<<< HEAD
-    const userMap: any = {};
-    for (const integrationName of Object.keys(CssAdminSyncController.integrationRoles)) {
-      userMap[integrationName] = {};
-      const roleConfigs = CssAdminSyncController.integrationRoles[integrationName].roles;
-      for (const roleConfig of roleConfigs) {
-        const role = this.roleFromConfig(roleConfig);
-        for (const sourceService of this.sourceServices) {
-          const users = await sourceService.getUsers(roleConfig);
-          const outletMap = userMap[integrationName];
-          if (users.length === 0) {
-            continue;
-          }
-
-          if (!outletMap[role]) {
-            outletMap[role] = new Set();
-          }
-          users.forEach(outletMap[role].add, outletMap[role]);
-        }
-      }
-=======
     const userMap: IntegrationOutletMap = {};
     for (const integrationName of Object.keys(this.integrationRoles)) {
       console.log(`>>> ${integrationName} : Get users`);
       userMap[integrationName] = await this.integrationMemberSync(this.integrationRoles[integrationName].roles);
->>>>>>> 0dca13f5f16b4497dd36ee3b0238936fb7735e4d
     }
     return this.cssAdminApi.syncRoleUsers(userMap);
   }
 
-<<<<<<< HEAD
-  private roleFromConfig(roleConfig: any) {
-=======
   private async integrationMemberSync(roleConfigs: any) {
     const outletMap: OutletMap = {};
     const roleConfigNames = roleConfigs.map((roleConfig: any) => this.roleFromConfig(roleConfig));
@@ -223,7 +171,6 @@ export class CssAdminSyncController {
   }
 
   private roleFromConfig(roleConfig: RoleConfig) {
->>>>>>> 0dca13f5f16b4497dd36ee3b0238936fb7735e4d
     if (roleConfig.group) {
       return `${roleConfig.group}_${roleConfig.name}`;
     } else {

@@ -4,24 +4,6 @@ export const help = {
   help: flags.help({char: 'h'}),
 };
 
-<<<<<<< HEAD
-export const cssTokenUrl = {
-  'css-token-url': flags.string({
-    default: 'url',
-    description: 'The css token url',
-    env: 'CSS_TOKEN_URL',
-  }),
-};
-
-export const cssClientId = {
-  'css-client-id': flags.string({
-    default: 'id',
-    description: 'The css keycloak client id',
-    env: 'CSS_CLIENT_ID',
-  }),
-};
-
-=======
 export const configPath = {
   'config-path': flags.string({
     default: './config',
@@ -46,7 +28,6 @@ export const cssClientId = {
   }),
 };
 
->>>>>>> 0dca13f5f16b4497dd36ee3b0238936fb7735e4d
 export const cssClientSecret = {
   'css-client-secret': flags.string({
     default: 'password',
