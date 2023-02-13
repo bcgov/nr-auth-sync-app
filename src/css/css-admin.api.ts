@@ -3,10 +3,7 @@ import {injectable} from 'inversify';
 
 const CSS_SSO_API_URL = 'https://api.loginproxy.gov.bc.ca/api/v1';
 const EMAIL_IGNORE = new Set(['nrids.tier2@gov.bc.ca', 'nrcda001@gov.bc.ca']);
-<<<<<<< HEAD
-=======
 const ROLE_USER_MAX = 50;
->>>>>>> 0dca13f5f16b4497dd36ee3b0238936fb7735e4d
 @injectable()
 /**
  *
@@ -102,20 +99,7 @@ export class CssAdminApi {
     for (const roleName of Object.keys(userRoles)) {
       const roleSet: Set<string> = userRoles[roleName];
       console.log(`${integration.id} ${environment} ${roleName}`);
-<<<<<<< HEAD
-      const existingUsers = (await axios.get(
-        `/integrations/${integration.id}/${environment}/user-role-mappings`, {
-          params: {
-            roleName,
-          },
-          ...this.axiosOptions})).data.users;
-      const existingUsernames = new Set<string>();
-      for (const user of existingUsers) {
-        existingUsernames.add(user.email);
-      }
-=======
       const existingUsernames = await this.getRoleUsernameSet(integration.id, environment, roleName);
->>>>>>> 0dca13f5f16b4497dd36ee3b0238936fb7735e4d
 
       const usersToRemove = [...existingUsernames].filter((email) => !roleSet.has(email));
       const usersToAdd = [...roleSet].filter((email) =>
@@ -125,8 +109,6 @@ export class CssAdminApi {
     }
   }
 
-<<<<<<< HEAD
-=======
   private async getRoleUsernameSet(integrationId: string, environment: string, roleName: string) {
     const usernameSet = new Set<string>();
     for (let page = 1; true; page++) {
@@ -148,7 +130,6 @@ export class CssAdminApi {
     return usernameSet;
   }
 
->>>>>>> 0dca13f5f16b4497dd36ee3b0238936fb7735e4d
   private async postIntegrationRoleUserChanges(
     integrationId: string, environment: string, roleName: string, operation: 'add' | 'del', users: string[],
   ) {
@@ -167,16 +148,6 @@ export class CssAdminApi {
       }
       const username = userData.data[0].username;
       console.log(`${operation}: ${username} [${email}]`);
-<<<<<<< HEAD
-      await axios.post(
-        `/integrations/${integrationId}/${environment}/user-role-mappings`,
-        {
-          roleName,
-          username,
-          operation,
-        },
-        this.axiosOptions);
-=======
       if (operation === 'add') {
         await axios.post(
           `/integrations/${integrationId}/${environment}/users/${username}/roles`,
@@ -189,7 +160,6 @@ export class CssAdminApi {
           `/integrations/${integrationId}/${environment}/users/${username}/roles/${roleName}`,
           this.axiosOptions);
       }
->>>>>>> 0dca13f5f16b4497dd36ee3b0238936fb7735e4d
     }
   }
 
