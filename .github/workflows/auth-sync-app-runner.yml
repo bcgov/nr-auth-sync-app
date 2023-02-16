@@ -1,0 +1,28 @@
+name: Auth Sync App Runner
+# Run this workflow every time a new commit pushed to your repository
+on:
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
+    # Runs script to obtain CSS secrets
+      - name: Get Secrets
+        env:
+          CSS_TOKEN_URL: ${{ secrets.CSS_TOKEN_URL }}
+          CSS_CLIENT_ID: ${{ secrets.CSS_CLIENT_ID }}
+          CSS_CLIENT_SECRET: ${{ secrets.CSS_CLIENT_SECRET }}
+          JIRA_USERNAME: ${{ secrets.JIRA_USERNAME }}
+          JIRA_PASSWORD: ${{ secrets.JIRA_PASSWORD }}
+      - name: Member and Role Sync
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: npm ci
+      - run: ./bin/dev member-sync
+      - run: ./bin/dev role-sync
