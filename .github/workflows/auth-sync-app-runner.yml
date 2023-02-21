@@ -18,7 +18,6 @@ jobs:
           node-version: 16
       - run: npm ci
       # Runs script to obtain CSS secrets
-      - name: Member and Role Sync
       - run: ./bin/dev member-sync
         env:
           CSS_TOKEN_URL: ${{ secrets.CSS_TOKEN_URL }}
