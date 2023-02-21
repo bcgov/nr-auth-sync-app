@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
+
   run:
     runs-on: ubuntu-latest
     steps:
@@ -23,6 +24,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-      - run: npm ci
-      - run: ./bin/dev member-sync
-      - run: ./bin/dev role-sync
+        run: npm ci
+        run: ./bin/dev member-sync
+        run: ./bin/dev role-sync
