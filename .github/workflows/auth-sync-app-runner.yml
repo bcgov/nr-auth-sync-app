@@ -19,11 +19,17 @@ jobs:
       - run: npm ci
       # Runs script to obtain CSS secrets
       - name: Member and Role Sync
+      - run: ./bin/dev member-sync
         env:
           CSS_TOKEN_URL: ${{ secrets.CSS_TOKEN_URL }}
           CSS_CLIENT_ID: ${{ secrets.CSS_CLIENT_ID }}
           CSS_CLIENT_SECRET: ${{ secrets.CSS_CLIENT_SECRET }}
           JIRA_USERNAME: ${{ secrets.JIRA_USERNAME }}
           JIRA_PASSWORD: ${{ secrets.JIRA_PASSWORD }}
-      - run: ./bin/dev member-sync
       - run: ./bin/dev role-sync
+        env:
+          CSS_TOKEN_URL: ${{ secrets.CSS_TOKEN_URL }}
+          CSS_CLIENT_ID: ${{ secrets.CSS_CLIENT_ID }}
+          CSS_CLIENT_SECRET: ${{ secrets.CSS_CLIENT_SECRET }}
+          JIRA_USERNAME: ${{ secrets.JIRA_USERNAME }}
+          JIRA_PASSWORD: ${{ secrets.JIRA_PASSWORD }}
