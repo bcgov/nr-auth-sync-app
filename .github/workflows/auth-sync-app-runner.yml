@@ -1,5 +1,5 @@
 name: Auth Sync App Runner
-# Run this workflow every time a new commit pushed to your repository
+
 on:
   workflow_dispatch:
 
