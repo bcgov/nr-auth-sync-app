@@ -1,6 +1,7 @@
 name: Auth Sync App Runner
 
 on:
+  push:
   workflow_dispatch:
 
 jobs:
