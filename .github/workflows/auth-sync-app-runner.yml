@@ -1,0 +1,49 @@
+name: Auth Sync App Runner
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
+      - name: Checkout Config
+        uses: actions/checkout@v3
+        with:
+          repository: "bcgov-nr/auth-sync-config-knox"
+          token: ${{ secrets.GH_PAT }}
+          path: config
+      - name: Checkout Config
+        uses: actions/checkout@v3
+        with:
+          repository: "bcgov-nr/auth-sync-config-opensearch"
+          token: ${{ secrets.GH_PAT }}
+          path: config
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: npm ci
+      # Runs script to obtain CSS secrets
+      - name: Role Sync
+        run: ./bin/dev role-sync
+        env:
+          CSS_TOKEN_URL: ${{ secrets.CSS_TOKEN_URL }}
+          CSS_CLIENT_ID: ${{ secrets.CSS_CLIENT_ID }}
+          CSS_CLIENT_SECRET: ${{ secrets.CSS_CLIENT_SECRET }}
+          JIRA_USERNAME: ${{ secrets.JIRA_USERNAME }}
+          JIRA_PASSWORD: ${{ secrets.JIRA_PASSWORD }}
+      - name: Member Sync
+        run: ./bin/dev member-sync
+        env:
+          CSS_TOKEN_URL: ${{ secrets.CSS_TOKEN_URL }}
+          CSS_CLIENT_ID: ${{ secrets.CSS_CLIENT_ID }}
+          CSS_CLIENT_SECRET: ${{ secrets.CSS_CLIENT_SECRET }}
+          JIRA_USERNAME: ${{ secrets.JIRA_USERNAME }}
+          JIRA_PASSWORD: ${{ secrets.JIRA_PASSWORD }}
