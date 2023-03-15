@@ -1,35 +1,38 @@
 name: Auth Sync App Runner
 
 on:
-  push:
   workflow_dispatch:
+  workflow_call:
+    inputs:
+      name:
+        description: 'Environment to run against'
+        type: string
+        required: true
 
 jobs:
 
   run:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.name }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
         with:
           ref: ${{ github.event.workflow_run.head_branch }}
+
       - name: Checkout Config
         uses: actions/checkout@v3
         with:
-          repository: "bcgov-nr/auth-sync-config-knox"
+          repository: "bcgov-nr/auth-sync-config-${{ inputs.name }}"
           token: ${{ secrets.GH_PAT }}
           path: config
-      - name: Checkout Config
-        uses: actions/checkout@v3
-        with:
-          repository: "bcgov-nr/auth-sync-config-opensearch"
-          token: ${{ secrets.GH_PAT }}
-          path: config
+
       - name: Use Node.js 16
         uses: actions/setup-node@v3
         with:
           node-version: 16
       - run: npm ci
+
       # Runs script to obtain CSS secrets
       - name: Role Sync
         run: ./bin/dev role-sync
@@ -39,6 +42,7 @@ jobs:
           CSS_CLIENT_SECRET: ${{ secrets.CSS_CLIENT_SECRET }}
           JIRA_USERNAME: ${{ secrets.JIRA_USERNAME }}
           JIRA_PASSWORD: ${{ secrets.JIRA_PASSWORD }}
+
       - name: Member Sync
         run: ./bin/dev member-sync
         env:

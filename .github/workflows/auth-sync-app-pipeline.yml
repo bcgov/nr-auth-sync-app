@@ -1,0 +1,19 @@
+name: Auth Sync App Pipeline
+# Run this workflow every time a new commit pushed to your repository
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  knox:
+    uses: bcgov-nr/auth-sync-app/.github/workflows/auth-sync-app-runner.yml@main
+    with:
+      name: knox
+    secrets: inherit
+
+  opensearch:
+    uses: bcgov-nr/auth-sync-app/.github/workflows/auth-sync-app-runner.yml@main
+    with:
+      name: opensearch
+    secrets: inherit
+    needs: knox
