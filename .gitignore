@@ -11,4 +11,4 @@ VAULT_UNSEAL_KEY
 /setenv*
 !/setenv.sh.tmp
 .DS_STORE
-/config*/service-account.json
+/config*
