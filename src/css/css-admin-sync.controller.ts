@@ -139,7 +139,6 @@ export class CssAdminSyncController {
           targetArr.add(target);
         }
       }
-      console.log(targetArr);
 
       for (const target of targetArr.values()) {
         if (!outletMap[target]) {
