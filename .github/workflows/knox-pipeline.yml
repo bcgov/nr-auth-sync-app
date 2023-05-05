@@ -1,6 +1,8 @@
 name: Knox Pipeline
 # Run this workflow every time a new commit pushed to your main repository or manually
 on:
+  schedule:
+  - cron: "0 23 * * 0"
   push:
     branches:
       -main
