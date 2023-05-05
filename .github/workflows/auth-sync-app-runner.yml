@@ -1,6 +1,8 @@
 name: Auth Sync App Runner
 
 on:
+  schedule:
+  - cron: "0 23 * * 0"
   workflow_dispatch:
   workflow_call:
     inputs:
