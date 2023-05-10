@@ -10,7 +10,7 @@ import {CssAdminSyncController} from '../css/css-admin-sync.controller';
  * Syncs roles to css command
  */
 export default class MemberSync extends Command {
-  static description = 'Syncs Developers from Jira projects to Css';
+  static description = 'Syncs user and role configuration to CSS';
 
   static examples = [
     '<%= config.bin %> <%= command.id %>',

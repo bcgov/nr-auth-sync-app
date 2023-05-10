@@ -1,9 +1,14 @@
 import axios, {AxiosRequestConfig} from 'axios';
 import {injectable} from 'inversify';
+import {IntegrationEnvironmentRoleUsersDto} from './css.types';
 
 const CSS_SSO_API_URL = 'https://api.loginproxy.gov.bc.ca/api/v1';
 const EMAIL_IGNORE = new Set(['nrids.tier2@gov.bc.ca', 'nrcda001@gov.bc.ca']);
 const ROLE_USER_MAX = 50;
+const envUserCache: {
+  [key: string]: any
+} = {};
+
 @injectable()
 /**
  *
@@ -78,41 +83,35 @@ export class CssAdminApi {
 
   /**
    *
-   * @param userMap
+   * @param integration
+   * @param userRoles
+   * @param idp
    */
-  public async syncRoleUsers(userMap: any) {
-    const integrations = await this.getIntegrations();
-
-    for (const integration of integrations) {
-      if (!userMap[integration.projectName]) {
-        console.log(`>>> ${integration.projectName} : Skip`);
-        continue;
-      }
-      console.log(`>>> ${integration.projectName} : Sync`);
-      for (const environment of integration.environments) {
-        await this.syncIntegrationRoleUsers(integration, environment, userMap[integration.projectName]);
-      }
+  public async syncRoleUsers(integrationDto: any, userRoles: any, idp: string) {
+    console.log(`>>> ${integrationDto.projectName} : Sync`);
+    for (const environment of integrationDto.environments) {
+      await this.syncIntegrationRoleUsers(integrationDto, environment, userRoles, idp);
     }
   }
 
-  private async syncIntegrationRoleUsers(integration: any, environment: any, userRoles: any) {
+  private async syncIntegrationRoleUsers(integrationDto: any, environment: string, userRoles: any, idp: string) {
     for (const roleName of Object.keys(userRoles)) {
       const roleSet: Set<string> = userRoles[roleName];
-      console.log(`${integration.id} ${environment} ${roleName}`);
-      const existingUsernames = await this.getRoleUsernameSet(integration.id, environment, roleName);
+      console.log(`${integrationDto.id} ${environment} ${roleName}`);
+      const existingUsernames = await this.getRoleUsernameSet(integrationDto.id, environment, idp, roleName);
 
       const usersToRemove = [...existingUsernames].filter((email) => !roleSet.has(email));
       const usersToAdd = [...roleSet].filter((email) =>
         !existingUsernames.has(email) && email.length > 0 && !EMAIL_IGNORE.has(email));
-      await this.postIntegrationRoleUserChanges(integration.id, environment, roleName, 'add', usersToAdd);
-      await this.postIntegrationRoleUserChanges(integration.id, environment, roleName, 'del', usersToRemove);
+      await this.postIntegrationRoleUserChanges(integrationDto.id, environment, idp, roleName, 'add', usersToAdd);
+      await this.postIntegrationRoleUserChanges(integrationDto.id, environment, idp, roleName, 'del', usersToRemove);
     }
   }
 
-  private async getRoleUsernameSet(integrationId: string, environment: string, roleName: string) {
+  private async getRoleUsernameSet(integrationId: string, environment: string, idp: string, roleName: string) {
     const usernameSet = new Set<string>();
     for (let page = 1; true; page++) {
-      const fetchedUsers = (await axios.get(
+      const fetchedUsers = (await axios.get<IntegrationEnvironmentRoleUsersDto>(
         `/integrations/${integrationId}/${environment}/roles/${roleName}/users`, {
           params: {
             page,
@@ -121,7 +120,9 @@ export class CssAdminApi {
           ...this.axiosOptions,
         })).data.data;
       for (const user of fetchedUsers) {
-        usernameSet.add(user.email);
+        if (user.username.endsWith('@' + idp) || user.username.endsWith('@' + idp.replace('-', ''))) {
+          usernameSet.add(user.email);
+        }
       }
       if (fetchedUsers.length < ROLE_USER_MAX) {
         break;
@@ -131,13 +132,18 @@ export class CssAdminApi {
   }
 
   private async postIntegrationRoleUserChanges(
-    integrationId: string, environment: string, roleName: string, operation: 'add' | 'del', users: string[],
+    integrationId: string,
+    environment: string,
+    idp: string,
+    roleName: string,
+    operation: 'add' | 'del',
+    users: string[],
   ) {
     if (users.length === 0) {
       console.log(`No users to ${operation}`);
     }
     for (const email of users) {
-      const userData = await this.getEnvUser(environment, email);
+      const userData = await this.getEnvUser(environment, idp, email);
       if (userData.data.length === 0) {
         console.log(`skip: ${email} (not found)`);
         continue;
@@ -163,16 +169,21 @@ export class CssAdminApi {
     }
   }
 
-  private async getIntegrations(): Promise<any> {
+  public async getIntegrations(): Promise<any> {
     return (await axios.get('integrations', this.axiosOptions)).data.data;
   }
 
-  private async getEnvUser(environment: string, email: string) {
-    return (await axios.get(
-      `/${environment}/idir/users`, {
-        params: {
-          email,
-        },
-        ...this.axiosOptions})).data;
+  private async getEnvUser(environment: string, idp: string, email: string) {
+    const keyStr = `${environment}/${idp}/${email}`;
+    if (!envUserCache[keyStr]) {
+      const userData = (await axios.get(
+        `/${environment}/${idp}/users`, {
+          params: {
+            email,
+          },
+          ...this.axiosOptions})).data;
+      envUserCache[keyStr] = userData;
+    }
+    return envUserCache[keyStr];
   }
 }

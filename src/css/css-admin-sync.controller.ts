@@ -4,46 +4,14 @@ import path from 'path';
 import {TYPES} from '../inversify.types';
 import {CssAdminApi} from './css-admin.api';
 import {SourceService} from '../services/source.service';
-
-interface OutletMap {
-  [key: string]: Set<string>;
-}
-
-interface IntegrationOutletMap {
-  [key: string]: OutletMap;
-}
-
-interface IntegrationRoles {
-  [key: string]: IntegrationConfig;
-}
-
-interface RoleMemberConfig {
-  copy?: string[];
-  exclude?: string[];
-  jira?: {
-    project: string;
-    groups: string[];
-  }
-  static?: string[];
-  [key: string]: unknown;
-}
-
-interface RoleConfig {
-  group: string;
-  name: string;
-  members: RoleMemberConfig;
-}
-
-interface IntegrationConfig {
-  roles: RoleConfig[]
-}
+import {IntegrationOutletMap, IntegrationRoles, OutletMap, RoleConfig} from './css.types';
 
 @injectable()
 /**
  * Css sync controller
  */
 export class CssAdminSyncController {
-  private readonly integrationRoles: IntegrationRoles;
+  private readonly integrationRoles: IntegrationRoles[];
 
   /**
    * Constructor
@@ -63,24 +31,37 @@ export class CssAdminSyncController {
    */
   public async roleSync(): Promise<void> {
     const parsedIntegrationRoles: any = {};
-    for (const integrationName of Object.keys(this.integrationRoles)) {
-      const parsedRoles: string[] = [];
-      const roleConfigs = this.integrationRoles[integrationName].roles;
+    for (const integration of this.integrationRoles) {
+      const parsedRoles: string[] = parsedIntegrationRoles[integration.name] ?? [];
+      const roleConfigs = integration.roles;
       for (const roleConfig of roleConfigs) {
         parsedRoles.push(this.roleFromConfig(roleConfig));
       }
-      parsedIntegrationRoles[integrationName] = parsedRoles;
+      parsedIntegrationRoles[integration.name] = parsedRoles;
     }
     return this.cssAdminApi.syncRoles(parsedIntegrationRoles);
   }
 
   public async memberSync() {
     const userMap: IntegrationOutletMap = {};
-    for (const integrationName of Object.keys(this.integrationRoles)) {
-      console.log(`>>> ${integrationName} : Get users`);
-      userMap[integrationName] = await this.integrationMemberSync(this.integrationRoles[integrationName].roles);
+    for (const integration of this.integrationRoles) {
+      console.log(`>>> ${integration.name} : Get users`);
+      userMap[integration.name] = await this.integrationMemberSync(integration.roles);
     }
-    return this.cssAdminApi.syncRoleUsers(userMap);
+    const integrationDtos = await this.cssAdminApi.getIntegrations();
+    for (const integrationDto of integrationDtos) {
+      if (!userMap[integrationDto.projectName]) {
+        console.log(`>>> ${integrationDto.projectName} : Skip`);
+        continue;
+      }
+      const integrations = this.integrationRoles.filter((role) => {
+        return role.name === integrationDto.projectName;
+      });
+      for (const integration of integrations) {
+        const idp = integration.idp ?? 'idir';
+        return this.cssAdminApi.syncRoleUsers(integrationDto, userMap[integrationDto.projectName], idp);
+      }
+    }
   }
 
   private async integrationMemberSync(roleConfigs: any) {
