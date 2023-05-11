@@ -9,7 +9,7 @@ import {CssAdminSyncController} from '../css/css-admin-sync.controller';
  * Syncs roles to css command
  */
 export default class RoleSync extends Command {
-  static description = 'Syncs roles to Css';
+  static description = 'Syncs roles to CSS';
 
   static examples = [
     '<%= config.bin %> <%= command.id %>',
