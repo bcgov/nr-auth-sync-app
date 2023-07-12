@@ -1,6 +1,8 @@
 // file types.ts
 
 const TYPES = {
+  BrokerApiUrl: Symbol.for('BrokerApiUrl'),
+  BrokerToken: Symbol.for('BrokerToken'),
   ConfigService: Symbol.for('ConfigService'),
   CssAdminClient: Symbol.for('CssAdminClient'),
   CssAdminApi: Symbol.for('CssAdminApi'),

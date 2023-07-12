@@ -12,6 +12,22 @@ export const configPath = {
   }),
 };
 
+export const brokerApiUrl = {
+  'broker-api-url': flags.string({
+    default: 'https://nr-broker.apps.silver.devops.gov.bc.ca/api/',
+    description: 'The broker api base url',
+    env: 'BROKER_API_URL',
+  }),
+};
+
+export const brokerToken = {
+  'broker-token': flags.string({
+    required: false,
+    description: 'The broker JWT',
+    env: 'BROKER_TOKEN',
+  }),
+};
+
 export const cssTokenUrl = {
   'css-token-url': flags.string({
     default: 'url',
