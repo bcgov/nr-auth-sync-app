@@ -42,20 +42,20 @@ $ ./bin/run (-v|--version|version)
 
 # Commands
 <!-- commands -->
-* [`authtool help [COMMAND]`](#authtool-help-command)
+* [`authtool help [COMMANDS]`](#authtool-help-commands)
 * [`authtool member-sync`](#authtool-member-sync)
 * [`authtool role-sync`](#authtool-role-sync)
 
-## `authtool help [COMMAND]`
+## `authtool help [COMMANDS]`
 
 Display help for authtool.
 
 ```
 USAGE
-  $ authtool help [COMMAND] [-n]
+  $ authtool help [COMMANDS] [-n]
 
 ARGUMENTS
-  COMMAND  Command to show help for.
+  COMMANDS  Command to show help for.
 
 FLAGS
   -n, --nested-commands  Include all nested commands in the output.
@@ -64,19 +64,23 @@ DESCRIPTION
   Display help for authtool.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.19/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.2.12/src/commands/help.ts)_
 
 ## `authtool member-sync`
 
-Syncs Developers from Jira projects to Css
+Syncs user and role configuration to CSS
 
 ```
 USAGE
-  $ authtool member-sync [-h] [--css-token-url <value>] [--css-client-id <value>] [--css-client-secret <value>]
-    [--jira-host <value>] [--jira-base-url <value>] [--jira-username <value>] [--jira-password <value>]
+  $ authtool member-sync [-h] [--broker-api-url <value>] [--broker-token <value>] [--config-path <value>]
+    [--css-token-url <value>] [--css-client-id <value>] [--css-client-secret <value>] [--jira-host <value>]
+    [--jira-base-url <value>] [--jira-username <value>] [--jira-password <value>]
 
 FLAGS
   -h, --help                   show CLI help
+  --broker-api-url=<value>     [default: https://nr-broker.apps.silver.devops.gov.bc.ca/api/] The broker api base url
+  --broker-token=<value>       The broker JWT
+  --config-path=<value>        [default: ./config] The path to the config directory
   --css-client-id=<value>      [default: id] The css keycloak client id
   --css-client-secret=<value>  [default: password] The css keycloak client secret
   --css-token-url=<value>      [default: url] The css token url
@@ -86,7 +90,7 @@ FLAGS
   --jira-username=<value>      [default: admin] The Jira user
 
 DESCRIPTION
-  Syncs Developers from Jira projects to Css
+  Syncs user and role configuration to CSS
 
 EXAMPLES
   $ authtool member-sync
@@ -94,20 +98,22 @@ EXAMPLES
 
 ## `authtool role-sync`
 
-Syncs roles to Css
+Syncs roles to CSS
 
 ```
 USAGE
-  $ authtool role-sync [-h] [--css-token-url <value>] [--css-client-id <value>] [--css-client-secret <value>]
+  $ authtool role-sync [-h] [--config-path <value>] [--css-token-url <value>] [--css-client-id <value>]
+    [--css-client-secret <value>]
 
 FLAGS
   -h, --help                   show CLI help
+  --config-path=<value>        [default: ./config] The path to the config directory
   --css-client-id=<value>      [default: id] The css keycloak client id
   --css-client-secret=<value>  [default: password] The css keycloak client secret
   --css-token-url=<value>      [default: url] The css token url
 
 DESCRIPTION
-  Syncs roles to Css
+  Syncs roles to CSS
 
 EXAMPLES
   $ authtool role-sync

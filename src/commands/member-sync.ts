@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 import {Command} from '@oclif/command';
 // eslint-disable-next-line max-len
-import {help, cssTokenUrl, cssClientId, cssClientSecret, jiraHost, jiraBaseUrl, jiraUsername, jiraPassword, configPath} from '../flags';
+import {help, cssTokenUrl, cssClientId, cssClientSecret, jiraHost, jiraBaseUrl, jiraUsername, jiraPassword, configPath, brokerToken, brokerApiUrl} from '../flags';
 import {TYPES} from '../inversify.types';
-import {bindConfigPath, bindCss, bindJira, vsContainer} from '../inversify.config';
+import {bindBroker, bindConfigPath, bindCss, bindJira, vsContainer} from '../inversify.config';
 import {CssAdminSyncController} from '../css/css-admin-sync.controller';
 
 /**
@@ -18,6 +18,8 @@ export default class MemberSync extends Command {
 
   static flags = {
     ...help,
+    ...brokerApiUrl,
+    ...brokerToken,
     ...configPath,
     ...cssTokenUrl,
     ...cssClientId,
@@ -46,6 +48,10 @@ export default class MemberSync extends Command {
       flags['jira-base-url'],
       flags['jira-username'],
       flags['jira-password']);
+
+    bindBroker(
+      flags['broker-api-url'],
+      flags['broker-token']);
 
     this.log(`Syncing project devs to CSS`);
 
