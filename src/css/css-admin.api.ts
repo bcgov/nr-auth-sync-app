@@ -103,8 +103,10 @@ export class CssAdminApi {
       const usersToRemove = [...existingUsernames].filter((email) => !roleSet.has(email));
       const usersToAdd = [...roleSet].filter((email) =>
         !existingUsernames.has(email) && email.length > 0 && !EMAIL_IGNORE.has(email));
-      await this.postIntegrationRoleUserChanges(integrationDto.id, environment, idp, roleName, 'add', usersToAdd);
-      await this.postIntegrationRoleUserChanges(integrationDto.id, environment, idp, roleName, 'del', usersToRemove);
+      await Promise.all([
+        this.postIntegrationRoleUserChanges(integrationDto.id, environment, idp, roleName, 'add', usersToAdd),
+        this.postIntegrationRoleUserChanges(integrationDto.id, environment, idp, roleName, 'del', usersToRemove),
+      ]);
     }
   }
 
