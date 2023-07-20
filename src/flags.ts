@@ -14,7 +14,7 @@ export const configPath = {
 
 export const brokerApiUrl = {
   'broker-api-url': flags.string({
-    default: 'https://nr-broker.apps.silver.devops.gov.bc.ca/api/',
+    default: 'https://nr-broker.apps.silver.devops.gov.bc.ca/',
     description: 'The broker api base url',
     env: 'BROKER_API_URL',
   }),

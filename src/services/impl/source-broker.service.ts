@@ -24,8 +24,9 @@ export class SourceBrokerService implements SourceService {
       return Promise.resolve([]);
     }
     const response: UpstreamResponseDto[] =
-      (await axios.get(
+      (await axios.post(
         `${this.brokerApiUrl}v1/graph/vertex/${roleConfig.members.broker}/upstream/4`,
+        {},
         {headers: {Authorization: `Bearer ${this.brokerToken}`}})
       ).data;
     return response.map((up) => up.collection.email);
