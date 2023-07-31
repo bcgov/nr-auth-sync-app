@@ -1,4 +1,3 @@
-
 export interface GraphDataResponseEdgeDto {
   id: string;
   is: number;
@@ -12,7 +11,6 @@ export interface GraphDataResponseEdgeDto {
 export interface VertexPointerDto {
   vertex: string;
 }
-
 
 export interface UserDto extends VertexPointerDto {
   id: string;

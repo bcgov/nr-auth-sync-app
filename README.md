@@ -42,9 +42,31 @@ $ ./bin/run (-v|--version|version)
 
 # Commands
 <!-- commands -->
+* [`authtool generate`](#authtool-generate)
 * [`authtool help [COMMANDS]`](#authtool-help-commands)
 * [`authtool member-sync`](#authtool-member-sync)
 * [`authtool role-sync`](#authtool-role-sync)
+
+## `authtool generate`
+
+Syncs roles to CSS
+
+```
+USAGE
+  $ authtool generate [-h] [--broker-api-url <value>] [--broker-token <value>] [--config-path <value>]
+
+FLAGS
+  -h, --help                show CLI help
+  --broker-api-url=<value>  [default: https://nr-broker.apps.silver.devops.gov.bc.ca/] The broker api base url
+  --broker-token=<value>    The broker JWT
+  --config-path=<value>     [default: ./config] The path to the config directory
+
+DESCRIPTION
+  Syncs roles to CSS
+
+EXAMPLES
+  $ authtool generate
+```
 
 ## `authtool help [COMMANDS]`
 
@@ -64,7 +86,7 @@ DESCRIPTION
   Display help for authtool.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.2.12/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.2.15/src/commands/help.ts)_
 
 ## `authtool member-sync`
 
@@ -78,7 +100,7 @@ USAGE
 
 FLAGS
   -h, --help                   show CLI help
-  --broker-api-url=<value>     [default: https://nr-broker.apps.silver.devops.gov.bc.ca/api/] The broker api base url
+  --broker-api-url=<value>     [default: https://nr-broker.apps.silver.devops.gov.bc.ca/] The broker api base url
   --broker-token=<value>       The broker JWT
   --config-path=<value>        [default: ./config] The path to the config directory
   --css-client-id=<value>      [default: id] The css keycloak client id

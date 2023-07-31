@@ -1,4 +1,4 @@
-import { RoleMemberConfig } from "../css/css.types";
+import { RoleMemberConfig } from '../css/css.types';
 
 /**
  * Service for getting role data based on the implementing service.

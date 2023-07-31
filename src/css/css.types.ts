@@ -1,5 +1,3 @@
-
-
 export interface OutletMap {
   [key: string]: Set<string>;
 }
@@ -8,7 +6,10 @@ export interface IntegrationOutletMap {
   [key: string]: OutletMap;
 }
 
-export type RoleMemberConfig = BrokerRoleMemberConfig | JiraRoleMemberConfig | StaticRoleMemberConfig;
+export type RoleMemberConfig =
+  | BrokerRoleMemberConfig
+  | JiraRoleMemberConfig
+  | StaticRoleMemberConfig;
 
 interface BaseRoleMemberConfig {
   copy?: string[];
@@ -23,7 +24,7 @@ export interface JiraRoleMemberConfig extends BaseRoleMemberConfig {
   jira: {
     project: string;
     groups: string[];
-  }
+  };
 }
 
 export interface StaticRoleMemberConfig extends BaseRoleMemberConfig {
@@ -56,7 +57,7 @@ export interface BrokerVertexRoleGenerator extends BaseRoleGenerator {
     name: string;
     target: string;
     property?: string;
-  }
+  };
 }
 
 export interface SomethingRoleGenerator extends BaseRoleGenerator {

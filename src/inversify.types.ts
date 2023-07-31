@@ -1,6 +1,7 @@
 // file types.ts
 
 const TYPES = {
+  BrokerApi: Symbol.for('BrokerApi'),
   BrokerApiUrl: Symbol.for('BrokerApiUrl'),
   BrokerToken: Symbol.for('BrokerToken'),
   ConfigService: Symbol.for('ConfigService'),
@@ -19,4 +20,4 @@ const TYPES = {
   SourceService: Symbol.for('SourceService'),
 };
 
-export {TYPES};
+export { TYPES };

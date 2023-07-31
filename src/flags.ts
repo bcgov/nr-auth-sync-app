@@ -1,7 +1,7 @@
-import {flags} from '@oclif/command';
+import { flags } from '@oclif/command';
 
 export const help = {
-  help: flags.help({char: 'h'}),
+  help: flags.help({ char: 'h' }),
 };
 
 export const configPath = {

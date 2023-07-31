@@ -1,8 +1,7 @@
-import {injectable} from 'inversify';
-import {SourceService} from '../source.service';
+import { injectable } from 'inversify';
+import { SourceService } from '../source.service';
 import { isStaticRoleMemberConfig } from '../../util/config.util';
 import { RoleMemberConfig } from '../../css/css.types';
-
 
 @injectable()
 /**
