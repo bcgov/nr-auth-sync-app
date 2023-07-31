@@ -3,6 +3,8 @@ import JiraApi from 'jira-client';
 import axios from 'axios';
 import {TYPES} from '../../inversify.types';
 import {SourceService} from '../source.service';
+import { RoleMemberConfig } from '../../css/css.types';
+import { isJiraRoleMemberConfig } from '../../util/config.util';
 
 interface Project {
   name: string;
@@ -25,11 +27,11 @@ export class SourceJiraService implements SourceService {
   /**
    * Returns an array of Scopes/Groups.
    */
-  public async getUsers(roleConfig: any): Promise<string[]> {
-    if (!roleConfig?.members?.jira) {
+  public async getUsers(config: RoleMemberConfig): Promise<string[]> {
+    if (!isJiraRoleMemberConfig(config)) {
       return [];
     }
-    const jiraArray = Array.isArray(roleConfig.members.jira) ? roleConfig.members.jira : [roleConfig.members.jira];
+    const jiraArray = Array.isArray(config.jira) ? config.jira : [config.jira];
     const users: string[] = [];
     for (const jira of jiraArray) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars

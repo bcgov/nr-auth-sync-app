@@ -13,7 +13,6 @@
     "axios": "^1.4.0",
     "inversify": "^6.0.1",
     "jira-client": "^8.2.2",
-    "ldapjs": "^2.3.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1"
   },
@@ -23,7 +22,6 @@
     "@types/chai": "^4.3.5",
     "@types/ejs": "^3.1.2",
     "@types/jira-client": "^7.1.6",
-    "@types/ldapjs": "^2.2.0",
     "@types/mocha": "^10.0.1",
     "@types/node": "^18.16.19",
     "@typescript-eslint/eslint-plugin": "^5.62.0",

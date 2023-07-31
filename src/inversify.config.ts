@@ -4,15 +4,13 @@ import EnvironmentUtil from './util/environment.util';
 import {SourceService} from './services/source.service';
 import JiraApi from 'jira-client';
 import {jiraFactory} from './jira/jira.factory';
-import {ldapFactory} from './ldap/ldap.factory';
-import {Client} from 'ldapjs';
-import {LdapApi} from './ldap/ldap.api';
 import {CssAdminSyncController} from './css/css-admin-sync.controller';
 import {CssAdminApi} from './css/css-admin.api';
 import {cssAdminApiFactory} from './css/css.factory';
 import {SourceJiraService} from './services/impl/source-jira.service';
 import {SourceBrokerService} from './services/impl/source-broker.service';
 import {SourceStaticService} from './services/impl/source-static.service';
+import {GenerateController} from './css/generate.contoller';
 
 const vsContainer = new Container();
 // Services
@@ -21,8 +19,8 @@ vsContainer.bind<SourceService>(TYPES.SourceService).to(SourceBrokerService);
 vsContainer.bind<SourceService>(TYPES.SourceService).to(SourceStaticService);
 
 // Controllers
-vsContainer.bind<LdapApi>(TYPES.LdapApi).to(LdapApi);
 vsContainer.bind<CssAdminSyncController>(TYPES.CssAdminSyncController).to(CssAdminSyncController);
+vsContainer.bind<GenerateController>(TYPES.GenerateController).to(GenerateController);
 
 // Util
 vsContainer.bind<EnvironmentUtil>(TYPES.EnvironmentUtil).to(EnvironmentUtil);
@@ -76,16 +74,4 @@ export function bindJira(host: string, basePath: string, username: string, passw
   vsContainer.bind<string>(TYPES.JiraBasePath).toConstantValue(basePath);
   vsContainer.bind<string>(TYPES.JiraUsername).toConstantValue(username);
   vsContainer.bind<string>(TYPES.JiraPassword).toConstantValue(password);
-}
-
-/**
- * The LDAP factory
- * @param url The LDAP address
- * @param username The LDAP username
- * @param password The LDAP password
- */
-export async function bindLdap(url: string, username: string, password: string): Promise<void> {
-  const client = await ldapFactory(url, username, password);
-
-  vsContainer.bind<Client>(TYPES.LdapClient).toConstantValue(client);
 }
