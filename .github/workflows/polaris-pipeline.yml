@@ -1,0 +1,17 @@
+name: Polaris Pipeline
+# Run this workflow every time a new commit pushed to your main repository or manually
+on:
+  schedule:
+  - cron: "0 23 * * *"
+  push:
+    branches:
+      -main
+  workflow_dispatch:
+
+jobs:
+
+  polaris:
+    uses: bcgov-nr/auth-sync-app/.github/workflows/auth-sync-app-runner.yml@main
+    with:
+      name: polaris
+    secrets: inherit
