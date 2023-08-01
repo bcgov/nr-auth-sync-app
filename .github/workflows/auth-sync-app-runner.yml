@@ -38,7 +38,12 @@ jobs:
           cache: 'npm'
       - run: npm ci
 
-      # Runs script to obtain CSS secrets
+      - name: Generate
+        run: ./bin/dev generate
+        env:
+          BROKER_API_URL: ${{ secrets.BROKER_API_URL }}
+          BROKER_TOKEN: ${{ secrets.BROKER_TOKEN }}
+
       - name: Role Sync
         run: ./bin/dev role-sync
         env:
