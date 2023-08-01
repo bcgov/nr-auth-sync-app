@@ -8,7 +8,12 @@ import JiraApi from 'jira-client';
  * @param password The Jira password
  * @returns
  */
-export function jiraFactory(host: string, basePath: string, username: string, password: string): JiraApi {
+export function jiraFactory(
+  host: string,
+  basePath: string,
+  username: string,
+  password: string,
+): JiraApi {
   return new JiraApi({
     protocol: 'https',
     host,

@@ -1,7 +1,7 @@
-import {flags} from '@oclif/command';
+import { flags } from '@oclif/command';
 
 export const help = {
-  help: flags.help({char: 'h'}),
+  help: flags.help({ char: 'h' }),
 };
 
 export const configPath = {
@@ -81,29 +81,5 @@ export const jiraPassword = {
     default: 'password',
     description: 'The Jira password',
     env: 'JIRA_PASSWORD',
-  }),
-};
-
-export const ldapUrl = {
-  'ldap-url': flags.string({
-    default: 'ldaps://idir.bcgov',
-    description: 'The LDAP URL',
-    env: 'LDAP_URL',
-  }),
-};
-
-export const ldapUsername = {
-  'ldap-username': flags.string({
-    default: 'admin',
-    description: 'The ldap user',
-    env: 'LDAP_USERNAME',
-  }),
-};
-
-export const ldapPassword = {
-  'ldap-password': flags.string({
-    default: 'password',
-    description: 'The ldap password',
-    env: 'LDAP_PASSWORD',
   }),
 };

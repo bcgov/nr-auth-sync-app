@@ -1,6 +1,7 @@
 // file types.ts
 
 const TYPES = {
+  BrokerApi: Symbol.for('BrokerApi'),
   BrokerApiUrl: Symbol.for('BrokerApiUrl'),
   BrokerToken: Symbol.for('BrokerToken'),
   ConfigService: Symbol.for('ConfigService'),
@@ -8,16 +9,15 @@ const TYPES = {
   CssAdminApi: Symbol.for('CssAdminApi'),
   CssAdminSyncController: Symbol.for('CssAdminSyncController'),
   EnvironmentUtil: Symbol.for('EnvironmentUtil'),
+  GenerateController: Symbol.for('GenerateController'),
   IntegrationRolesPath: Symbol.for('IntegrationRolesPath'),
   JiraBasePath: Symbol.for('JiraBasePath'),
   JiraClient: Symbol.for('JiraClient'),
   JiraHost: Symbol.for('JiraHost'),
   JiraUsername: Symbol.for('JiraUsername'),
   JiraPassword: Symbol.for('JiraPassword'),
-  LdapApi: Symbol.for('LdapApi'),
-  LdapClient: Symbol.for('LdapClient'),
   Logger: Symbol.for('Logger'),
   SourceService: Symbol.for('SourceService'),
 };
 
-export {TYPES};
+export { TYPES };

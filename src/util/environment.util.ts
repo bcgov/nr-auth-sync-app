@@ -1,20 +1,20 @@
-import {injectable} from 'inversify';
+import { injectable } from 'inversify';
 
 /**
  * Library of environment aliases
  */
-const envAlias: {[key: string]: string} = {
-  'PRODUCTION': 'prod',
-  'TEST': 'test',
-  'DEVELOPMENT': 'dev',
-  'INTEGRATION': 'int',
-  'WFPRD': 'prod',
-  'WFTST': 'test',
-  'WFDLV': 'dev',
-  'WFINT': 'int',
-  'SMTPRODUCTION': 'prod',
-  'SMTTEST': 'test',
-  'SMTDELIVERY': 'dev',
+const envAlias: { [key: string]: string } = {
+  PRODUCTION: 'prod',
+  TEST: 'test',
+  DEVELOPMENT: 'dev',
+  INTEGRATION: 'int',
+  WFPRD: 'prod',
+  WFTST: 'test',
+  WFDLV: 'dev',
+  WFINT: 'int',
+  SMTPRODUCTION: 'prod',
+  SMTTEST: 'test',
+  SMTDELIVERY: 'dev',
 };
 
 @injectable()

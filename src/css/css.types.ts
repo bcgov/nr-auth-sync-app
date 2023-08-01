@@ -1,5 +1,3 @@
-
-
 export interface OutletMap {
   [key: string]: Set<string>;
 }
@@ -8,19 +6,33 @@ export interface IntegrationOutletMap {
   [key: string]: OutletMap;
 }
 
-export interface RoleMemberConfig {
+export type RoleMemberConfig =
+  | BrokerRoleMemberConfig
+  | JiraRoleMemberConfig
+  | StaticRoleMemberConfig;
+
+interface BaseRoleMemberConfig {
   copy?: string[];
   exclude?: string[];
-  jira?: {
+}
+
+export interface BrokerRoleMemberConfig extends BaseRoleMemberConfig {
+  broker: string;
+}
+
+export interface JiraRoleMemberConfig extends BaseRoleMemberConfig {
+  jira: {
     project: string;
     groups: string[];
-  }
-  static?: string[];
-  [key: string]: unknown;
+  };
+}
+
+export interface StaticRoleMemberConfig extends BaseRoleMemberConfig {
+  static: string[];
 }
 
 export interface RoleConfig {
-  group: string;
+  group?: string;
   name: string;
   members: RoleMemberConfig;
 }
@@ -28,7 +40,28 @@ export interface RoleConfig {
 export interface IntegrationRoles {
   name: string;
   idp: string;
+  roleGenerators?: RoleGenerator[];
   roles: RoleConfig[];
+}
+
+export type RoleGenerator = BrokerVertexRoleGenerator | SomethingRoleGenerator;
+
+interface BaseRoleGenerator {
+  roleMap: RoleConfig;
+}
+
+export interface BrokerVertexRoleGenerator extends BaseRoleGenerator {
+  name: 'broker-vertex';
+  collection: string;
+  edge?: {
+    name: string;
+    target: string;
+    property?: string;
+  };
+}
+
+export interface SomethingRoleGenerator extends BaseRoleGenerator {
+  name: 'something';
 }
 
 export interface IntegrationEnvironmentRoleUsersDataDto {

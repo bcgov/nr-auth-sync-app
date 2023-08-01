@@ -1,18 +1,17 @@
-import {Container} from 'inversify';
-import {TYPES} from './inversify.types';
+import { Container } from 'inversify';
+import { TYPES } from './inversify.types';
 import EnvironmentUtil from './util/environment.util';
-import {SourceService} from './services/source.service';
+import { SourceService } from './services/source.service';
 import JiraApi from 'jira-client';
-import {jiraFactory} from './jira/jira.factory';
-import {ldapFactory} from './ldap/ldap.factory';
-import {Client} from 'ldapjs';
-import {LdapApi} from './ldap/ldap.api';
-import {CssAdminSyncController} from './css/css-admin-sync.controller';
-import {CssAdminApi} from './css/css-admin.api';
-import {cssAdminApiFactory} from './css/css.factory';
-import {SourceJiraService} from './services/impl/source-jira.service';
-import {SourceBrokerService} from './services/impl/source-broker.service';
-import {SourceStaticService} from './services/impl/source-static.service';
+import { jiraFactory } from './jira/jira.factory';
+import { CssAdminSyncController } from './css/css-admin-sync.controller';
+import { CssAdminApi } from './css/css-admin.api';
+import { cssAdminApiFactory } from './css/css.factory';
+import { SourceJiraService } from './services/impl/source-jira.service';
+import { SourceBrokerService } from './services/impl/source-broker.service';
+import { SourceStaticService } from './services/impl/source-static.service';
+import { GenerateController } from './broker/generate.contoller';
+import { BrokerApi } from './broker/broker.api';
 
 const vsContainer = new Container();
 // Services
@@ -20,14 +19,21 @@ vsContainer.bind<SourceService>(TYPES.SourceService).to(SourceJiraService);
 vsContainer.bind<SourceService>(TYPES.SourceService).to(SourceBrokerService);
 vsContainer.bind<SourceService>(TYPES.SourceService).to(SourceStaticService);
 
+// API
+vsContainer.bind<BrokerApi>(TYPES.BrokerApi).to(BrokerApi);
+
 // Controllers
-vsContainer.bind<LdapApi>(TYPES.LdapApi).to(LdapApi);
-vsContainer.bind<CssAdminSyncController>(TYPES.CssAdminSyncController).to(CssAdminSyncController);
+vsContainer
+  .bind<CssAdminSyncController>(TYPES.CssAdminSyncController)
+  .to(CssAdminSyncController);
+vsContainer
+  .bind<GenerateController>(TYPES.GenerateController)
+  .to(GenerateController);
 
 // Util
 vsContainer.bind<EnvironmentUtil>(TYPES.EnvironmentUtil).to(EnvironmentUtil);
 
-export {vsContainer};
+export { vsContainer };
 
 /**
  * Bind Broker api to the vs container
@@ -54,8 +60,13 @@ export function bindConfigPath(path: string) {
 export async function bindCss(
   cssTokenUrl: string,
   cssClientId: string,
-  cssClientSecret: string): Promise<void> {
-  const client = await cssAdminApiFactory(cssTokenUrl, cssClientId, cssClientSecret);
+  cssClientSecret: string,
+): Promise<void> {
+  const client = await cssAdminApiFactory(
+    cssTokenUrl,
+    cssClientId,
+    cssClientSecret,
+  );
 
   vsContainer.bind<CssAdminApi>(TYPES.CssAdminApi).toConstantValue(client);
 }
@@ -67,7 +78,12 @@ export async function bindCss(
  * @param username The Jira username
  * @param password The Jira password
  */
-export function bindJira(host: string, basePath: string, username: string, password: string): void {
+export function bindJira(
+  host: string,
+  basePath: string,
+  username: string,
+  password: string,
+): void {
   const client = jiraFactory(host, basePath, username, password);
 
   vsContainer.bind<JiraApi>(TYPES.JiraClient).toConstantValue(client);
@@ -76,16 +92,4 @@ export function bindJira(host: string, basePath: string, username: string, passw
   vsContainer.bind<string>(TYPES.JiraBasePath).toConstantValue(basePath);
   vsContainer.bind<string>(TYPES.JiraUsername).toConstantValue(username);
   vsContainer.bind<string>(TYPES.JiraPassword).toConstantValue(password);
-}
-
-/**
- * The LDAP factory
- * @param url The LDAP address
- * @param username The LDAP username
- * @param password The LDAP password
- */
-export async function bindLdap(url: string, username: string, password: string): Promise<void> {
-  const client = await ldapFactory(url, username, password);
-
-  vsContainer.bind<Client>(TYPES.LdapClient).toConstantValue(client);
 }
