@@ -1,6 +1,7 @@
 import { inject, injectable } from 'inversify';
 import fs from 'fs';
 import path from 'path';
+import ejs from 'ejs';
 import { TYPES } from '../inversify.types';
 import {
   BrokerVertexRoleGenerator,
@@ -9,7 +10,6 @@ import {
 } from '../css/css.types';
 import { BrokerApi } from './broker.api';
 import { VertexSearchDto } from './dto/vertex-rest.dto';
-import ejs from 'ejs';
 import { isBrokerRoleMemberConfig } from '../util/config.util';
 
 @injectable()
@@ -17,7 +17,7 @@ import { isBrokerRoleMemberConfig } from '../util/config.util';
  * Generate controller
  */
 export class GenerateController {
-  private readonly integrationRolesTpl: IntegrationRoles[];
+  private readonly integrationRolesTpl: IntegrationRoles[] | null;
 
   /**
    * Constructor
@@ -27,12 +27,21 @@ export class GenerateController {
     private readonly integrationRolesPath: string,
     @inject(TYPES.BrokerApi) private brokerApi: BrokerApi,
   ) {
-    this.integrationRolesTpl = JSON.parse(
-      fs.readFileSync(
-        path.join(integrationRolesPath, 'integration-roles.tpl.json'),
-        'utf8',
-      ),
+    const configPath = path.join(
+      integrationRolesPath,
+      'integration-roles.tpl.json',
     );
+
+    if (fs.existsSync(configPath)) {
+      this.integrationRolesTpl = JSON.parse(
+        fs.readFileSync(
+          configPath,
+          'utf8',
+        ),
+      );
+    } else {
+      this.integrationRolesTpl = null;
+    }
   }
 
   /**
@@ -40,6 +49,10 @@ export class GenerateController {
    * @returns
    */
   public async generate(): Promise<void> {
+    if (!this.integrationRolesTpl) {
+      console.log('Skipping: No template')
+      return;
+    }
     for (const tmpl of this.integrationRolesTpl) {
       if (!tmpl.roleGenerators) {
         continue;
