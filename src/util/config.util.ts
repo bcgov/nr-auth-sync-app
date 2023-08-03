@@ -6,19 +6,19 @@ import {
 } from '../css/css.types';
 
 export function isBrokerRoleMemberConfig(
-  config: RoleMemberConfig,
+  config: RoleMemberConfig | undefined,
 ): config is BrokerRoleMemberConfig {
-  return (config as BrokerRoleMemberConfig).broker !== undefined;
+  return !!config && (config as BrokerRoleMemberConfig).broker !== undefined;
 }
 
 export function isJiraRoleMemberConfig(
-  config: RoleMemberConfig,
+  config: RoleMemberConfig | undefined,
 ): config is JiraRoleMemberConfig {
-  return (config as JiraRoleMemberConfig).jira !== undefined;
+  return !!config && (config as JiraRoleMemberConfig).jira !== undefined;
 }
 
 export function isStaticRoleMemberConfig(
-  config: RoleMemberConfig,
+  config: RoleMemberConfig | undefined,
 ): config is StaticRoleMemberConfig {
-  return (config as StaticRoleMemberConfig).static !== undefined;
+  return !!config && (config as StaticRoleMemberConfig).static !== undefined;
 }
