@@ -35,7 +35,7 @@ export class BrokerApi {
     edgeTarget?: string,
   ): Promise<VertexSearchDto[]> {
     const response = await axios.post(
-      `graph/vertex/search?collection=${collection}` +
+      `v1/graph/vertex/search?collection=${collection}` +
         (edgeName !== undefined && edgeTarget !== undefined
           ? `&edgeName=${edgeName}&edgeTarget=${edgeTarget}`
           : ''),
