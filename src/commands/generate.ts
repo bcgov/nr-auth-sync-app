@@ -9,7 +9,7 @@ import { GenerateController } from '../broker/generate.contoller';
  * Generate role file command
  */
 export default class Generate extends Command {
-  static description = 'Syncs roles to CSS';
+  static description = 'Generates configuration file from template.';
 
   static examples = ['<%= config.bin %> <%= command.id %>'];
 
