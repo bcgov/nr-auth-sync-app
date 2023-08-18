@@ -10,7 +10,11 @@ import {
 } from '../css/css.types';
 import { BrokerApi } from './broker.api';
 import { VertexSearchDto } from './dto/vertex-rest.dto';
-import { isBrokerRoleMemberConfig } from '../util/config.util';
+import {
+  isBrokerRoleMemberConfig,
+  isJiraRoleMemberConfig,
+  isStaticRoleMemberConfig,
+} from '../util/config.util';
 
 @injectable()
 /**
@@ -34,10 +38,7 @@ export class GenerateController {
 
     if (fs.existsSync(configPath)) {
       this.integrationRolesTpl = JSON.parse(
-        fs.readFileSync(
-          configPath,
-          'utf8',
-        ),
+        fs.readFileSync(configPath, 'utf8'),
       );
     } else {
       this.integrationRolesTpl = null;
@@ -50,7 +51,7 @@ export class GenerateController {
    */
   public async generate(): Promise<void> {
     if (!this.integrationRolesTpl) {
-      console.log('Skipping: No template')
+      console.log('Skipping: No template');
       return;
     }
     for (const tmpl of this.integrationRolesTpl) {
@@ -95,12 +96,32 @@ export class GenerateController {
     });
     vertices;
     return vertices.map((vertex) => {
+      let jiraMembers = {};
+      let staticMembers = {};
+      if (isJiraRoleMemberConfig(roleConfig)) {
+        jiraMembers = {
+          jira: {
+            project: ejs.render(roleConfig.jira.project, { vertex }),
+            groups: roleConfig.jira.groups.map((group) =>
+              ejs.render(group, { vertex }),
+            ),
+          },
+        };
+      }
+      if (isStaticRoleMemberConfig(roleConfig)) {
+        staticMembers = {
+          static: roleConfig.static,
+        };
+      }
+
       return {
         name: ejs.render(gen.roleMap.name, { vertex }),
         members: {
           broker: ejs.render(roleConfig.broker, { vertex }),
           copy: roleConfig.copy ? roleConfig.copy : [],
           exclude: roleConfig.exclude ? roleConfig.exclude : [],
+          ...jiraMembers,
+          ...staticMembers,
         },
       };
     });
