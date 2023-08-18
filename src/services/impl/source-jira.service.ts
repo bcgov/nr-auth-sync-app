@@ -36,6 +36,10 @@ export class SourceJiraService implements SourceService {
     for (const jira of jiraArray) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const project = await this.getProject(jira.project);
+      if (!project) {
+        // Could not find jira project: Skip
+        continue;
+      }
       for (const group of jira.groups) {
         users.push(...(await this.getUsersInGroup(group)));
       }
@@ -47,11 +51,16 @@ export class SourceJiraService implements SourceService {
    * Returns the Jira project
    * @param projectName The key of the project to fetch
    */
-  private async getProject(projectName: string): Promise<Project> {
-    const project = await this.jira.getProject(projectName);
-    return {
-      name: (project.key as string).toLowerCase(),
-    };
+  private async getProject(projectName: string): Promise<Project | null> {
+    try {
+      const project = await this.jira.getProject(projectName);
+      return {
+        name: (project.key as string).toLowerCase(),
+      };
+    } catch (err) {
+      // Skip missing
+    }
+    return null;
   }
 
   /**
