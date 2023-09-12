@@ -118,8 +118,10 @@ export class GenerateController {
         name: ejs.render(gen.roleMap.name, { vertex }),
         members: {
           broker: ejs.render(roleConfig.broker, { vertex }),
-          copy: roleConfig.copy ? roleConfig.copy : [],
-          exclude: roleConfig.exclude ? roleConfig.exclude : [],
+          copy: gen.roleMap.members.copy ? gen.roleMap.members.copy : [],
+          exclude: gen.roleMap.members.exclude
+            ? gen.roleMap.members.exclude
+            : [],
           ...jiraMembers,
           ...staticMembers,
         },
