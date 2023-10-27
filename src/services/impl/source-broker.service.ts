@@ -32,6 +32,8 @@ export class SourceBrokerService implements SourceService {
         { headers: { Authorization: `Bearer ${this.brokerToken}` } },
       )
     ).data;
-    return response.map((up) => up.collection.email);
+    return response
+      .filter((up) => up.collection.domain === 'azureidir')
+      .map((up) => up.collection.email);
   }
 }
