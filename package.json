@@ -9,7 +9,7 @@
   "dependencies": {
     "@oclif/core": "^3.9.1",
     "@oclif/plugin-help": "^6.0.4",
-    "@oclif/plugin-plugins": "^4.0.1",
+    "@oclif/plugin-plugins": "^4.1.9",
     "axios": "^1.6.0",
     "inversify": "^6.0.2",
     "jira-client": "^8.2.2",
