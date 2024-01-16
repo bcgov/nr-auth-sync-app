@@ -1,6 +1,7 @@
 # Auth Sync Tool
 
 The auth sync tool takes user group and "privilege information" from federated systems to generate client roles and group membership (and what roles those groups have) in CSS (KeyCloak).
+The auth sync runs everyday at 3PM.
 
 See: [Confluence Documentation](https://apps.nrs.gov.bc.ca/int/confluence/x/LpZvBQ)
 
