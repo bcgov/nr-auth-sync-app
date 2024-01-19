@@ -25,15 +25,29 @@ export class SourceBrokerService implements SourceService {
     if (!isBrokerRoleMemberConfig(config) || !this.brokerToken) {
       return Promise.resolve([]);
     }
-    const response: UpstreamResponseDto[] = (
-      await axios.post(
-        `${this.brokerApiUrl}v1/graph/vertex/${config.broker}/upstream/4`,
-        {},
-        { headers: { Authorization: `Bearer ${this.brokerToken}` } },
-      )
-    ).data;
-    return response
-      .filter((up) => up.collection.domain === 'azureidir')
-      .map((up) => up.collection.email);
+    if (config.broker === 'all') {
+      const response: { email: string; domain: string }[] = (
+        await axios.post(
+          `${this.brokerApiUrl}v1/collection/user/export?fields=email&fields=domain`,
+          {},
+          { headers: { Authorization: `Bearer ${this.brokerToken}` } },
+        )
+      ).data;
+
+      return response
+        .filter((collection) => collection.domain === 'azureidir')
+        .map((collection) => collection.email);
+    } else {
+      const response: UpstreamResponseDto[] = (
+        await axios.post(
+          `${this.brokerApiUrl}v1/graph/vertex/${config.broker}/upstream/4`,
+          {},
+          { headers: { Authorization: `Bearer ${this.brokerToken}` } },
+        )
+      ).data;
+      return response
+        .filter((up) => up.collection.domain === 'azureidir')
+        .map((up) => up.collection.email);
+    }
   }
 }

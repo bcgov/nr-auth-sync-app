@@ -94,7 +94,6 @@ export class GenerateController {
         vertex.edge.prop[gen.edge.property] !== undefined
       );
     });
-    vertices;
     return vertices.map((vertex) => {
       let jiraMembers = {};
       let staticMembers = {};
