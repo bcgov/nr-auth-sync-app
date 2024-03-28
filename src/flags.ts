@@ -1,11 +1,11 @@
-import { flags } from '@oclif/command';
+import { Flags } from '@oclif/core';
 
 export const help = {
-  help: flags.help({ char: 'h' }),
+  help: Flags.help({ char: 'h' }),
 };
 
 export const configPath = {
-  'config-path': flags.string({
+  'config-path': Flags.string({
     default: './config',
     description: 'The path to the config directory',
     env: 'AUTH_SYNC_CONFIG_PATH',
@@ -13,7 +13,7 @@ export const configPath = {
 };
 
 export const brokerApiUrl = {
-  'broker-api-url': flags.string({
+  'broker-api-url': Flags.string({
     default: 'https://nr-broker.apps.silver.devops.gov.bc.ca/',
     description: 'The broker api base url',
     env: 'BROKER_API_URL',
@@ -21,7 +21,7 @@ export const brokerApiUrl = {
 };
 
 export const brokerToken = {
-  'broker-token': flags.string({
+  'broker-token': Flags.string({
     required: false,
     description: 'The broker JWT',
     env: 'BROKER_TOKEN',
@@ -29,7 +29,7 @@ export const brokerToken = {
 };
 
 export const cssTokenUrl = {
-  'css-token-url': flags.string({
+  'css-token-url': Flags.string({
     default: 'url',
     description: 'The css token url',
     env: 'CSS_TOKEN_URL',
@@ -37,7 +37,7 @@ export const cssTokenUrl = {
 };
 
 export const cssClientId = {
-  'css-client-id': flags.string({
+  'css-client-id': Flags.string({
     default: 'id',
     description: 'The css keycloak client id',
     env: 'CSS_CLIENT_ID',
@@ -45,7 +45,7 @@ export const cssClientId = {
 };
 
 export const cssClientSecret = {
-  'css-client-secret': flags.string({
+  'css-client-secret': Flags.string({
     default: 'password',
     description: 'The css keycloak client secret',
     env: 'CSS_CLIENT_SECRET',
@@ -53,7 +53,7 @@ export const cssClientSecret = {
 };
 
 export const jiraHost = {
-  'jira-host': flags.string({
+  'jira-host': Flags.string({
     default: 'bwa.nrs.gov.bc.ca',
     description: 'The Jira host',
     env: 'JIRA_HOST',
@@ -61,7 +61,7 @@ export const jiraHost = {
 };
 
 export const jiraBaseUrl = {
-  'jira-base-url': flags.string({
+  'jira-base-url': Flags.string({
     default: '/int/jira',
     description: 'The Jira Base URL',
     env: 'JIRA_BASE_URL',
@@ -69,7 +69,7 @@ export const jiraBaseUrl = {
 };
 
 export const jiraUsername = {
-  'jira-username': flags.string({
+  'jira-username': Flags.string({
     default: 'admin',
     description: 'The Jira user',
     env: 'JIRA_USERNAME',
@@ -77,7 +77,7 @@ export const jiraUsername = {
 };
 
 export const jiraPassword = {
-  'jira-password': flags.string({
+  'jira-password': Flags.string({
     default: 'password',
     description: 'The Jira password',
     env: 'JIRA_PASSWORD',

@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Command } from '@oclif/command';
+import { Command } from '@oclif/core';
 // eslint-disable-next-line max-len
 import {
   help,
@@ -50,7 +50,7 @@ export default class MemberSync extends Command {
    * Run the command
    */
   async run(): Promise<void> {
-    const { flags } = this.parse(MemberSync);
+    const { flags } = await this.parse(MemberSync);
 
     bindConfigPath(flags['config-path']);
 
