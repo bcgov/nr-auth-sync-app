@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Command } from '@oclif/command';
+import { Command } from '@oclif/core';
 import { help, configPath, brokerApiUrl, brokerToken } from '../flags';
 import { TYPES } from '../inversify.types';
 import { bindBroker, bindConfigPath, vsContainer } from '../inversify.config';
@@ -24,7 +24,7 @@ export default class Generate extends Command {
    * Run the command
    */
   async run(): Promise<void> {
-    const { flags } = this.parse(Generate);
+    const { flags } = await this.parse(Generate);
 
     bindConfigPath(flags['config-path']);
 

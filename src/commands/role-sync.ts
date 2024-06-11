@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Command } from '@oclif/command';
+import { Command } from '@oclif/core';
 import {
   help,
   cssTokenUrl,
@@ -31,7 +31,7 @@ export default class RoleSync extends Command {
    * Run the command
    */
   async run(): Promise<void> {
-    const { flags } = this.parse(RoleSync);
+    const { flags } = await this.parse(RoleSync);
 
     bindConfigPath(flags['config-path']);
 

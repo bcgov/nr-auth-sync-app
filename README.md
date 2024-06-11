@@ -24,7 +24,7 @@ $ npm install -g authtool
 $ authtool COMMAND
 running command...
 $ authtool (--version)
-authtool/1.0.0 darwin-x64 node-v16.17.1
+authtool/1.0.0 darwin-arm64 node-v22.1.0
 $ authtool --help [COMMAND]
 USAGE
   $ authtool COMMAND
@@ -44,41 +44,41 @@ $ ./bin/run (-v|--version|version)
 # Commands
 <!-- commands -->
 * [`authtool generate`](#authtool-generate)
-* [`authtool help [COMMANDS]`](#authtool-help-commands)
+* [`authtool help [COMMAND]`](#authtool-help-command)
 * [`authtool member-sync`](#authtool-member-sync)
 * [`authtool role-sync`](#authtool-role-sync)
 
 ## `authtool generate`
 
-Syncs roles to CSS
+Generates configuration file from template.
 
 ```
 USAGE
   $ authtool generate [-h] [--broker-api-url <value>] [--broker-token <value>] [--config-path <value>]
 
 FLAGS
-  -h, --help                show CLI help
-  --broker-api-url=<value>  [default: https://nr-broker.apps.silver.devops.gov.bc.ca/] The broker api base url
-  --broker-token=<value>    The broker JWT
-  --config-path=<value>     [default: ./config] The path to the config directory
+  -h, --help                    Show CLI help.
+      --broker-api-url=<value>  [default: https://nr-broker.apps.silver.devops.gov.bc.ca/] The broker api base url
+      --broker-token=<value>    The broker JWT
+      --config-path=<value>     [default: ./config] The path to the config directory
 
 DESCRIPTION
-  Syncs roles to CSS
+  Generates configuration file from template.
 
 EXAMPLES
   $ authtool generate
 ```
 
-## `authtool help [COMMANDS]`
+## `authtool help [COMMAND]`
 
 Display help for authtool.
 
 ```
 USAGE
-  $ authtool help [COMMANDS] [-n]
+  $ authtool help [COMMAND...] [-n]
 
 ARGUMENTS
-  COMMANDS  Command to show help for.
+  COMMAND...  Command to show help for.
 
 FLAGS
   -n, --nested-commands  Include all nested commands in the output.
@@ -87,7 +87,7 @@ DESCRIPTION
   Display help for authtool.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.2.15/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v6.2.1/src/commands/help.ts)_
 
 ## `authtool member-sync`
 
@@ -96,21 +96,16 @@ Syncs user and role configuration to CSS
 ```
 USAGE
   $ authtool member-sync [-h] [--broker-api-url <value>] [--broker-token <value>] [--config-path <value>]
-    [--css-token-url <value>] [--css-client-id <value>] [--css-client-secret <value>] [--jira-host <value>]
-    [--jira-base-url <value>] [--jira-username <value>] [--jira-password <value>]
+    [--css-token-url <value>] [--css-client-id <value>] [--css-client-secret <value>]
 
 FLAGS
-  -h, --help                   show CLI help
-  --broker-api-url=<value>     [default: https://nr-broker.apps.silver.devops.gov.bc.ca/] The broker api base url
-  --broker-token=<value>       The broker JWT
-  --config-path=<value>        [default: ./config] The path to the config directory
-  --css-client-id=<value>      [default: id] The css keycloak client id
-  --css-client-secret=<value>  [default: password] The css keycloak client secret
-  --css-token-url=<value>      [default: url] The css token url
-  --jira-base-url=<value>      [default: /int/jira] The Jira Base URL
-  --jira-host=<value>          [default: bwa.nrs.gov.bc.ca] The Jira host
-  --jira-password=<value>      [default: password] The Jira password
-  --jira-username=<value>      [default: admin] The Jira user
+  -h, --help                       Show CLI help.
+      --broker-api-url=<value>     [default: https://nr-broker.apps.silver.devops.gov.bc.ca/] The broker api base url
+      --broker-token=<value>       The broker JWT
+      --config-path=<value>        [default: ./config] The path to the config directory
+      --css-client-id=<value>      [default: id] The css keycloak client id
+      --css-client-secret=<value>  [default: password] The css keycloak client secret
+      --css-token-url=<value>      [default: url] The css token url
 
 DESCRIPTION
   Syncs user and role configuration to CSS
@@ -129,11 +124,11 @@ USAGE
     [--css-client-secret <value>]
 
 FLAGS
-  -h, --help                   show CLI help
-  --config-path=<value>        [default: ./config] The path to the config directory
-  --css-client-id=<value>      [default: id] The css keycloak client id
-  --css-client-secret=<value>  [default: password] The css keycloak client secret
-  --css-token-url=<value>      [default: url] The css token url
+  -h, --help                       Show CLI help.
+      --config-path=<value>        [default: ./config] The path to the config directory
+      --css-client-id=<value>      [default: id] The css keycloak client id
+      --css-client-secret=<value>  [default: password] The css keycloak client secret
+      --css-token-url=<value>      [default: url] The css token url
 
 DESCRIPTION
   Syncs roles to CSS
