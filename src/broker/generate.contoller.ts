@@ -12,7 +12,6 @@ import { BrokerApi } from './broker.api';
 import { VertexSearchDto } from './dto/vertex-rest.dto';
 import {
   isBrokerRoleMemberConfig,
-  isJiraRoleMemberConfig,
   isStaticRoleMemberConfig,
 } from '../util/config.util';
 
@@ -95,18 +94,7 @@ export class GenerateController {
       );
     });
     return vertices.map((vertex) => {
-      let jiraMembers = {};
       let staticMembers = {};
-      if (isJiraRoleMemberConfig(roleConfig)) {
-        jiraMembers = {
-          jira: {
-            project: ejs.render(roleConfig.jira.project, { vertex }),
-            groups: roleConfig.jira.groups.map((group) =>
-              ejs.render(group, { vertex }),
-            ),
-          },
-        };
-      }
       if (isStaticRoleMemberConfig(roleConfig)) {
         staticMembers = {
           static: roleConfig.static,
@@ -121,7 +109,6 @@ export class GenerateController {
           exclude: gen.roleMap.members.exclude
             ? gen.roleMap.members.exclude
             : [],
-          ...jiraMembers,
           ...staticMembers,
         },
       };

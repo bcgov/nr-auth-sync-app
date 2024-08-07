@@ -50,8 +50,6 @@ jobs:
           CSS_TOKEN_URL: ${{ secrets.CSS_TOKEN_URL }}
           CSS_CLIENT_ID: ${{ secrets.CSS_CLIENT_ID }}
           CSS_CLIENT_SECRET: ${{ secrets.CSS_CLIENT_SECRET }}
-          JIRA_USERNAME: ${{ secrets.JIRA_USERNAME }}
-          JIRA_PASSWORD: ${{ secrets.JIRA_PASSWORD }}
 
       - name: Member Sync
         run: ./bin/dev member-sync
@@ -61,5 +59,3 @@ jobs:
           CSS_TOKEN_URL: ${{ secrets.CSS_TOKEN_URL }}
           CSS_CLIENT_ID: ${{ secrets.CSS_CLIENT_ID }}
           CSS_CLIENT_SECRET: ${{ secrets.CSS_CLIENT_SECRET }}
-          JIRA_USERNAME: ${{ secrets.JIRA_USERNAME }}
-          JIRA_PASSWORD: ${{ secrets.JIRA_PASSWORD }}

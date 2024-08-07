@@ -1,15 +1,11 @@
 import 'reflect-metadata';
-import { Command } from '@oclif/command';
+import { Command } from '@oclif/core';
 // eslint-disable-next-line max-len
 import {
   help,
   cssTokenUrl,
   cssClientId,
   cssClientSecret,
-  jiraHost,
-  jiraBaseUrl,
-  jiraUsername,
-  jiraPassword,
   configPath,
   brokerToken,
   brokerApiUrl,
@@ -19,7 +15,6 @@ import {
   bindBroker,
   bindConfigPath,
   bindCss,
-  bindJira,
   vsContainer,
 } from '../inversify.config';
 import { CssAdminSyncController } from '../css/css-admin-sync.controller';
@@ -40,17 +35,13 @@ export default class MemberSync extends Command {
     ...cssTokenUrl,
     ...cssClientId,
     ...cssClientSecret,
-    ...jiraHost,
-    ...jiraBaseUrl,
-    ...jiraUsername,
-    ...jiraPassword,
   };
 
   /**
    * Run the command
    */
   async run(): Promise<void> {
-    const { flags } = this.parse(MemberSync);
+    const { flags } = await this.parse(MemberSync);
 
     bindConfigPath(flags['config-path']);
 
@@ -58,13 +49,6 @@ export default class MemberSync extends Command {
       flags['css-token-url'],
       flags['css-client-id'],
       flags['css-client-secret'],
-    );
-
-    bindJira(
-      flags['jira-host'],
-      flags['jira-base-url'],
-      flags['jira-username'],
-      flags['jira-password'],
     );
 
     bindBroker(flags['broker-api-url'], flags['broker-token']);

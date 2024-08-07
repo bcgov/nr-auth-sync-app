@@ -6,10 +6,7 @@ export interface IntegrationOutletMap {
   [key: string]: OutletMap;
 }
 
-export type RoleMemberConfig =
-  | BrokerRoleMemberConfig
-  | JiraRoleMemberConfig
-  | StaticRoleMemberConfig;
+export type RoleMemberConfig = BrokerRoleMemberConfig | StaticRoleMemberConfig;
 
 interface BaseRoleMemberConfig {
   copy?: string[];
@@ -18,13 +15,6 @@ interface BaseRoleMemberConfig {
 
 export interface BrokerRoleMemberConfig extends BaseRoleMemberConfig {
   broker: string;
-}
-
-export interface JiraRoleMemberConfig extends BaseRoleMemberConfig {
-  jira: {
-    project: string;
-    groups: string[];
-  };
 }
 
 export interface StaticRoleMemberConfig extends BaseRoleMemberConfig {
