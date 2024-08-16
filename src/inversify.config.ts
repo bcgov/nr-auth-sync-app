@@ -2,13 +2,18 @@ import { Container } from 'inversify';
 import { TYPES } from './inversify.types';
 import EnvironmentUtil from './util/environment.util';
 import { SourceService } from './services/source.service';
-import { CssAdminSyncController } from './css/css-admin-sync.controller';
-import { CssAdminApi } from './css/css-admin.api';
-import { cssAdminApiFactory } from './css/css.factory';
+
+import { GenerateController } from './controller/generate.contoller';
+import { AuthMemberSyncController } from './controller/auth-member-sync.controller';
+import { AuthMonitorController } from './controller/auth-monitor.controller';
+import { AuthRoleSyncController } from './controller/auth-role-sync.controller';
+
+// import { CssAdminApi } from './css/css-admin.api';
+import { cssAdminApiFactory } from './services/target.factory';
 import { SourceBrokerService } from './services/impl/source-broker.service';
 import { SourceStaticService } from './services/impl/source-static.service';
-import { GenerateController } from './broker/generate.contoller';
 import { BrokerApi } from './broker/broker.api';
+import { TargetService } from './services/target.service';
 
 const vsContainer = new Container();
 // Services
@@ -20,8 +25,14 @@ vsContainer.bind<BrokerApi>(TYPES.BrokerApi).to(BrokerApi);
 
 // Controllers
 vsContainer
-  .bind<CssAdminSyncController>(TYPES.CssAdminSyncController)
-  .to(CssAdminSyncController);
+  .bind<AuthMemberSyncController>(TYPES.AuthMemberSyncController)
+  .to(AuthMemberSyncController);
+vsContainer
+  .bind<AuthMonitorController>(TYPES.AuthMonitorController)
+  .to(AuthMonitorController);
+vsContainer
+  .bind<AuthRoleSyncController>(TYPES.AuthRoleSyncController)
+  .to(AuthRoleSyncController);
 vsContainer
   .bind<GenerateController>(TYPES.GenerateController)
   .to(GenerateController);
@@ -53,7 +64,7 @@ export function bindConfigPath(path: string) {
  * @param cssClientId
  * @param cssClientSecret
  */
-export async function bindCss(
+export async function bindTarget(
   cssTokenUrl: string,
   cssClientId: string,
   cssClientSecret: string,
@@ -64,5 +75,8 @@ export async function bindCss(
     cssClientSecret,
   );
 
-  vsContainer.bind<CssAdminApi>(TYPES.CssAdminApi).toConstantValue(client);
+  // TODO: Bind based on inputs
+  vsContainer.bind<TargetService>(TYPES.TargetService).toConstantValue(client);
+
+  // vsContainer.bind<CssAdminApi>(TYPES.CssAdminApi).toConstantValue(client);
 }

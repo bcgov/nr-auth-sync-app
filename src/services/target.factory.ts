@@ -1,16 +1,16 @@
 import axios from 'axios';
 import qs from 'querystring';
-import { CssAdminApi } from './css-admin.api';
+import { TargetCssService } from './impl/target-css.service';
 
 const CSS_API_TOKEN_RENEWAL_MS = 250000;
 
 let cssApiPromiseResolve: (
-  value: CssAdminApi | PromiseLike<CssAdminApi>,
+  value: TargetCssService | PromiseLike<TargetCssService>,
 ) => void;
-const CSS_API_PROMISE = new Promise<CssAdminApi>((resolve) => {
+const CSS_API_PROMISE = new Promise<TargetCssService>((resolve) => {
   cssApiPromiseResolve = resolve;
 });
-let CSS_API_INSTANCE: CssAdminApi | null = null;
+let CSS_API_INSTANCE: TargetCssService | null = null;
 
 /**
  * CSS Api factory
@@ -23,11 +23,11 @@ export async function cssAdminApiFactory(
   cssTokenUrl: string,
   cssClientId: string,
   cssClientSecret: string,
-): Promise<CssAdminApi> {
+): Promise<TargetCssService> {
   if (CSS_API_INSTANCE) {
     return CSS_API_PROMISE;
   }
-  CSS_API_INSTANCE = new CssAdminApi();
+  CSS_API_INSTANCE = new TargetCssService();
   const accessToken = await requestToken(
     cssTokenUrl,
     cssClientId,

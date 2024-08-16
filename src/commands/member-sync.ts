@@ -1,6 +1,7 @@
 import 'reflect-metadata';
+import fs from 'fs';
+import path from 'path';
 import { Command } from '@oclif/core';
-// eslint-disable-next-line max-len
 import {
   help,
   cssTokenUrl,
@@ -14,10 +15,10 @@ import { TYPES } from '../inversify.types';
 import {
   bindBroker,
   bindConfigPath,
-  bindCss,
+  bindTarget,
   vsContainer,
 } from '../inversify.config';
-import { CssAdminSyncController } from '../css/css-admin-sync.controller';
+import { AuthMemberSyncController } from '../controller/auth-member-sync.controller';
 
 /**
  * Syncs roles to css command
@@ -42,10 +43,14 @@ export default class MemberSync extends Command {
    */
   async run(): Promise<void> {
     const { flags } = await this.parse(MemberSync);
+    const configPath = path.join(
+      flags['config-path'],
+      'integration-roles.json',
+    );
 
     bindConfigPath(flags['config-path']);
 
-    await bindCss(
+    await bindTarget(
       flags['css-token-url'],
       flags['css-client-id'],
       flags['css-client-secret'],
@@ -53,10 +58,18 @@ export default class MemberSync extends Command {
 
     bindBroker(flags['broker-api-url'], flags['broker-token']);
 
-    this.log(`Syncing project devs to CSS`);
+    this.log(`Syncing member roles`);
 
-    await vsContainer
-      .get<CssAdminSyncController>(TYPES.CssAdminSyncController)
-      .memberSync();
+    if (fs.existsSync(configPath)) {
+      const integrationConfigs = JSON.parse(
+        fs.readFileSync(configPath, 'utf8'),
+      );
+
+      await vsContainer
+        .get<AuthMemberSyncController>(TYPES.AuthMemberSyncController)
+        .sync(integrationConfigs);
+    } else {
+      console.log(`Could not find config: ${configPath}`);
+    }
   }
 }

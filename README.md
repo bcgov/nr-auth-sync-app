@@ -24,7 +24,7 @@ $ npm install -g authtool
 $ authtool COMMAND
 running command...
 $ authtool (--version)
-authtool/1.0.0 darwin-arm64 node-v22.1.0
+authtool/1.0.0 darwin-x64 node-v20.11.1
 $ authtool --help [COMMAND]
 USAGE
   $ authtool COMMAND
@@ -87,7 +87,7 @@ DESCRIPTION
   Display help for authtool.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v6.2.1/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v6.2.8/src/commands/help.ts)_
 
 ## `authtool member-sync`
 

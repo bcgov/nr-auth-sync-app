@@ -1,30 +1,28 @@
 import 'reflect-metadata';
 import { Command } from '@oclif/core';
 import {
-  help,
-  configPath,
   brokerApiUrl,
   brokerToken,
+  configPath,
   cssClientId,
   cssClientSecret,
   cssTokenUrl,
+  help,
 } from '../flags';
-import { TYPES } from '../inversify.types';
 import {
   bindBroker,
   bindConfigPath,
   bindTarget,
   vsContainer,
 } from '../inversify.config';
-import { GenerateController } from '../controller/generate.contoller';
+import { TYPES } from '../inversify.types';
+import { AuthMonitorController } from '../controller/auth-monitor.controller';
 
 /**
- * Generate configuration file command
+ * Monitor and sync on demand
  */
-export default class Generate extends Command {
-  static description = 'Generates configuration file from template.';
-
-  static examples = ['<%= config.bin %> <%= command.id %>'];
+export default class Monitor extends Command {
+  static description = 'Monitor for auth changes to sync';
 
   static flags = {
     ...help,
@@ -40,7 +38,9 @@ export default class Generate extends Command {
    * Run the command
    */
   async run(): Promise<void> {
-    const { flags } = await this.parse(Generate);
+    const { flags } = await this.parse(Monitor);
+
+    this.log('Auth Monitor Sync');
 
     bindConfigPath(flags['config-path']);
     bindBroker(flags['broker-api-url'], flags['broker-token']);
@@ -51,7 +51,7 @@ export default class Generate extends Command {
     );
 
     await vsContainer
-      .get<GenerateController>(TYPES.GenerateController)
-      .generate();
+      .get<AuthMonitorController>(TYPES.AuthMonitorController)
+      .monitor();
   }
 }

@@ -1,3 +1,5 @@
+import { SourceUser } from './services/source.service';
+
 export interface OutletMap {
   [key: string]: Set<string>;
 }
@@ -18,7 +20,7 @@ export interface BrokerRoleMemberConfig extends BaseRoleMemberConfig {
 }
 
 export interface StaticRoleMemberConfig extends BaseRoleMemberConfig {
-  static: string[];
+  static: SourceUser[];
 }
 
 export interface RoleConfig {
@@ -27,11 +29,17 @@ export interface RoleConfig {
   members: RoleMemberConfig;
 }
 
-export interface IntegrationRoles {
+export interface IntegrationConfig {
   name: string;
   idp: string;
-  roleGenerators?: RoleGenerator[];
+  id: number | string;
+  environments: string[];
   roles: RoleConfig[];
+}
+
+export interface IntegrationConfigTemplate
+  extends Omit<IntegrationConfig, 'id' | 'environments'> {
+  roleGenerators?: RoleGenerator[];
 }
 
 export type RoleGenerator = BrokerVertexRoleGenerator | SomethingRoleGenerator;

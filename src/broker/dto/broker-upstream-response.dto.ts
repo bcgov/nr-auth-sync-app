@@ -13,7 +13,7 @@ export interface VertexPointerDto {
 }
 
 export interface UserDto extends VertexPointerDto {
-  _id: string;
+  id: string;
   domain: string;
   email: string;
   guid: string;

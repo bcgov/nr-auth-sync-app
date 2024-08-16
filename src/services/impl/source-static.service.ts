@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
-import { SourceService } from '../source.service';
+import { SourceService, SourceUser } from '../source.service';
 import { isStaticRoleMemberConfig } from '../../util/config.util';
-import { RoleMemberConfig } from '../../css/css.types';
+import { RoleMemberConfig } from '../../types';
 
 @injectable()
 /**
@@ -9,9 +9,9 @@ import { RoleMemberConfig } from '../../css/css.types';
  */
 export class SourceStaticService implements SourceService {
   /**
-   * Returns an array of Scopes/Groups.
+   * Returns an array of users.
    */
-  public getUsers(config: RoleMemberConfig): Promise<string[]> {
+  public getUsers(config: RoleMemberConfig): Promise<SourceUser[]> {
     if (!isStaticRoleMemberConfig(config)) {
       return Promise.resolve([]);
     }
