@@ -32,7 +32,11 @@ export class SourceBrokerService implements SourceService {
       ]);
 
       return response
-        .filter((collection) => collection.domain === this.sourceBrokerIdp)
+        .filter(
+          (collection) =>
+            this.sourceBrokerIdp === '' ||
+            collection.domain === this.sourceBrokerIdp,
+        )
         .map((collection) => ({
           guid: collection.guid,
           domain: collection.domain,
@@ -42,7 +46,11 @@ export class SourceBrokerService implements SourceService {
         config.broker,
       );
       return response
-        .filter((up) => up.collection.domain === this.sourceBrokerIdp)
+        .filter(
+          (up) =>
+            this.sourceBrokerIdp === '' ||
+            up.collection.domain === this.sourceBrokerIdp,
+        )
         .map((up) => ({
           guid: up.collection.guid,
           domain: up.collection.domain,
