@@ -8,11 +8,12 @@ import {
   cssClientId,
   cssClientSecret,
   cssTokenUrl,
+  sourceBrokerIdp,
 } from '../flags';
 import { TYPES } from '../inversify.types';
 import {
   bindBroker,
-  bindConfigPath,
+  bindConstants,
   bindTarget,
   vsContainer,
 } from '../inversify.config';
@@ -34,6 +35,7 @@ export default class Generate extends Command {
     ...cssTokenUrl,
     ...cssClientId,
     ...cssClientSecret,
+    ...sourceBrokerIdp,
   };
 
   /**
@@ -42,7 +44,7 @@ export default class Generate extends Command {
   async run(): Promise<void> {
     const { flags } = await this.parse(Generate);
 
-    bindConfigPath(flags['config-path']);
+    bindConstants(flags['config-path'], flags['source-broker-idp']);
     bindBroker(flags['broker-api-url'], flags['broker-token']);
     await bindTarget(
       flags['css-token-url'],

@@ -43,13 +43,20 @@ jobs:
         env:
           BROKER_API_URL: ${{ secrets.BROKER_API_URL }}
           BROKER_TOKEN: ${{ secrets.BROKER_TOKEN }}
+          CSS_TOKEN_URL: ${{ secrets.CSS_TOKEN_URL }}
+          CSS_CLIENT_ID: ${{ secrets.CSS_CLIENT_ID }}
+          CSS_CLIENT_SECRET: ${{ secrets.CSS_CLIENT_SECRET }}
+          SOURCE_BROKER_DOMAIN: 'azureidir'
 
       - name: Role Sync
         run: ./bin/dev role-sync
         env:
+          BROKER_API_URL: ${{ secrets.BROKER_API_URL }}
+          BROKER_TOKEN: ${{ secrets.BROKER_TOKEN }}
           CSS_TOKEN_URL: ${{ secrets.CSS_TOKEN_URL }}
           CSS_CLIENT_ID: ${{ secrets.CSS_CLIENT_ID }}
           CSS_CLIENT_SECRET: ${{ secrets.CSS_CLIENT_SECRET }}
+          SOURCE_BROKER_DOMAIN: 'azureidir'
 
       - name: Member Sync
         run: ./bin/dev member-sync
@@ -59,3 +66,4 @@ jobs:
           CSS_TOKEN_URL: ${{ secrets.CSS_TOKEN_URL }}
           CSS_CLIENT_ID: ${{ secrets.CSS_CLIENT_ID }}
           CSS_CLIENT_SECRET: ${{ secrets.CSS_CLIENT_SECRET }}
+          SOURCE_BROKER_DOMAIN: 'azureidir'

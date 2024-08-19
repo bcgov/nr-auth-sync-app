@@ -54,8 +54,11 @@ export function bindBroker(apiUrl: string, token: string | undefined): void {
   }
 }
 
-export function bindConfigPath(path: string) {
+export function bindConstants(path: string, sourceBrokerIdp: string) {
   vsContainer.bind<string>(TYPES.IntegrationRolesPath).toConstantValue(path);
+  vsContainer
+    .bind<string>(TYPES.SourceBrokerIdp)
+    .toConstantValue(sourceBrokerIdp);
 }
 
 /**
@@ -77,6 +80,4 @@ export async function bindTarget(
 
   // TODO: Bind based on inputs
   vsContainer.bind<TargetService>(TYPES.TargetService).toConstantValue(client);
-
-  // vsContainer.bind<CssAdminApi>(TYPES.CssAdminApi).toConstantValue(client);
 }

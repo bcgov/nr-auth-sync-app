@@ -13,7 +13,11 @@ export class SourceBrokerService implements SourceService {
   /**
    * Construct the Broker source service
    */
-  constructor(@inject(TYPES.BrokerApi) private readonly brokerApi: BrokerApi) {}
+  constructor(
+    @inject(TYPES.BrokerApi) private readonly brokerApi: BrokerApi,
+    @inject(TYPES.SourceBrokerIdp)
+    private readonly sourceBrokerIdp: string,
+  ) {}
   /**
    * Returns an array of users.
    */
@@ -28,7 +32,7 @@ export class SourceBrokerService implements SourceService {
       ]);
 
       return response
-        .filter((collection) => collection.domain === 'azureidir')
+        .filter((collection) => collection.domain === this.sourceBrokerIdp)
         .map((collection) => ({
           guid: collection.guid,
           domain: collection.domain,
@@ -38,7 +42,7 @@ export class SourceBrokerService implements SourceService {
         config.broker,
       );
       return response
-        .filter((up) => up.collection.domain === 'azureidir')
+        .filter((up) => up.collection.domain === this.sourceBrokerIdp)
         .map((up) => ({
           guid: up.collection.guid,
           domain: up.collection.domain,

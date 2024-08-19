@@ -51,3 +51,11 @@ export const cssClientSecret = {
     env: 'CSS_CLIENT_SECRET',
   }),
 };
+
+export const sourceBrokerIdp = {
+  'source-broker-idp': Flags.string({
+    default: '',
+    description: 'The idp to filter users to',
+    env: 'SOURCE_BROKER_DOMAIN',
+  }),
+};

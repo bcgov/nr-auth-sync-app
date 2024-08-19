@@ -14,7 +14,7 @@ import {
 import { TYPES } from '../inversify.types';
 import {
   bindBroker,
-  bindConfigPath,
+  bindConstants,
   bindTarget,
   vsContainer,
 } from '../inversify.config';
@@ -43,23 +43,21 @@ export default class MemberSync extends Command {
    */
   async run(): Promise<void> {
     const { flags } = await this.parse(MemberSync);
-    const configPath = path.join(
-      flags['config-path'],
-      'integration-roles.json',
-    );
 
-    bindConfigPath(flags['config-path']);
-
+    bindConstants(flags['config-path'], flags['source-broker-idp']);
+    bindBroker(flags['broker-api-url'], flags['broker-token']);
     await bindTarget(
       flags['css-token-url'],
       flags['css-client-id'],
       flags['css-client-secret'],
     );
 
-    bindBroker(flags['broker-api-url'], flags['broker-token']);
-
     this.log(`Syncing member roles`);
 
+    const configPath = path.join(
+      flags['config-path'],
+      'integration-roles.json',
+    );
     if (fs.existsSync(configPath)) {
       const integrationConfigs = JSON.parse(
         fs.readFileSync(configPath, 'utf8'),

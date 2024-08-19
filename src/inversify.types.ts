@@ -15,6 +15,7 @@ const TYPES = {
   IntegrationRolesPath: Symbol.for('IntegrationRolesPath'),
   Logger: Symbol.for('Logger'),
   SourceService: Symbol.for('SourceService'),
+  SourceBrokerIdp: Symbol.for('SourceBrokerIdp'),
   TargetService: Symbol.for('TargetService'),
 };
 
