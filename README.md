@@ -1,10 +1,6 @@
 # Auth Sync Tool
 
 The auth sync tool takes user group and "privilege information" from federated systems to generate client roles and group membership (and what roles those groups have) in CSS (KeyCloak).
-The auth sync runs everyday at 3PM.
-
-See: [Confluence Documentation](https://apps.nrs.gov.bc.ca/int/confluence/x/LpZvBQ)
-
 
 <!-- toc -->
 * [Auth Sync Tool](#auth-sync-tool)
@@ -12,11 +8,36 @@ See: [Confluence Documentation](https://apps.nrs.gov.bc.ca/int/confluence/x/LpZv
 * [Commands](#commands)
 <!-- tocstop -->
 
-## Supported npm commands
+## Running
 
-* npm start - deploy configuration to provided vault instance
-* npm run lint - lint source code
-* npm run test - Run unit tests
+The tool can be run from the source using Node.js or a container image by using Podman or Docker.
+
+```
+./bin/dev generate
+```
+
+```
+podman run --rm ghcr.io/bcgov-nr/auth-sync-app:v1.0.0 generate
+```
+
+The sample command runs the generate command. All the commands will require some arguments set up to work.
+
+## Environment Variables
+
+The tool can utilize environment variables instead of most command arguments. It is recommended to set all confidential parameters (such as tokens and secrets) using environment variables. As an example, the argument 'broker-token' should always be configured with the environment variable 'BROKER_TOKEN'.
+
+These can be found by looking in the [src/flags.ts](src/flags.ts) file.
+
+A sample env file is provided. To setup for running the tool using a local dev environment, run the following command:
+
+`source setenv-local.sh`
+
+## Development
+
+This document is aimed at developers looking to setup the Auth Sync Tool to run or make modifications to it.
+
+See: [Development](README-dev.md)
+
 # Usage
 <!-- usage -->
 ```sh-session

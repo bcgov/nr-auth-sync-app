@@ -1,4 +1,4 @@
-export AUTH_SYNC_CONFIG_PATH=./config-
+export AUTH_SYNC_CONFIG_PATH=./config
 export BROKER_TOKEN=
 export SOURCE_BROKER_DOMAIN=azureidir
 export CSS_TOKEN_URL=$(jq -r '.tokenUrl' $AUTH_SYNC_CONFIG_PATH/service-account.json)

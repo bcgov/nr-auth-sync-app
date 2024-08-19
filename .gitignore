@@ -9,6 +9,6 @@ npm-debug.log
 VAULT_ROOT_TOKEN
 VAULT_UNSEAL_KEY
 /setenv*
-!/setenv.sh.tmp
+!/setenv-local.sh
 .DS_STORE
 /config*
