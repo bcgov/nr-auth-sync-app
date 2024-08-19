@@ -46,6 +46,7 @@ $ ./bin/run (-v|--version|version)
 * [`authtool generate`](#authtool-generate)
 * [`authtool help [COMMAND]`](#authtool-help-command)
 * [`authtool member-sync`](#authtool-member-sync)
+* [`authtool monitor`](#authtool-monitor)
 * [`authtool role-sync`](#authtool-role-sync)
 
 ## `authtool generate`
@@ -55,12 +56,17 @@ Generates configuration file from template.
 ```
 USAGE
   $ authtool generate [-h] [--broker-api-url <value>] [--broker-token <value>] [--config-path <value>]
+    [--css-token-url <value>] [--css-client-id <value>] [--css-client-secret <value>] [--source-broker-idp <value>]
 
 FLAGS
-  -h, --help                    Show CLI help.
-      --broker-api-url=<value>  [default: https://nr-broker.apps.silver.devops.gov.bc.ca/] The broker api base url
-      --broker-token=<value>    The broker JWT
-      --config-path=<value>     [default: ./config] The path to the config directory
+  -h, --help                       Show CLI help.
+      --broker-api-url=<value>     [default: https://nr-broker.apps.silver.devops.gov.bc.ca/] The broker api base url
+      --broker-token=<value>       The broker JWT
+      --config-path=<value>        [default: ./config] The path to the config directory
+      --css-client-id=<value>      [default: id] The css keycloak client id
+      --css-client-secret=<value>  [default: password] The css keycloak client secret
+      --css-token-url=<value>      [default: url] The css token url
+      --source-broker-idp=<value>  The idp to filter users to
 
 DESCRIPTION
   Generates configuration file from template.
@@ -114,21 +120,47 @@ EXAMPLES
   $ authtool member-sync
 ```
 
+## `authtool monitor`
+
+Monitor for auth changes to sync
+
+```
+USAGE
+  $ authtool monitor [-h] [--broker-api-url <value>] [--broker-token <value>] [--config-path <value>]
+    [--css-token-url <value>] [--css-client-id <value>] [--css-client-secret <value>] [--source-broker-idp <value>]
+
+FLAGS
+  -h, --help                       Show CLI help.
+      --broker-api-url=<value>     [default: https://nr-broker.apps.silver.devops.gov.bc.ca/] The broker api base url
+      --broker-token=<value>       The broker JWT
+      --config-path=<value>        [default: ./config] The path to the config directory
+      --css-client-id=<value>      [default: id] The css keycloak client id
+      --css-client-secret=<value>  [default: password] The css keycloak client secret
+      --css-token-url=<value>      [default: url] The css token url
+      --source-broker-idp=<value>  The idp to filter users to
+
+DESCRIPTION
+  Monitor for auth changes to sync
+```
+
 ## `authtool role-sync`
 
 Syncs roles to CSS
 
 ```
 USAGE
-  $ authtool role-sync [-h] [--config-path <value>] [--css-token-url <value>] [--css-client-id <value>]
-    [--css-client-secret <value>]
+  $ authtool role-sync [-h] [--broker-api-url <value>] [--broker-token <value>] [--config-path <value>]
+    [--css-token-url <value>] [--css-client-id <value>] [--css-client-secret <value>] [--source-broker-idp <value>]
 
 FLAGS
   -h, --help                       Show CLI help.
+      --broker-api-url=<value>     [default: https://nr-broker.apps.silver.devops.gov.bc.ca/] The broker api base url
+      --broker-token=<value>       The broker JWT
       --config-path=<value>        [default: ./config] The path to the config directory
       --css-client-id=<value>      [default: id] The css keycloak client id
       --css-client-secret=<value>  [default: password] The css keycloak client secret
       --css-token-url=<value>      [default: url] The css token url
+      --source-broker-idp=<value>  The idp to filter users to
 
 DESCRIPTION
   Syncs roles to CSS
