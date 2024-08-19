@@ -2,6 +2,12 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../inversify.types';
 import { VertexSearchDto } from './dto/vertex-rest.dto';
+import { UpstreamResponseDto } from './dto/broker-upstream-response.dto';
+
+// Define a type that maps an array of keys to an object where those keys are the properties
+type ObjectWithKeys<K extends string> = {
+  [key in K]: string; // Replace 'any' with the specific type of the values if known
+};
 
 @injectable()
 /**
@@ -14,8 +20,8 @@ export class BrokerApi {
    * Constructor
    */
   constructor(
-    @inject(TYPES.BrokerApiUrl) private brokerApi: string,
-    @inject(TYPES.BrokerToken) private brokerToken: string,
+    @inject(TYPES.BrokerApiUrl) private readonly brokerApi: string,
+    @inject(TYPES.BrokerToken) private readonly brokerToken: string,
   ) {
     this.setToken();
   }
@@ -43,5 +49,29 @@ export class BrokerApi {
       this.axiosOptions,
     );
     return response.data;
+  }
+
+  public async exportCollection<K extends string>(
+    collection: string,
+    fields: K[],
+  ): Promise<ObjectWithKeys<K>[]> {
+    const response = await axios.post(
+      `v1/collection/${collection}/export?${fields.map((field) => `fields=${field}`).join('&')}`,
+      {},
+      this.axiosOptions,
+    );
+    return response.data;
+  }
+
+  public async getVertexUpstreamUser(
+    id: string,
+  ): Promise<UpstreamResponseDto[]> {
+    return (
+      await axios.post(
+        `v1/graph/vertex/${id}/upstream/4`,
+        {},
+        this.axiosOptions,
+      )
+    ).data;
   }
 }

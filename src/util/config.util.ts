@@ -2,7 +2,7 @@ import {
   BrokerRoleMemberConfig,
   RoleMemberConfig,
   StaticRoleMemberConfig,
-} from '../css/css.types';
+} from '../types';
 
 export function isBrokerRoleMemberConfig(
   config: RoleMemberConfig | undefined,

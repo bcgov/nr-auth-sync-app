@@ -1,10 +1,9 @@
-import { inject, injectable, optional } from 'inversify';
-import axios from 'axios';
-import { SourceService } from '../source.service';
-import { UpstreamResponseDto } from './broker-upstream-response.dto';
+import { inject, injectable } from 'inversify';
+import { SourceService, SourceUser } from '../source.service';
 import { TYPES } from '../../inversify.types';
-import { RoleMemberConfig } from '../../css/css.types';
+import { RoleMemberConfig } from '../../types';
 import { isBrokerRoleMemberConfig } from '../../util/config.util';
+import { BrokerApi } from '../../broker/broker.api';
 
 @injectable()
 /**
@@ -15,39 +14,47 @@ export class SourceBrokerService implements SourceService {
    * Construct the Broker source service
    */
   constructor(
-    @optional() @inject(TYPES.BrokerApiUrl) private brokerApiUrl: string,
-    @optional() @inject(TYPES.BrokerToken) private brokerToken: string,
+    @inject(TYPES.BrokerApi) private readonly brokerApi: BrokerApi,
+    @inject(TYPES.SourceBrokerIdp)
+    private readonly sourceBrokerIdp: string,
   ) {}
   /**
    * Returns an array of users.
    */
-  public async getUsers(config: RoleMemberConfig): Promise<string[]> {
-    if (!isBrokerRoleMemberConfig(config) || !this.brokerToken) {
+  public async getUsers(config: RoleMemberConfig): Promise<SourceUser[]> {
+    if (!isBrokerRoleMemberConfig(config)) {
       return Promise.resolve([]);
     }
     if (config.broker === 'all') {
-      const response: { email: string; domain: string }[] = (
-        await axios.post(
-          `${this.brokerApiUrl}v1/collection/user/export?fields=email&fields=domain`,
-          {},
-          { headers: { Authorization: `Bearer ${this.brokerToken}` } },
-        )
-      ).data;
+      const response = await this.brokerApi.exportCollection('user', [
+        'domain',
+        'guid',
+      ]);
 
       return response
-        .filter((collection) => collection.domain === 'azureidir')
-        .map((collection) => collection.email);
-    } else {
-      const response: UpstreamResponseDto[] = (
-        await axios.post(
-          `${this.brokerApiUrl}v1/graph/vertex/${config.broker}/upstream/4`,
-          {},
-          { headers: { Authorization: `Bearer ${this.brokerToken}` } },
+        .filter(
+          (collection) =>
+            this.sourceBrokerIdp === '' ||
+            collection.domain === this.sourceBrokerIdp,
         )
-      ).data;
+        .map((collection) => ({
+          guid: collection.guid,
+          domain: collection.domain,
+        }));
+    } else {
+      const response = await this.brokerApi.getVertexUpstreamUser(
+        config.broker,
+      );
       return response
-        .filter((up) => up.collection.domain === 'azureidir')
-        .map((up) => up.collection.email);
+        .filter(
+          (up) =>
+            this.sourceBrokerIdp === '' ||
+            up.collection.domain === this.sourceBrokerIdp,
+        )
+        .map((up) => ({
+          guid: up.collection.guid,
+          domain: up.collection.domain,
+        }));
     }
   }
 }

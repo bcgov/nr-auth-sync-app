@@ -1,0 +1,19 @@
+# git things
+.git
+.github
+
+# Configs
+.editorconfig
+
+# No docs
+*.md
+
+/coverage
+/e2e
+/dist
+/node_modules
+/setenv*
+/setenv/*
+/config*
+/config/*
+/env.hcl

@@ -1,10 +1,6 @@
 # Auth Sync Tool
 
 The auth sync tool takes user group and "privilege information" from federated systems to generate client roles and group membership (and what roles those groups have) in CSS (KeyCloak).
-The auth sync runs everyday at 3PM.
-
-See: [Confluence Documentation](https://apps.nrs.gov.bc.ca/int/confluence/x/LpZvBQ)
-
 
 <!-- toc -->
 * [Auth Sync Tool](#auth-sync-tool)
@@ -12,11 +8,36 @@ See: [Confluence Documentation](https://apps.nrs.gov.bc.ca/int/confluence/x/LpZv
 * [Commands](#commands)
 <!-- tocstop -->
 
-## Supported npm commands
+## Running
 
-* npm start - deploy configuration to provided vault instance
-* npm run lint - lint source code
-* npm run test - Run unit tests
+The tool can be run from the source using Node.js or a container image by using Podman or Docker.
+
+```
+./bin/dev generate
+```
+
+```
+podman run --rm ghcr.io/bcgov-nr/auth-sync-app:v1.0.0 generate
+```
+
+The sample command runs the generate command. All the commands will require some arguments set up to work.
+
+## Environment Variables
+
+The tool can utilize environment variables instead of most command arguments. It is recommended to set all confidential parameters (such as tokens and secrets) using environment variables. As an example, the argument 'broker-token' should always be configured with the environment variable 'BROKER_TOKEN'.
+
+These can be found by looking in the [src/flags.ts](src/flags.ts) file.
+
+A sample env file is provided. To setup for running the tool using a local dev environment, run the following command:
+
+`source setenv-local.sh`
+
+## Development
+
+This document is aimed at developers looking to setup the Auth Sync Tool to run or make modifications to it.
+
+See: [Development](README-dev.md)
+
 # Usage
 <!-- usage -->
 ```sh-session
@@ -24,7 +45,7 @@ $ npm install -g authtool
 $ authtool COMMAND
 running command...
 $ authtool (--version)
-authtool/1.0.0 darwin-arm64 node-v22.1.0
+authtool/1.0.0 darwin-x64 node-v20.11.1
 $ authtool --help [COMMAND]
 USAGE
   $ authtool COMMAND
@@ -46,6 +67,7 @@ $ ./bin/run (-v|--version|version)
 * [`authtool generate`](#authtool-generate)
 * [`authtool help [COMMAND]`](#authtool-help-command)
 * [`authtool member-sync`](#authtool-member-sync)
+* [`authtool monitor`](#authtool-monitor)
 * [`authtool role-sync`](#authtool-role-sync)
 
 ## `authtool generate`
@@ -55,12 +77,17 @@ Generates configuration file from template.
 ```
 USAGE
   $ authtool generate [-h] [--broker-api-url <value>] [--broker-token <value>] [--config-path <value>]
+    [--css-token-url <value>] [--css-client-id <value>] [--css-client-secret <value>] [--source-broker-idp <value>]
 
 FLAGS
-  -h, --help                    Show CLI help.
-      --broker-api-url=<value>  [default: https://nr-broker.apps.silver.devops.gov.bc.ca/] The broker api base url
-      --broker-token=<value>    The broker JWT
-      --config-path=<value>     [default: ./config] The path to the config directory
+  -h, --help                       Show CLI help.
+      --broker-api-url=<value>     [default: https://nr-broker.apps.silver.devops.gov.bc.ca/] The broker api base url
+      --broker-token=<value>       The broker JWT
+      --config-path=<value>        [default: ./config] The path to the config directory
+      --css-client-id=<value>      [default: id] The css keycloak client id
+      --css-client-secret=<value>  [default: password] The css keycloak client secret
+      --css-token-url=<value>      [default: url] The css token url
+      --source-broker-idp=<value>  The idp to filter users to
 
 DESCRIPTION
   Generates configuration file from template.
@@ -87,7 +114,7 @@ DESCRIPTION
   Display help for authtool.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v6.2.1/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v6.2.8/src/commands/help.ts)_
 
 ## `authtool member-sync`
 
@@ -114,21 +141,47 @@ EXAMPLES
   $ authtool member-sync
 ```
 
+## `authtool monitor`
+
+Monitor for auth changes to sync
+
+```
+USAGE
+  $ authtool monitor [-h] [--broker-api-url <value>] [--broker-token <value>] [--config-path <value>]
+    [--css-token-url <value>] [--css-client-id <value>] [--css-client-secret <value>] [--source-broker-idp <value>]
+
+FLAGS
+  -h, --help                       Show CLI help.
+      --broker-api-url=<value>     [default: https://nr-broker.apps.silver.devops.gov.bc.ca/] The broker api base url
+      --broker-token=<value>       The broker JWT
+      --config-path=<value>        [default: ./config] The path to the config directory
+      --css-client-id=<value>      [default: id] The css keycloak client id
+      --css-client-secret=<value>  [default: password] The css keycloak client secret
+      --css-token-url=<value>      [default: url] The css token url
+      --source-broker-idp=<value>  The idp to filter users to
+
+DESCRIPTION
+  Monitor for auth changes to sync
+```
+
 ## `authtool role-sync`
 
 Syncs roles to CSS
 
 ```
 USAGE
-  $ authtool role-sync [-h] [--config-path <value>] [--css-token-url <value>] [--css-client-id <value>]
-    [--css-client-secret <value>]
+  $ authtool role-sync [-h] [--broker-api-url <value>] [--broker-token <value>] [--config-path <value>]
+    [--css-token-url <value>] [--css-client-id <value>] [--css-client-secret <value>] [--source-broker-idp <value>]
 
 FLAGS
   -h, --help                       Show CLI help.
+      --broker-api-url=<value>     [default: https://nr-broker.apps.silver.devops.gov.bc.ca/] The broker api base url
+      --broker-token=<value>       The broker JWT
       --config-path=<value>        [default: ./config] The path to the config directory
       --css-client-id=<value>      [default: id] The css keycloak client id
       --css-client-secret=<value>  [default: password] The css keycloak client secret
       --css-token-url=<value>      [default: url] The css token url
+      --source-broker-idp=<value>  The idp to filter users to
 
 DESCRIPTION
   Syncs roles to CSS
