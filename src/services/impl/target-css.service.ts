@@ -1,11 +1,18 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { injectable } from 'inversify';
 import { Integration, TargetService } from '../target.service';
-import { IntegrationEnvironmentRoleUsersDto } from '../../types';
+import {
+  IntegrationConfig,
+  IntegrationEnvironmentRoleUsersDto,
+} from '../../types';
 import { SourceUser } from '../source.service';
 
 const CSS_SSO_API_URL = 'https://api.loginproxy.gov.bc.ca/api/v1';
 const ROLE_USER_MAX = 50;
+const idpToPath: { [key in string]: string } = {
+  azureidir: 'azure-idir',
+  idir: 'idir',
+};
 
 @injectable()
 /**
@@ -109,7 +116,7 @@ export class TargetCssService implements TargetService {
   }
 
   public async alterIntegrationRoleUser(
-    integrationId: string | number,
+    integrationConfig: IntegrationConfig,
     environment: string,
     roleName: string,
     operation: 'add' | 'del',
@@ -119,15 +126,17 @@ export class TargetCssService implements TargetService {
       console.log(`No users to ${operation}`);
     }
     for (const user of users) {
-      const username = `${user.guid.toLowerCase()}@${user.domain}}`;
-      if (await this.testIgnoreUser(environment, user.guid)) {
+      const username = `${user.guid.toLowerCase()}@${user.domain}`;
+      if (
+        await this.testIgnoreUser(integrationConfig.idp, environment, user.guid)
+      ) {
         console.log(`${operation}: ${username} (skip)`);
         continue;
       }
       console.log(`${operation}: ${username}`);
       if (operation === 'add') {
         await axios.post(
-          `/integrations/${integrationId}/${environment}/users/${username}/roles`,
+          `/integrations/${integrationConfig.id}/${environment}/users/${username}/roles`,
           [
             {
               name: roleName,
@@ -137,29 +146,43 @@ export class TargetCssService implements TargetService {
         );
       } else if (operation === 'del') {
         await axios.delete(
-          `/integrations/${integrationId}/${environment}/users/${username}/roles/${roleName}`,
+          `/integrations/${integrationConfig.id}/${environment}/users/${username}/roles/${roleName}`,
           this.axiosOptions,
         );
       }
     }
   }
 
-  private async testIgnoreUser(environment: string, guid: string) {
-    if (this.ignoreEnvGuids[environment]?.get(guid)) {
-      console.log(`use cache: guid`);
-      return true;
+  public async resetUserCache(all: boolean) {
+    if (all) {
+      this.ignoreEnvGuids = {};
+    } else {
+      for (const key of Object.keys(this.ignoreEnvGuids)) {
+        const envUserCache = this.ignoreEnvGuids[key];
+        for (const [guid, ignoreUser] of envUserCache)
+          if (ignoreUser) {
+            envUserCache.delete(guid);
+          }
+      }
+    }
+  }
+
+  private async testIgnoreUser(idp: string, environment: string, guid: string) {
+    if (this.ignoreEnvGuids[environment]?.has(guid)) {
+      // console.log(`use cache: guid`);
+      return this.ignoreEnvGuids[environment].get(guid);
     }
     const data = (
       await axios.get(
-        `/${environment}/azure-idir/users?guid=${guid}`,
+        `/${environment}/${idpToPath[idp]}/users?guid=${guid}`,
         this.axiosOptions,
       )
     ).data.data;
 
+    if (!this.ignoreEnvGuids[environment]) {
+      this.ignoreEnvGuids[environment] = new Map();
+    }
     if (data.length === 0) {
-      if (!this.ignoreEnvGuids[environment]) {
-        this.ignoreEnvGuids[environment] = new Map();
-      }
       this.ignoreEnvGuids[environment].set(guid, true);
       return true;
     }

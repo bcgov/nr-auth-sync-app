@@ -1,3 +1,4 @@
+import { IntegrationConfig } from '../types';
 import { SourceUser } from './source.service';
 
 export interface Integration {
@@ -26,7 +27,7 @@ export interface TargetService {
     role: string,
   ): Promise<void>;
   alterIntegrationRoleUser(
-    integrationId: string | number,
+    integrationConfig: IntegrationConfig,
     environment: string,
     roleName: string,
     operation: 'add' | 'del',
@@ -38,8 +39,5 @@ export interface TargetService {
     idp: string,
     roleName: string,
   ): Promise<Map<string, SourceUser>>;
-  /**
-   * Returns an array of users.
-   */
-  // getUsers(roleConfig: RoleMemberConfig): Promise<string[]>;
+  resetUserCache(all: boolean): Promise<void>;
 }

@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../inversify.types';
-import { exhaustMap, timer } from 'rxjs';
+import { exhaustMap, filter, interval, timer } from 'rxjs';
 import { GenerateController } from './generate.contoller';
 import { AuthRoleSyncController } from './auth-role-sync.controller';
 import { AuthMemberSyncController } from './auth-member-sync.controller';
+import { TargetService } from '../services/target.service';
 
 @injectable()
 /**
@@ -19,6 +20,7 @@ export class AuthMonitorController {
     @inject(TYPES.AuthRoleSyncController) private role: AuthRoleSyncController,
     @inject(TYPES.AuthMemberSyncController)
     private member: AuthMemberSyncController,
+    @inject(TYPES.TargetService) private targetService: TargetService,
   ) {}
 
   /**
@@ -27,7 +29,20 @@ export class AuthMonitorController {
    */
   public async monitor(): Promise<void> {
     const source$ = timer(0, 30 * 60 * 1000);
+    const resetCacheInterval$ = interval(6 * 60 * 60 * 1000);
+    const resetAllCacheInterval$ = interval(12 * 60 * 60 * 1000);
     console.log(`>>> Monitor - start`);
+
+    // Skip every 2nd because it is a full reset
+    resetCacheInterval$.pipe(filter((cnt) => cnt % 2 === 0)).subscribe(() => {
+      console.log(`---- Reset user cache`);
+      this.targetService.resetUserCache(false);
+    });
+    resetAllCacheInterval$.subscribe(() => {
+      console.log(`---- Reset user cache (all)`);
+      this.targetService.resetUserCache(true);
+    });
+
     source$
       .pipe(
         exhaustMap(async () => {

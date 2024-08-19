@@ -21,6 +21,7 @@ export class AuthMemberSyncController {
   ) {}
 
   public async sync(integrationConfigs: IntegrationConfig[]) {
+    const sdate = new Date();
     const userMap: { [key in string]: OutletMap } = {};
     for (const integrationConfig of integrationConfigs) {
       const idp = integrationConfig.idp ?? 'idir';
@@ -30,18 +31,24 @@ export class AuthMemberSyncController {
         integrationConfig.roles,
       );
 
-      // console.log(userMap);
-
-      // const idp = integrationConfig.idp ?? 'idir';
       for (const environment of integrationConfig.environments) {
+        const sEnvDate = new Date();
+        console.log(`>>> ${integrationConfig.name} - ${environment}: start`);
         await this.syncIntegrationRoleUsers(
           integrationConfig,
           environment,
           userMap[integrationConfig.name],
           idp,
         );
+        const eEnvDate = new Date();
+        console.log(
+          `>>> ${integrationConfig.name} - ${environment}: done - ${eEnvDate.getTime() - sEnvDate.getTime()} ms`,
+        );
       }
     }
+    const edate = new Date();
+
+    console.log(`Done - ${edate.getTime() - sdate.getTime()} ms`);
   }
 
   private async syncIntegrationRoleUsers(
@@ -73,14 +80,14 @@ export class AuthMemberSyncController {
       // console.log(usersToAdd);
       await Promise.all([
         this.targetService.alterIntegrationRoleUser(
-          integrationConfig.id,
+          integrationConfig,
           environment,
           roleName,
           'add',
           usersToAdd,
         ),
         this.targetService.alterIntegrationRoleUser(
-          integrationConfig.id,
+          integrationConfig,
           environment,
           roleName,
           'del',

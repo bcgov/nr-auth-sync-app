@@ -10,6 +10,7 @@ import {
   configPath,
   brokerToken,
   brokerApiUrl,
+  sourceBrokerIdp,
 } from '../flags';
 import { TYPES } from '../inversify.types';
 import {
@@ -36,6 +37,7 @@ export default class MemberSync extends Command {
     ...cssTokenUrl,
     ...cssClientId,
     ...cssClientSecret,
+    ...sourceBrokerIdp,
   };
 
   /**

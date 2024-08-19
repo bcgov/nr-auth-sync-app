@@ -32,9 +32,6 @@ export class AuthRoleSyncController {
             this.syncIntegrationRoles(integration, environment, roles),
           ),
         );
-        // for (const environment of integration.environments) {
-        //   await this.syncIntegrationRoles(integration, environment, roles);
-        // }
       }
     }
     const edate = new Date();
