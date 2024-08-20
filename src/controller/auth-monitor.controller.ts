@@ -33,7 +33,7 @@ export class AuthMonitorController {
    * @returns
    */
   public async monitor(): Promise<void> {
-    const source$ = timer(MONITOR_INTERVAL_MS);
+    const source$ = timer(0, MONITOR_INTERVAL_MS);
     const resetCacheInterval$ = interval(MONITOR_CACHE_RESET_INTERVAL_MS);
     const resetAllCacheInterval$ = interval(
       MONITOR_CACHE_RESET_INTERVAL_MS * MONITOR_CACHE_RESET_FULL_NTH,
