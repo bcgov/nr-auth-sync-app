@@ -126,7 +126,7 @@ export class TargetCssService implements TargetService {
       console.log(`No users to ${operation}`);
     }
     for (const user of users) {
-      const username = `${user.guid.toLowerCase()}@${user.domain}`;
+      const username = `${user.guid.toLowerCase()}@${integrationConfig.idp}`;
       if (
         await this.testIgnoreUser(integrationConfig.idp, environment, user.guid)
       ) {
