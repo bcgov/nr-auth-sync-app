@@ -57,13 +57,17 @@ export class AuthMonitorController {
         // Delay a bit so cach reset runs first
         delay(MONITOR_STARTUP_DELAY_MS),
         exhaustMap(async () => {
-          const startMs = Date.now();
-          const integrationConfigs = await this.generate.generate();
-          if (integrationConfigs) {
-            await this.role.sync(integrationConfigs);
-            await this.member.sync(integrationConfigs);
+          try {
+            const startMs = Date.now();
+            const integrationConfigs = await this.generate.generate();
+            if (integrationConfigs) {
+              await this.role.sync(integrationConfigs);
+              await this.member.sync(integrationConfigs);
+            }
+            console.log(`---- sync end [${Date.now() - startMs}]`);
+          } catch (e) {
+            console.log(`---- sync fail [Check authentication]`);
           }
-          console.log(`---- sync end [${Date.now() - startMs}]`);
         }),
       )
       .subscribe(() => {});
