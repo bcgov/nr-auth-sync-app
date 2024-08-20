@@ -1,11 +1,6 @@
 name: Opensearch Pipeline
 # Run this workflow every time a new commit pushed to your main repository or manually
 on:
-  schedule:
-  - cron: "0 23 * * *"
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:
