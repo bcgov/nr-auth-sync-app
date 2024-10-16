@@ -27,6 +27,14 @@ export interface RoleConfig {
   group?: string;
   name: string;
   members: RoleMemberConfig;
+  onAdd?: NotificationConfig;
+  onRemove?: NotificationConfig;
+}
+
+export interface NotificationConfig {
+  environments: string[];
+  templateText: string;
+  templateHtml: string;
 }
 
 export interface IntegrationConfig {
@@ -73,4 +81,10 @@ export interface IntegrationEnvironmentRoleUsersDataDto {
 export interface IntegrationEnvironmentRoleUsersDto {
   page: number;
   data: IntegrationEnvironmentRoleUsersDataDto[];
+}
+
+export class UserSummary {
+  constructor(public user: SourceUser) {}
+  public addRoles: string[] = [];
+  public delRoles: string[] = [];
 }

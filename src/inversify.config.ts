@@ -14,6 +14,7 @@ import { SourceBrokerService } from './services/impl/source-broker.service';
 import { SourceStaticService } from './services/impl/source-static.service';
 import { BrokerApi } from './broker/broker.api';
 import { TargetService } from './services/target.service';
+import { SmtpNotificationService } from './notification/smtp-notification.service';
 
 const vsContainer = new Container();
 // Services
@@ -36,6 +37,9 @@ vsContainer
 vsContainer
   .bind<GenerateController>(TYPES.GenerateController)
   .to(GenerateController);
+vsContainer
+  .bind<SmtpNotificationService>(TYPES.SmtpNotificationService)
+  .to(SmtpNotificationService);
 
 // Util
 vsContainer.bind<EnvironmentUtil>(TYPES.EnvironmentUtil).to(EnvironmentUtil);
@@ -52,6 +56,11 @@ export function bindBroker(apiUrl: string, token: string | undefined): void {
   if (token) {
     vsContainer.bind<string>(TYPES.BrokerToken).toConstantValue(token);
   }
+}
+
+export function bindNotification(smtp: any, option: any): void {
+  vsContainer.bind<string>(TYPES.NotificationSmtp).toConstantValue(smtp);
+  vsContainer.bind<string>(TYPES.NotificationOption).toConstantValue(option);
 }
 
 export function bindConstants(path: string, sourceBrokerIdp: string) {

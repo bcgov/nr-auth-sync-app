@@ -3,6 +3,8 @@ import { RoleMemberConfig } from '../types';
 export interface SourceUser {
   guid: string;
   domain: string;
+  name?: string;
+  email?: string;
 }
 
 /**

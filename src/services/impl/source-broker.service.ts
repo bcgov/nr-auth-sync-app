@@ -29,6 +29,8 @@ export class SourceBrokerService implements SourceService {
       const response = await this.brokerApi.exportCollection('user', [
         'domain',
         'guid',
+        'email',
+        'name',
       ]);
 
       return response
@@ -40,6 +42,8 @@ export class SourceBrokerService implements SourceService {
         .map((collection) => ({
           guid: collection.guid,
           domain: collection.domain,
+          email: collection.email,
+          name: collection.name,
         }));
     } else {
       const response = await this.brokerApi.getVertexUpstreamUser(
@@ -54,6 +58,8 @@ export class SourceBrokerService implements SourceService {
         .map((up) => ({
           guid: up.collection.guid,
           domain: up.collection.domain,
+          email: up.collection.email,
+          name: up.collection.name,
         }));
     }
   }

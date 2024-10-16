@@ -11,11 +11,19 @@ import {
   brokerToken,
   brokerApiUrl,
   sourceBrokerIdp,
+  notificationOptionFrom,
+  notificationOptionSubject,
+  notificationOptionTemplateHtml,
+  notificationOptionTemplateText,
+  notificationSmtpHost,
+  notificationSmtpPort,
+  notificationSmtpSecure,
 } from '../flags';
 import { TYPES } from '../inversify.types';
 import {
   bindBroker,
   bindConstants,
+  bindNotification,
   bindTarget,
   vsContainer,
 } from '../inversify.config';
@@ -37,6 +45,13 @@ export default class MemberSync extends Command {
     ...cssTokenUrl,
     ...cssClientId,
     ...cssClientSecret,
+    ...notificationSmtpHost,
+    ...notificationSmtpPort,
+    ...notificationSmtpSecure,
+    ...notificationOptionFrom,
+    ...notificationOptionSubject,
+    ...notificationOptionTemplateText,
+    ...notificationOptionTemplateHtml,
     ...sourceBrokerIdp,
   };
 
@@ -48,6 +63,19 @@ export default class MemberSync extends Command {
 
     bindConstants(flags['config-path'], flags['source-broker-idp']);
     bindBroker(flags['broker-api-url'], flags['broker-token']);
+    bindNotification(
+      {
+        host: flags['notification-smtp-host'],
+        port: flags['notification-smtp-port'],
+        secure: flags['notification-smtp-secure'],
+      },
+      {
+        from: flags['notification-option-from'],
+        subject: flags['notification-option-subject'],
+        text: flags['notification-option-template-text'],
+        html: flags['notification-option-template-html'],
+      },
+    );
     await bindTarget(
       flags['css-token-url'],
       flags['css-client-id'],

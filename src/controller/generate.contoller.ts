@@ -2,6 +2,7 @@ import { inject, injectable } from 'inversify';
 import fs from 'fs';
 import path from 'path';
 import ejs from 'ejs';
+import { getLogger } from '@oclif/core';
 
 import { TYPES } from '../inversify.types';
 import { BrokerApi } from '../broker/broker.api';
@@ -23,6 +24,7 @@ import {
  * Generate controller
  */
 export class GenerateController {
+  private readonly console = getLogger('GenerateController');
   private readonly integrationTplArr: IntegrationConfigTemplate[] | null = null;
 
   /**
@@ -53,10 +55,10 @@ export class GenerateController {
   public async generate(): Promise<IntegrationConfig[] | null> {
     const rval: IntegrationConfig[] = [];
     if (!this.integrationTplArr) {
-      console.log('Skipping: No template');
+      this.console.info('Skipping: No template');
       return null;
     }
-    console.log(`Generate integration file`);
+    this.console.info(`Generate integration file`);
     const sdate = new Date();
     const integrations = await this.targetService.getIntegrations();
 
@@ -65,7 +67,7 @@ export class GenerateController {
         (i) => i.name === integrationTpl.name,
       );
       if (!integration) {
-        console.log(`Skip: ${integrationTpl.name} (not found)`);
+        this.console.info(`Skip: ${integrationTpl.name} (not found)`);
         continue;
       }
 
@@ -84,7 +86,7 @@ export class GenerateController {
 
     const edate = new Date();
 
-    console.log(`Done - ${edate.getTime() - sdate.getTime()} ms`);
+    this.console.info(`Done - ${edate.getTime() - sdate.getTime()} ms`);
     return rval;
   }
 
@@ -146,6 +148,32 @@ export class GenerateController {
             : [],
           ...staticMembers,
         },
+        ...(gen.roleMap.onAdd
+          ? {
+              onAdd: {
+                environments: gen.roleMap.onAdd.environments,
+                templateText: ejs.render(gen.roleMap.onAdd.templateText, {
+                  vertex,
+                }),
+                templateHtml: ejs.render(gen.roleMap.onAdd.templateHtml, {
+                  vertex,
+                }),
+              },
+            }
+          : {}),
+        ...(gen.roleMap.onRemove
+          ? {
+              onRemove: {
+                environments: gen.roleMap.onRemove.environments,
+                templateText: ejs.render(gen.roleMap.onRemove.templateText, {
+                  vertex,
+                }),
+                templateHtml: ejs.render(gen.roleMap.onRemove.templateHtml, {
+                  vertex,
+                }),
+              },
+            }
+          : {}),
       };
     });
   }

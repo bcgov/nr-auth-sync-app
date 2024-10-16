@@ -59,3 +59,85 @@ export const sourceBrokerIdp = {
     env: 'SOURCE_BROKER_DOMAIN',
   }),
 };
+
+export const notificationSmtpHost = {
+  'notification-smtp-host': Flags.string({
+    required: false,
+    description: 'The SMTP Host',
+    env: 'NOTIFICATION_SMTP_HOST',
+  }),
+};
+
+export const notificationSmtpPort = {
+  'notification-smtp-port': Flags.integer({
+    required: false,
+    description: 'The SMTP port',
+    env: 'NOTIFICATION_SMTP_PORT',
+  }),
+};
+
+export const notificationSmtpSecure = {
+  'notification-smtp-secure': Flags.boolean({
+    default: true,
+    description: 'The SMTP secure flag',
+    env: 'NOTIFICATION_SMTP_SECURE',
+  }),
+};
+
+export const notificationOptionFrom = {
+  'notification-option-from': Flags.string({
+    required: false,
+    description: 'The notification from address',
+    env: 'NOTIFICATION_OPTION_FROM',
+  }),
+};
+
+export const notificationOptionSubject = {
+  'notification-option-subject': Flags.string({
+    default: 'Your Access Report (<%= config.name %>)',
+    description: 'The notification subject',
+    env: 'NOTIFICATION_OPTION_SUBJECT',
+  }),
+};
+
+export const notificationOptionTemplateText = {
+  'notification-option-template-text': Flags.string({
+    default: `Hi <%= summary.user.name %>,
+
+This report shows changes to your account access to <%= config.name %>. The following account changes have occurred.
+<% summary.addRoles.forEach(function(role) { %>
+Add: <%= role %><% if (addRoleMap[role]) { %>
+
+<%= addRoleMap[role] %>
+<% }}); %>
+
+<% summary.delRoles.forEach(function(role) { %>
+Remove: <%= role %>
+<% }); %>
+
+This service uses your connections in Broker's graph to enable (and disable) access by altering your roles in Common Hosted Single Sign-On (CSS).`,
+    description: 'The notification template in text',
+    env: 'NOTIFICATION_OPTION_TEMPLATE_TEXT',
+  }),
+};
+
+export const notificationOptionTemplateHtml = {
+  'notification-option-template-html': Flags.string({
+    default: `Hi <%= summary.user.name %>,
+
+This report shows changes to your account access to <%= config.name %>. The following account changes have occurred.
+<% summary.addRoles.forEach(function(role) { %>
+Add: <%= role %><% if (addRoleMap[role]) { %>
+
+<%= addRoleMap[role] %>
+<% }}); %>
+
+<% summary.delRoles.forEach(function(role) { %>
+Remove: <%= role %>
+<% }); %>
+
+This service uses your connections in Broker's graph to enable (and disable) access by altering your roles in Common Hosted Single Sign-On (CSS).`,
+    description: 'The notification template in html',
+    env: 'NOTIFICATION_OPTION_TEMPLATE_HTML',
+  }),
+};

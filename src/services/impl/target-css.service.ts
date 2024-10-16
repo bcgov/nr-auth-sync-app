@@ -1,5 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { injectable } from 'inversify';
+import { getLogger } from '@oclif/core';
+
 import { Integration, TargetService } from '../target.service';
 import {
   IntegrationConfig,
@@ -19,6 +21,7 @@ const idpToPath: { [key in string]: string } = {
  *
  */
 export class TargetCssService implements TargetService {
+  private readonly console = getLogger('TargetCssService');
   private axiosOptions!: AxiosRequestConfig;
   private token!: string;
   private ignoreEnvGuids: { [key in string]: Map<string, boolean> } = {};
@@ -122,18 +125,19 @@ export class TargetCssService implements TargetService {
     operation: 'add' | 'del',
     users: SourceUser[],
   ) {
+    const finalized: SourceUser[] = [];
     if (users.length === 0) {
-      console.log(`No users to ${operation}`);
+      this.console.debug(`No users to ${operation}`);
     }
     for (const user of users) {
       const username = `${user.guid.toLowerCase()}@${integrationConfig.idp}`;
       if (
         await this.testIgnoreUser(integrationConfig.idp, environment, user.guid)
       ) {
-        console.log(`${operation}: ${username} (skip)`);
+        this.console.debug(`${operation}: ${username} (skip)`);
         continue;
       }
-      console.log(`${operation}: ${username}`);
+      this.console.debug(`${operation}: ${username}`);
       if (operation === 'add') {
         await axios.post(
           `/integrations/${integrationConfig.id}/${environment}/users/${username}/roles`,
@@ -150,7 +154,9 @@ export class TargetCssService implements TargetService {
           this.axiosOptions,
         );
       }
+      finalized.push(user);
     }
+    return finalized;
   }
 
   public async resetUserCache(all: boolean) {
@@ -169,7 +175,7 @@ export class TargetCssService implements TargetService {
 
   private async testIgnoreUser(idp: string, environment: string, guid: string) {
     if (this.ignoreEnvGuids[environment]?.has(guid)) {
-      // console.log(`use cache: guid`);
+      // this.console.info(`use cache: guid`);
       return this.ignoreEnvGuids[environment].get(guid);
     }
     const data = (

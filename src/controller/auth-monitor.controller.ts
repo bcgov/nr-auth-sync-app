@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { inject, injectable } from 'inversify';
+import { getLogger } from '@oclif/core';
+
 import { TYPES } from '../inversify.types';
 import { delay, exhaustMap, filter, interval, timer } from 'rxjs';
 import { GenerateController } from './generate.contoller';
@@ -17,6 +19,7 @@ const MONITOR_CACHE_RESET_FULL_NTH = 4;
  * Auth monitor controller
  */
 export class AuthMonitorController {
+  private readonly console = getLogger('AuthMonitorController');
   /**
    * Constructor
    */
@@ -38,17 +41,17 @@ export class AuthMonitorController {
     const resetAllCacheInterval$ = interval(
       MONITOR_CACHE_RESET_INTERVAL_MS * MONITOR_CACHE_RESET_FULL_NTH,
     );
-    console.log(`>>> Monitor - start`);
+    this.console.info(`>>> Monitor - start`);
 
     // Skip every MONITOR_CACHE_RESET_FULL_NTH because it is a full reset
     resetCacheInterval$
       .pipe(filter((cnt) => cnt % MONITOR_CACHE_RESET_FULL_NTH === 0))
       .subscribe(() => {
-        console.log(`---- Reset user cache`);
+        this.console.info(`---- Reset user cache`);
         this.targetService.resetUserCache(false);
       });
     resetAllCacheInterval$.subscribe(() => {
-      console.log(`---- Reset user cache (all)`);
+      this.console.info(`---- Reset user cache (all)`);
       this.targetService.resetUserCache(true);
     });
 
@@ -64,9 +67,9 @@ export class AuthMonitorController {
               await this.role.sync(integrationConfigs);
               await this.member.sync(integrationConfigs);
             }
-            console.log(`---- sync end [${Date.now() - startMs}]`);
+            this.console.info(`---- sync end [${Date.now() - startMs}]`);
           } catch (e) {
-            console.log(`---- sync fail [Check authentication]`);
+            this.console.info(`---- sync fail [Check authentication]`);
           }
         }),
       )
