@@ -1,6 +1,17 @@
-# Auth Sync Tool
+# Auth Sync App
 
-The auth sync tool takes user group and "privilege information" from federated systems to generate client roles and group membership (and what roles those groups have) in CSS (KeyCloak).
+Auth Sync takes user group and "privilege information" from federated systems to grant users OIDC roles. The code is designed to support adding new sources and target systems.
+
+It does not setup the client (aka applications or integrations). It is up to the application to interpret the roles a user is granted appropriately. The client (application) may have its own tool (like the [Vault Sync App](https://github.com/bcgov-nr/vault-sync-app)) for managing on the application side of interpreting the roles received from OIDC.
+
+ ### Supported Sources
+
+* [Broker](https://bcgov-nr.github.io/nr-broker/#/)
+* Static files
+
+ ### Supported Targets
+
+* [BC Gov Common Hosted Single Sign-on (CSS)](https://developer.gov.bc.ca/docs/default/component/css-docs/)
 
 <!-- toc -->
 * [Auth Sync Tool](#auth-sync-tool)
@@ -20,11 +31,23 @@ The tool can be run from the source using Node.js or a container image by using 
 podman run --rm ghcr.io/bcgov-nr/auth-sync-app:v1.0.0 generate
 ```
 
-The sample command runs the generate command. All the commands will require some arguments set up to work.
+The sample command runs the [generate](#authtool-generate) command. All the commands will require authentication and configuration to function.
 
-## Environment Variables
+### Workflows
 
-The tool can utilize environment variables instead of most command arguments. It is recommended to set all confidential parameters (such as tokens and secrets) using environment variables. As an example, the argument 'broker-token' should always be configured with the environment variable 'BROKER_TOKEN'.
+The general pattern is to call the following commands:
+
+* [generate](#authtool-generate) - Create the final configuration file from a template
+* [role-sync](#authtool-role-sync) - Sync OIDC roles to target systems
+* [member-sync](#authtool-member-sync) - Sync membership in OIDC roles to target systems
+
+The monitor command can be used to run this workflow to run this workflow.
+
+* [monitor](#authtool-monitor)
+
+### Authentication
+
+It is recommended to set all confidential parameters (such as tokens and secrets) using environment variables instead of using arguments. As an example, the argument 'broker-token' should always be configured with the environment variable 'BROKER_TOKEN'.
 
 These can be found by looking in the [src/flags.ts](src/flags.ts) file.
 
@@ -32,7 +55,11 @@ A sample env file is provided. To setup for running the tool using a local dev e
 
 `source setenv-local.sh`
 
-## Development
+### Configuration
+
+See: [Development](README-dev.md)
+
+# Development
 
 This document is aimed at developers looking to setup the Auth Sync Tool to run or make modifications to it.
 
