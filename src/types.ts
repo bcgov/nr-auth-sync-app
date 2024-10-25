@@ -42,6 +42,7 @@ export interface IntegrationConfig {
   idp: string;
   id: number | string;
   environments: string[];
+  notifyEnvironments: string[];
   roles: RoleConfig[];
 }
 
