@@ -49,9 +49,14 @@ export class AuthMemberSyncController {
           idp,
         );
 
-        this.notificationService.notifyUsers(integrationConfig, [
-          ...summaryMap.values(),
-        ]);
+        if (
+          integrationConfig.notifyEnvironments &&
+          integrationConfig.notifyEnvironments.indexOf(environment) !== -1
+        ) {
+          this.notificationService.notifyUsers(integrationConfig, [
+            ...summaryMap.values(),
+          ]);
+        }
 
         const eEnvDate = new Date();
         this.console.info(

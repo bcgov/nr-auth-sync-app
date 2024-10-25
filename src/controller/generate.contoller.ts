@@ -76,6 +76,7 @@ export class GenerateController {
         idp: integrationTpl.idp,
         id: integration.id,
         environments: integration.environments,
+        notifyEnvironments: integrationTpl.notifyEnvironments,
         roles: await this.generateRoles(integrationTpl),
       });
     }
