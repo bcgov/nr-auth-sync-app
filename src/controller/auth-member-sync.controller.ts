@@ -42,26 +42,12 @@ export class AuthMemberSyncController {
         this.console.info(
           `>>> ${integrationConfig.name} - ${environment}: start`,
         );
-        // const summaryMap = await this.syncIntegrationRoleUsers(
-        //   integrationConfig,
-        //   environment,
-        //   userMap[integrationConfig.name],
-        //   idp,
-        // );
-        const summaryMap = new Map<string, UserSummary>();
-        summaryMap.set(
-          '483CFF50E3E94A22BDB082B56DE564B6',
-          new UserSummary({
-            guid: '483CFF50E3E94A22BDB082B56DE564B6',
-            domain: 'azureidir',
-            email: 'matthew.bystedt@gov.bc.ca',
-            name: 'Bystedt, Matthew WLRS:EX',
-          }),
+        const summaryMap = await this.syncIntegrationRoleUsers(
+          integrationConfig,
+          environment,
+          userMap[integrationConfig.name],
+          idp,
         );
-        summaryMap
-          .get('483CFF50E3E94A22BDB082B56DE564B6')
-          ?.addRoles.push('group_vault-user');
-        console.log(summaryMap);
 
         this.notificationService.notifyUsers(integrationConfig, [
           ...summaryMap.values(),
