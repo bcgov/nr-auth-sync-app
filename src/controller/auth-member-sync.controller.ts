@@ -1,9 +1,12 @@
 import { inject, injectable, multiInject } from 'inversify';
+import { getLogger } from '@oclif/core';
 
 import { TYPES } from '../inversify.types';
 import { SourceService, SourceUser } from '../services/source.service';
-import { IntegrationConfig, RoleConfig } from '../types';
+import { IntegrationConfig, RoleConfig, UserSummary } from '../types';
 import { TargetService } from '../services/target.service';
+import { SmtpNotificationService } from '../notification/smtp-notification.service';
+import { roleFromConfig } from '../util/role.util';
 
 type OutletMap = Map<string, Map<string, SourceUser>>;
 
@@ -12,12 +15,15 @@ type OutletMap = Map<string, Map<string, SourceUser>>;
  * Css sync controller
  */
 export class AuthMemberSyncController {
+  private readonly console = getLogger('AuthMemberSyncController');
   /**
    * Constructor
    */
   constructor(
     @multiInject(TYPES.SourceService) private sourceServices: SourceService[],
     @inject(TYPES.TargetService) private targetService: TargetService,
+    @inject(TYPES.SmtpNotificationService)
+    private notificationService: SmtpNotificationService,
   ) {}
 
   public async sync(integrationConfigs: IntegrationConfig[]) {
@@ -25,7 +31,7 @@ export class AuthMemberSyncController {
     const userMap: { [key in string]: OutletMap } = {};
     for (const integrationConfig of integrationConfigs) {
       const idp = integrationConfig.idp ?? 'idir';
-      console.log(`>>> ${integrationConfig.name} : Get users`);
+      this.console.info(`>>> ${integrationConfig.name} : Get users`);
       userMap[integrationConfig.name] = await this.integrationMemberSync(
         idp,
         integrationConfig.roles,
@@ -33,22 +39,43 @@ export class AuthMemberSyncController {
 
       for (const environment of integrationConfig.environments) {
         const sEnvDate = new Date();
-        console.log(`>>> ${integrationConfig.name} - ${environment}: start`);
-        await this.syncIntegrationRoleUsers(
-          integrationConfig,
-          environment,
-          userMap[integrationConfig.name],
-          idp,
+        this.console.info(
+          `>>> ${integrationConfig.name} - ${environment}: start`,
         );
+        // const summaryMap = await this.syncIntegrationRoleUsers(
+        //   integrationConfig,
+        //   environment,
+        //   userMap[integrationConfig.name],
+        //   idp,
+        // );
+        const summaryMap = new Map<string, UserSummary>();
+        summaryMap.set(
+          '483CFF50E3E94A22BDB082B56DE564B6',
+          new UserSummary({
+            guid: '483CFF50E3E94A22BDB082B56DE564B6',
+            domain: 'azureidir',
+            email: 'matthew.bystedt@gov.bc.ca',
+            name: 'Bystedt, Matthew WLRS:EX',
+          }),
+        );
+        summaryMap
+          .get('483CFF50E3E94A22BDB082B56DE564B6')
+          ?.addRoles.push('group_vault-user');
+        console.log(summaryMap);
+
+        this.notificationService.notifyUsers(integrationConfig, [
+          ...summaryMap.values(),
+        ]);
+
         const eEnvDate = new Date();
-        console.log(
+        this.console.info(
           `>>> ${integrationConfig.name} - ${environment}: done - ${eEnvDate.getTime() - sEnvDate.getTime()} ms`,
         );
       }
     }
     const edate = new Date();
 
-    console.log(`Done - ${edate.getTime() - sdate.getTime()} ms`);
+    this.console.info(`Done - ${edate.getTime() - sdate.getTime()} ms`);
   }
 
   private async syncIntegrationRoleUsers(
@@ -57,8 +84,9 @@ export class AuthMemberSyncController {
     userRoles: OutletMap,
     idp: string,
   ) {
+    const userSummary = new Map<string, UserSummary>();
     for (const [roleName, roleUserGuidMap] of userRoles.entries()) {
-      console.log(`${integrationConfig.id} ${environment} ${roleName}`);
+      this.console.info(`${integrationConfig.id} ${environment} ${roleName}`);
       const existingUserGuidMap = await this.targetService.getRoleUsers(
         integrationConfig.id,
         environment,
@@ -74,11 +102,11 @@ export class AuthMemberSyncController {
         .filter((guid) => !existingUserGuidMap.has(guid))
         .map((guid) => roleUserGuidMap.get(guid))
         .filter((user) => !!user);
-      // console.log(`remove:`);
-      // console.log(usersToRemove);
-      // console.log(`add:`);
-      // console.log(usersToAdd);
-      await Promise.all([
+      // this.console.info(`remove:`);
+      // this.console.info(usersToRemove);
+      // this.console.info(`add:`);
+      // this.console.info(usersToAdd);
+      const [finalizedAdd, finalizedDel] = await Promise.all([
         this.targetService.alterIntegrationRoleUser(
           integrationConfig,
           environment,
@@ -94,12 +122,25 @@ export class AuthMemberSyncController {
           usersToRemove,
         ),
       ]);
+      for (const finalize of finalizedAdd) {
+        if (!userSummary.has(finalize.guid)) {
+          userSummary.set(finalize.guid, new UserSummary(finalize));
+        }
+        userSummary.get(finalize.guid)?.addRoles.push(roleName);
+      }
+      for (const finalize of finalizedDel) {
+        if (!userSummary.has(finalize.guid)) {
+          userSummary.set(finalize.guid, new UserSummary(finalize));
+        }
+        userSummary.get(finalize.guid)?.delRoles.push(roleName);
+      }
     }
+    return userSummary;
   }
 
   private async integrationMemberSync(idp: string, roleConfigs: RoleConfig[]) {
     const roleConfigNames = roleConfigs.map((roleConfig) =>
-      this.roleFromConfig(roleConfig),
+      roleFromConfig(roleConfig),
     );
 
     const outletMap = await this.addUserToRoleWithServices(roleConfigs);
@@ -174,11 +215,7 @@ export class AuthMemberSyncController {
         if (!outletMap.has(target)) {
           continue;
         }
-        callback(
-          this.roleFromConfig(roleConfig),
-          outletMap,
-          outletMap.get(target),
-        );
+        callback(roleFromConfig(roleConfig), outletMap, outletMap.get(target));
       }
     }
   }
@@ -186,7 +223,7 @@ export class AuthMemberSyncController {
   private async addUserToRoleWithServices(roleConfigs: RoleConfig[]) {
     const outletMap = new Map<string, Map<string, SourceUser>>();
     for (const roleConfig of roleConfigs) {
-      const role = this.roleFromConfig(roleConfig);
+      const role = roleFromConfig(roleConfig);
       const users = await this.getUserMapFromServices(roleConfig);
       if (users.size > 0) {
         outletMap.set(role, users);
@@ -202,13 +239,5 @@ export class AuthMemberSyncController {
       users.forEach((user) => userMap.set(user.guid, user));
     }
     return userMap;
-  }
-
-  private roleFromConfig(roleConfig: RoleConfig) {
-    if (roleConfig.group) {
-      return `${roleConfig.group}_${roleConfig.name}`;
-    } else {
-      return roleConfig.name;
-    }
   }
 }

@@ -32,7 +32,7 @@ export interface TargetService {
     roleName: string,
     operation: 'add' | 'del',
     users: SourceUser[],
-  ): Promise<void>;
+  ): Promise<SourceUser[]>;
   getRoleUsers(
     id: string | number,
     environment: string,

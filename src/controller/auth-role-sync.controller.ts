@@ -1,14 +1,17 @@
 import { inject, injectable } from 'inversify';
+import { getLogger } from '@oclif/core';
 
-import { IntegrationConfig, RoleConfig } from '../types';
+import { IntegrationConfig } from '../types';
 import { TYPES } from '../inversify.types';
 import { TargetService } from '../services/target.service';
+import { roleFromConfig } from '../util/role.util';
 
 @injectable()
 /**
  * Auth role sync controller
  */
 export class AuthRoleSyncController {
+  private readonly console = getLogger('AuthRoleSyncController');
   /**
    * Constructor
    */
@@ -25,7 +28,7 @@ export class AuthRoleSyncController {
     if (integrationConfigs) {
       for (const integration of integrationConfigs) {
         const roles = integration.roles.map((roleConfig) =>
-          this.roleFromConfig(roleConfig),
+          roleFromConfig(roleConfig),
         );
         await Promise.all(
           integration.environments.map((environment) =>
@@ -36,7 +39,7 @@ export class AuthRoleSyncController {
     }
     const edate = new Date();
 
-    console.log(`Done - ${edate.getTime() - sdate.getTime()} ms`);
+    this.console.info(`Done - ${edate.getTime() - sdate.getTime()} ms`);
   }
 
   private async syncIntegrationRoles(
@@ -58,7 +61,7 @@ export class AuthRoleSyncController {
     );
 
     if (delRoles.length === 0) {
-      console.log(
+      this.console.debug(
         `Sync: ${integration.name} - ${environment}: No roles to del`,
       );
     }
@@ -68,13 +71,13 @@ export class AuthRoleSyncController {
         environment,
         role,
       );
-      console.log(
+      this.console.debug(
         `Sync: ${integration.name} - ${environment}: Delete: ${role}`,
       );
     }
 
     if (addRoles.length === 0) {
-      console.log(
+      this.console.debug(
         `Sync: ${integration.name} - ${environment}: No roles to add`,
       );
     }
@@ -84,19 +87,13 @@ export class AuthRoleSyncController {
         environment,
         role,
       );
-      console.log(`Sync: ${integration.name} - ${environment}: Add: ${role}`);
+      this.console.debug(
+        `Sync: ${integration.name} - ${environment}: Add: ${role}`,
+      );
     }
     const edate = new Date();
-    console.log(
+    this.console.info(
       `Sync: ${integration.name} - ${environment}: ${edate.getTime() - sdate.getTime()} ms`,
     );
-  }
-
-  private roleFromConfig(roleConfig: RoleConfig) {
-    if (roleConfig.group) {
-      return `${roleConfig.group}_${roleConfig.name}`;
-    } else {
-      return roleConfig.name;
-    }
   }
 }

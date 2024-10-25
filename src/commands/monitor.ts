@@ -8,11 +8,19 @@ import {
   cssClientSecret,
   cssTokenUrl,
   help,
+  notificationOptionFrom,
+  notificationOptionSubject,
+  notificationOptionTemplateHtml,
+  notificationOptionTemplateText,
+  notificationSmtpHost,
+  notificationSmtpPort,
+  notificationSmtpSecure,
   sourceBrokerIdp,
 } from '../flags';
 import {
   bindBroker,
   bindConstants,
+  bindNotification,
   bindTarget,
   vsContainer,
 } from '../inversify.config';
@@ -33,6 +41,13 @@ export default class Monitor extends Command {
     ...cssTokenUrl,
     ...cssClientId,
     ...cssClientSecret,
+    ...notificationSmtpHost,
+    ...notificationSmtpPort,
+    ...notificationSmtpSecure,
+    ...notificationOptionFrom,
+    ...notificationOptionSubject,
+    ...notificationOptionTemplateText,
+    ...notificationOptionTemplateHtml,
     ...sourceBrokerIdp,
   };
 
@@ -46,6 +61,19 @@ export default class Monitor extends Command {
 
     bindConstants(flags['config-path'], flags['source-broker-idp']);
     bindBroker(flags['broker-api-url'], flags['broker-token']);
+    bindNotification(
+      {
+        host: notificationSmtpHost,
+        port: notificationSmtpPort,
+        secure: notificationSmtpSecure,
+      },
+      {
+        from: notificationOptionFrom,
+        subject: notificationOptionSubject,
+        text: notificationOptionTemplateText,
+        html: notificationOptionTemplateHtml,
+      },
+    );
     await bindTarget(
       flags['css-token-url'],
       flags['css-client-id'],

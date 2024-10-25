@@ -1,8 +1,10 @@
 import axios from 'axios';
 import qs from 'querystring';
 import { TargetCssService } from './impl/target-css.service';
+import { getLogger } from '@oclif/core';
 
 const CSS_API_TOKEN_RENEWAL_MS = 250000;
+const console = getLogger('factory');
 
 let cssApiPromiseResolve: (
   value: TargetCssService | PromiseLike<TargetCssService>,
@@ -65,7 +67,7 @@ async function requestToken(
     data: qs.stringify(data),
     url: cssTokenUrl,
   };
-  console.log('>>> CSS: request token');
+  console.debug('>>> CSS: request token');
   const cssAdminApiResponse = await axios.request(options);
   return cssAdminApiResponse.data.access_token;
 }
