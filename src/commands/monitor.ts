@@ -63,15 +63,15 @@ export default class Monitor extends Command {
     bindBroker(flags['broker-api-url'], flags['broker-token']);
     bindNotification(
       {
-        host: notificationSmtpHost,
-        port: notificationSmtpPort,
-        secure: notificationSmtpSecure,
+        host: flags['notification-smtp-host'],
+        port: flags['notification-smtp-port'],
+        secure: flags['notification-smtp-secure'],
       },
       {
-        from: notificationOptionFrom,
-        subject: notificationOptionSubject,
-        text: notificationOptionTemplateText,
-        html: notificationOptionTemplateHtml,
+        from: flags['notification-option-from'],
+        subject: flags['notification-option-subject'],
+        text: flags['notification-option-template-text'],
+        html: flags['notification-option-template-html'],
       },
     );
     await bindTarget(

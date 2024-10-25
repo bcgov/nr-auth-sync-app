@@ -123,20 +123,22 @@ This service uses your connections in Broker's graph to enable (and disable) acc
 
 export const notificationOptionTemplateHtml = {
   'notification-option-template-html': Flags.string({
-    default: `Hi <%= summary.user.name %>,
+    default: `<html><body><p>Hi <%= summary.user.name %>,</p>
 
-This report shows changes to your account access to <%= config.name %>. The following account changes have occurred.
+<p>This report shows changes to your account access to <%= config.name %>. The following account changes have occurred.</p>
 <% summary.addRoles.forEach(function(role) { %>
-Add: <%= role %><% if (addRoleMap[role]) { %>
+<p>Add: <%= role %></p><% if (addRoleMap[role]) { %>
 
 <%= addRoleMap[role] %>
 <% }}); %>
 
 <% summary.delRoles.forEach(function(role) { %>
-Remove: <%= role %>
+<p>Remove: <%= role %></p>
 <% }); %>
 
-This service uses your connections in Broker's graph to enable (and disable) access by altering your roles in Common Hosted Single Sign-On (CSS).`,
+<p>This service uses your connections in Broker's graph to enable (and disable) access by altering your roles in Common Hosted Single Sign-On (CSS).</p>
+</body>
+</html>`,
     description: 'The notification template in html',
     env: 'NOTIFICATION_OPTION_TEMPLATE_HTML',
   }),
