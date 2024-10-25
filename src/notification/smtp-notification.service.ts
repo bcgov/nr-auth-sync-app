@@ -76,7 +76,7 @@ export class SmtpNotificationService {
       };
 
       // Send mail
-      this.console.debug(mailOptions);
+      // this.console.debug(mailOptions);
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
           return this.console.error('Error occurred: ' + error.message);

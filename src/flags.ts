@@ -108,7 +108,7 @@ This report shows changes to your account access to <%= config.name %>. The foll
 <% summary.addRoles.forEach(function(role) { %>
 Add: <%= role %><% if (addRoleMap[role]) { %>
 
-<%= addRoleMap[role] %>
+<%- addRoleMap[role] %>
 <% }}); %>
 
 <% summary.delRoles.forEach(function(role) { %>
@@ -129,7 +129,7 @@ export const notificationOptionTemplateHtml = {
 <% summary.addRoles.forEach(function(role) { %>
 <p>Add: <%= role %></p><% if (addRoleMap[role]) { %>
 
-<%= addRoleMap[role] %>
+<%- addRoleMap[role] %>
 <% }}); %>
 
 <% summary.delRoles.forEach(function(role) { %>
