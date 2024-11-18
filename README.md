@@ -14,7 +14,8 @@ It does not setup the client (aka applications or integrations). It is up to the
 * [BC Gov Common Hosted Single Sign-on (CSS)](https://developer.gov.bc.ca/docs/default/component/css-docs/)
 
 <!-- toc -->
-* [Auth Sync Tool](#auth-sync-tool)
+* [Auth Sync App](#auth-sync-app)
+* [Development](#development)
 * [Usage](#usage)
 * [Commands](#commands)
 <!-- tocstop -->
@@ -72,7 +73,7 @@ $ npm install -g authtool
 $ authtool COMMAND
 running command...
 $ authtool (--version)
-authtool/1.0.0 darwin-x64 node-v20.11.1
+authtool/1.0.0 darwin-x64 node-v20.17.0
 $ authtool --help [COMMAND]
 USAGE
   $ authtool COMMAND
@@ -104,17 +105,25 @@ Generates configuration file from template.
 ```
 USAGE
   $ authtool generate [-h] [--broker-api-url <value>] [--broker-token <value>] [--config-path <value>]
-    [--css-token-url <value>] [--css-client-id <value>] [--css-client-secret <value>] [--source-broker-idp <value>]
+    [--source-broker-idp <value>] [--css-token-url <value>] [--css-client-id <value>] [--css-client-secret <value>]
+    [--github-client-type <value>] [--github-app-id <value>] [--github-client-id <value>] [--github-client-secret
+    <value>] [--github-private-key <value>] [--github-token <value>]
 
 FLAGS
-  -h, --help                       Show CLI help.
-      --broker-api-url=<value>     [default: https://nr-broker.apps.silver.devops.gov.bc.ca/] The broker api base url
-      --broker-token=<value>       The broker JWT
-      --config-path=<value>        [default: ./config] The path to the config directory
-      --css-client-id=<value>      [default: id] The css keycloak client id
-      --css-client-secret=<value>  [default: password] The css keycloak client secret
-      --css-token-url=<value>      [default: url] The css token url
-      --source-broker-idp=<value>  The idp to filter users to
+  -h, --help                          Show CLI help.
+      --broker-api-url=<value>        [default: https://nr-broker.apps.silver.devops.gov.bc.ca/] The broker api base url
+      --broker-token=<value>          The broker JWT
+      --config-path=<value>           [default: ./config] The path to the config directory
+      --css-client-id=<value>         [default: id] The css keycloak client id
+      --css-client-secret=<value>     [default: password] The css keycloak client secret
+      --css-token-url=<value>         [default: url] The css token url
+      --github-app-id=<value>         [default: id] The GitHub app id
+      --github-client-id=<value>      [default: id] The GitHub client id
+      --github-client-secret=<value>  [default: password] The GitHub client secret
+      --github-client-type=<value>    The GitHub client type
+      --github-private-key=<value>    [default: key] The GitHub private key for signing requests
+      --github-token=<value>          [default: token] A GitHub PAT
+      --source-broker-idp=<value>     The idp to filter users to
 
 DESCRIPTION
   Generates configuration file from template.
@@ -141,7 +150,7 @@ DESCRIPTION
   Display help for authtool.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v6.2.8/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v6.2.18/src/commands/help.ts)_
 
 ## `authtool member-sync`
 
@@ -150,16 +159,36 @@ Syncs user and role configuration to CSS
 ```
 USAGE
   $ authtool member-sync [-h] [--broker-api-url <value>] [--broker-token <value>] [--config-path <value>]
-    [--css-token-url <value>] [--css-client-id <value>] [--css-client-secret <value>]
+    [--notification-smtp-host <value>] [--notification-smtp-port <value>] [--notification-smtp-secure]
+    [--notification-option-from <value>] [--notification-option-subject <value>] [--notification-option-template-text
+    <value>] [--notification-option-template-html <value>] [--source-broker-idp <value>] [--css-token-url <value>]
+    [--css-client-id <value>] [--css-client-secret <value>] [--github-client-type <value>] [--github-app-id <value>]
+    [--github-client-id <value>] [--github-client-secret <value>] [--github-private-key <value>] [--github-token
+    <value>]
 
 FLAGS
-  -h, --help                       Show CLI help.
-      --broker-api-url=<value>     [default: https://nr-broker.apps.silver.devops.gov.bc.ca/] The broker api base url
-      --broker-token=<value>       The broker JWT
-      --config-path=<value>        [default: ./config] The path to the config directory
-      --css-client-id=<value>      [default: id] The css keycloak client id
-      --css-client-secret=<value>  [default: password] The css keycloak client secret
-      --css-token-url=<value>      [default: url] The css token url
+  -h, --help                                       Show CLI help.
+      --broker-api-url=<value>                     [default: https://nr-broker.apps.silver.devops.gov.bc.ca/] The broker
+                                                   api base url
+      --broker-token=<value>                       The broker JWT
+      --config-path=<value>                        [default: ./config] The path to the config directory
+      --css-client-id=<value>                      [default: id] The css keycloak client id
+      --css-client-secret=<value>                  [default: password] The css keycloak client secret
+      --css-token-url=<value>                      [default: url] The css token url
+      --github-app-id=<value>                      [default: id] The GitHub app id
+      --github-client-id=<value>                   [default: id] The GitHub client id
+      --github-client-secret=<value>               [default: password] The GitHub client secret
+      --github-client-type=<value>                 The GitHub client type
+      --github-private-key=<value>                 [default: key] The GitHub private key for signing requests
+      --github-token=<value>                       [default: token] A GitHub PAT
+      --notification-option-from=<value>           The notification from address
+      --notification-option-subject=<value>        [default: Your Access Report (authtool)] The notification subject
+      --notification-option-template-html=<value>  The notification template in html
+      --notification-option-template-text=<value>  The notification template in text
+      --notification-smtp-host=<value>             The SMTP Host
+      --notification-smtp-port=<value>             The SMTP port
+      --notification-smtp-secure                   The SMTP secure flag
+      --source-broker-idp=<value>                  The idp to filter users to
 
 DESCRIPTION
   Syncs user and role configuration to CSS
@@ -175,17 +204,36 @@ Monitor for auth changes to sync
 ```
 USAGE
   $ authtool monitor [-h] [--broker-api-url <value>] [--broker-token <value>] [--config-path <value>]
-    [--css-token-url <value>] [--css-client-id <value>] [--css-client-secret <value>] [--source-broker-idp <value>]
+    [--notification-smtp-host <value>] [--notification-smtp-port <value>] [--notification-smtp-secure]
+    [--notification-option-from <value>] [--notification-option-subject <value>] [--notification-option-template-text
+    <value>] [--notification-option-template-html <value>] [--source-broker-idp <value>] [--css-token-url <value>]
+    [--css-client-id <value>] [--css-client-secret <value>] [--github-client-type <value>] [--github-app-id <value>]
+    [--github-client-id <value>] [--github-client-secret <value>] [--github-private-key <value>] [--github-token
+    <value>]
 
 FLAGS
-  -h, --help                       Show CLI help.
-      --broker-api-url=<value>     [default: https://nr-broker.apps.silver.devops.gov.bc.ca/] The broker api base url
-      --broker-token=<value>       The broker JWT
-      --config-path=<value>        [default: ./config] The path to the config directory
-      --css-client-id=<value>      [default: id] The css keycloak client id
-      --css-client-secret=<value>  [default: password] The css keycloak client secret
-      --css-token-url=<value>      [default: url] The css token url
-      --source-broker-idp=<value>  The idp to filter users to
+  -h, --help                                       Show CLI help.
+      --broker-api-url=<value>                     [default: https://nr-broker.apps.silver.devops.gov.bc.ca/] The broker
+                                                   api base url
+      --broker-token=<value>                       The broker JWT
+      --config-path=<value>                        [default: ./config] The path to the config directory
+      --css-client-id=<value>                      [default: id] The css keycloak client id
+      --css-client-secret=<value>                  [default: password] The css keycloak client secret
+      --css-token-url=<value>                      [default: url] The css token url
+      --github-app-id=<value>                      [default: id] The GitHub app id
+      --github-client-id=<value>                   [default: id] The GitHub client id
+      --github-client-secret=<value>               [default: password] The GitHub client secret
+      --github-client-type=<value>                 The GitHub client type
+      --github-private-key=<value>                 [default: key] The GitHub private key for signing requests
+      --github-token=<value>                       [default: token] A GitHub PAT
+      --notification-option-from=<value>           The notification from address
+      --notification-option-subject=<value>        [default: Your Access Report (authtool)] The notification subject
+      --notification-option-template-html=<value>  The notification template in html
+      --notification-option-template-text=<value>  The notification template in text
+      --notification-smtp-host=<value>             The SMTP Host
+      --notification-smtp-port=<value>             The SMTP port
+      --notification-smtp-secure                   The SMTP secure flag
+      --source-broker-idp=<value>                  The idp to filter users to
 
 DESCRIPTION
   Monitor for auth changes to sync
@@ -198,17 +246,25 @@ Syncs roles to CSS
 ```
 USAGE
   $ authtool role-sync [-h] [--broker-api-url <value>] [--broker-token <value>] [--config-path <value>]
-    [--css-token-url <value>] [--css-client-id <value>] [--css-client-secret <value>] [--source-broker-idp <value>]
+    [--source-broker-idp <value>] [--css-token-url <value>] [--css-client-id <value>] [--css-client-secret <value>]
+    [--github-client-type <value>] [--github-app-id <value>] [--github-client-id <value>] [--github-client-secret
+    <value>] [--github-private-key <value>] [--github-token <value>]
 
 FLAGS
-  -h, --help                       Show CLI help.
-      --broker-api-url=<value>     [default: https://nr-broker.apps.silver.devops.gov.bc.ca/] The broker api base url
-      --broker-token=<value>       The broker JWT
-      --config-path=<value>        [default: ./config] The path to the config directory
-      --css-client-id=<value>      [default: id] The css keycloak client id
-      --css-client-secret=<value>  [default: password] The css keycloak client secret
-      --css-token-url=<value>      [default: url] The css token url
-      --source-broker-idp=<value>  The idp to filter users to
+  -h, --help                          Show CLI help.
+      --broker-api-url=<value>        [default: https://nr-broker.apps.silver.devops.gov.bc.ca/] The broker api base url
+      --broker-token=<value>          The broker JWT
+      --config-path=<value>           [default: ./config] The path to the config directory
+      --css-client-id=<value>         [default: id] The css keycloak client id
+      --css-client-secret=<value>     [default: password] The css keycloak client secret
+      --css-token-url=<value>         [default: url] The css token url
+      --github-app-id=<value>         [default: id] The GitHub app id
+      --github-client-id=<value>      [default: id] The GitHub client id
+      --github-client-secret=<value>  [default: password] The GitHub client secret
+      --github-client-type=<value>    The GitHub client type
+      --github-private-key=<value>    [default: key] The GitHub private key for signing requests
+      --github-token=<value>          [default: token] A GitHub PAT
+      --source-broker-idp=<value>     The idp to filter users to
 
 DESCRIPTION
   Syncs roles to CSS

@@ -12,6 +12,7 @@
     // "allowImportingTsExtensions": true,
     // "emitDeclarationOnly": true,
     "moduleResolution": "node16",
+    "skipLibCheck": true
   },
   "include": [
     "src/**/*"

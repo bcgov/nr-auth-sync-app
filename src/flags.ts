@@ -173,20 +173,7 @@ export const notificationOptionSubject = {
 
 export const notificationOptionTemplateText = {
   'notification-option-template-text': Flags.string({
-    default: `Hi <%= summary.user.name %>,
-
-This report shows changes to your account access to <%= config.name %>. The following account changes have occurred.
-<% summary.addRoles.forEach(function(role) { %>
-Add: <%= role %><% if (addRoleMap[role]) { %>
-
-<%- addRoleMap[role] %>
-<% }}); %>
-
-<% summary.delRoles.forEach(function(role) { %>
-Remove: <%= role %>
-<% }); %>
-
-This service uses your connections in Broker's graph to enable (and disable) access by altering your roles in Common Hosted Single Sign-On (CSS).`,
+    default: '',
     description: 'The notification template in text',
     env: 'NOTIFICATION_OPTION_TEMPLATE_TEXT',
   }),
@@ -194,22 +181,7 @@ This service uses your connections in Broker's graph to enable (and disable) acc
 
 export const notificationOptionTemplateHtml = {
   'notification-option-template-html': Flags.string({
-    default: `<html><body><p>Hi <%= summary.user.name %>,</p>
-
-<p>This report shows changes to your account access to <%= config.name %>. The following account changes have occurred.</p>
-<% summary.addRoles.forEach(function(role) { %>
-<p>Add: <%= role %></p><% if (addRoleMap[role]) { %>
-
-<%- addRoleMap[role] %>
-<% }}); %>
-
-<% summary.delRoles.forEach(function(role) { %>
-<p>Remove: <%= role %></p>
-<% }); %>
-
-<p>This service uses your connections in Broker's graph to enable (and disable) access by altering your roles in Common Hosted Single Sign-On (CSS).</p>
-</body>
-</html>`,
+    default: '',
     description: 'The notification template in html',
     env: 'NOTIFICATION_OPTION_TEMPLATE_HTML',
   }),
