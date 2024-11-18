@@ -1,23 +1,23 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, multiInject } from 'inversify';
 import fs from 'fs';
 import path from 'path';
 import ejs from 'ejs';
 import { getLogger } from '@oclif/core';
 
-import { TYPES } from '../inversify.types';
-import { BrokerApi } from '../broker/broker.api';
-import { VertexSearchDto } from '../broker/dto/vertex-rest.dto';
+import { TYPES } from '../inversify.types.js';
+import { BrokerApi } from '../broker/broker.api.js';
+import { VertexSearchDto } from '../broker/dto/vertex-rest.dto.js';
 import {
   isBrokerRoleMemberConfig,
   isStaticRoleMemberConfig,
-} from '../util/config.util';
-import { TargetService } from '../services/target.service';
+} from '../util/config.util.js';
+import { TargetService } from '../services/target.service.js';
 import {
   BrokerVertexRoleGenerator,
   IntegrationConfig,
   IntegrationConfigTemplate,
   RoleConfig,
-} from '../types';
+} from '../types.js';
 
 @injectable()
 /**
@@ -25,7 +25,7 @@ import {
  */
 export class GenerateController {
   private readonly console = getLogger('GenerateController');
-  private readonly integrationTplArr: IntegrationConfigTemplate[] | null = null;
+  private readonly integrationTpl: IntegrationConfigTemplate | null = null;
 
   /**
    * Constructor
@@ -34,7 +34,7 @@ export class GenerateController {
     @inject(TYPES.IntegrationRolesPath)
     private readonly integrationRolesPath: string,
     @inject(TYPES.BrokerApi) private readonly brokerApi: BrokerApi,
-    @inject(TYPES.TargetService) private targetService: TargetService,
+    @multiInject(TYPES.TargetService) private targetServices: TargetService[],
   ) {
     const configPath = path.join(
       integrationRolesPath,
@@ -42,9 +42,9 @@ export class GenerateController {
     );
 
     if (fs.existsSync(configPath)) {
-      this.integrationTplArr = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+      this.integrationTpl = JSON.parse(fs.readFileSync(configPath, 'utf8'));
     } else {
-      this.integrationTplArr = null;
+      this.integrationTpl = null;
     }
   }
 
@@ -52,34 +52,19 @@ export class GenerateController {
    *
    * @returns
    */
-  public async generate(): Promise<IntegrationConfig[] | null> {
-    const rval: IntegrationConfig[] = [];
-    if (!this.integrationTplArr) {
+  public async generate(): Promise<IntegrationConfig | null> {
+    if (!this.integrationTpl) {
       this.console.info('Skipping: No template');
       return null;
     }
     this.console.info(`Generate integration file`);
     const sdate = new Date();
-    const integrations = await this.targetService.getIntegrations();
 
-    for (const integrationTpl of this.integrationTplArr) {
-      const integration = integrations.find(
-        (i) => i.name === integrationTpl.name,
-      );
-      if (!integration) {
-        this.console.info(`Skip: ${integrationTpl.name} (not found)`);
-        continue;
-      }
-
-      rval.push({
-        name: integrationTpl.name,
-        idp: integrationTpl.idp,
-        id: integration.id,
-        environments: integration.environments,
-        notifyEnvironments: integrationTpl.notifyEnvironments,
-        roles: await this.generateRoles(integrationTpl),
-      });
-    }
+    const rval = {
+      notifyEnvironments: this.integrationTpl.notifyEnvironments,
+      roles: await this.generateRoles(this.integrationTpl),
+      target: this.integrationTpl.target,
+    };
     fs.writeFileSync(
       path.join(this.integrationRolesPath, 'integration-roles.json'),
       JSON.stringify(rval, null, 2),
@@ -143,6 +128,9 @@ export class GenerateController {
         name: nameRender({ vertex }),
         members: {
           broker: brokerRender({ vertex }),
+          ...(roleConfig.brokerEdges
+            ? { brokerEdges: roleConfig.brokerEdges }
+            : {}),
           copy: gen.roleMap.members.copy ? gen.roleMap.members.copy : [],
           exclude: gen.roleMap.members.exclude
             ? gen.roleMap.members.exclude

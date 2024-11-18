@@ -4,22 +4,20 @@ import path from 'path';
 import { Command } from '@oclif/core';
 import {
   help,
-  cssTokenUrl,
-  cssClientId,
-  cssClientSecret,
   configPath,
   brokerApiUrl,
   brokerToken,
   sourceBrokerIdp,
-} from '../flags';
-import { TYPES } from '../inversify.types';
+  targetFlags,
+} from '../flags.js';
+import { TYPES } from '../inversify.types.js';
 import {
   bindBroker,
   bindConstants,
   bindTarget,
   vsContainer,
-} from '../inversify.config';
-import { AuthRoleSyncController } from '../controller/auth-role-sync.controller';
+} from '../inversify.config.js';
+import { AuthRoleSyncController } from '../controller/auth-role-sync.controller.js';
 
 /**
  * Syncs roles to css command
@@ -34,10 +32,8 @@ export default class RoleSync extends Command {
     ...brokerApiUrl,
     ...brokerToken,
     ...configPath,
-    ...cssTokenUrl,
-    ...cssClientId,
-    ...cssClientSecret,
     ...sourceBrokerIdp,
+    ...targetFlags,
   };
 
   /**
@@ -48,11 +44,7 @@ export default class RoleSync extends Command {
 
     bindConstants(flags['config-path'], flags['source-broker-idp']);
     bindBroker(flags['broker-api-url'], flags['broker-token']);
-    await bindTarget(
-      flags['css-token-url'],
-      flags['css-client-id'],
-      flags['css-client-secret'],
-    );
+    await bindTarget(flags);
 
     this.log(`Syncing roles to CSS`);
 
@@ -61,12 +53,10 @@ export default class RoleSync extends Command {
       'integration-roles.json',
     );
     if (fs.existsSync(configPath)) {
-      const integrationConfigs = JSON.parse(
-        fs.readFileSync(configPath, 'utf8'),
-      );
+      const integrationConfig = JSON.parse(fs.readFileSync(configPath, 'utf8'));
       await vsContainer
         .get<AuthRoleSyncController>(TYPES.AuthRoleSyncController)
-        .sync(integrationConfigs);
+        .sync(integrationConfig);
     } else {
       console.log(`Could not find config: ${configPath}`);
     }

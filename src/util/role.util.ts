@@ -1,4 +1,4 @@
-import { RoleConfig } from '../types';
+import { RoleConfig } from '../types.js';
 
 export function roleFromConfig(roleConfig: RoleConfig) {
   if (roleConfig.group) {

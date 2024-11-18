@@ -80,12 +80,12 @@ USAGE
 ```
 <!-- usagestop -->
 
-The script in /bin/run can also run the code without installing it.
+The script in /bin/run.js can also run the code without installing it.
 
 ```sh-session
-$ ./bin/run COMMAND
+$ ./bin/run.js COMMAND
 running command...
-$ ./bin/run (-v|--version|version)
+$ ./bin/run.js (-v|--version|version)
 ...
 ```
 

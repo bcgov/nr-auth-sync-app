@@ -1,4 +1,4 @@
-import { PointGeom } from './point.geom';
+import { PointGeom } from './point.geom.js';
 
 // Shared DTO: Copy in back-end and front-end should be identical
 

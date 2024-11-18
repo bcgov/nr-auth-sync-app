@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { inject, injectable } from 'inversify';
 import { getLogger } from '@oclif/core';
-
-import { TYPES } from '../inversify.types';
 import { delay, exhaustMap, filter, interval, timer } from 'rxjs';
-import { GenerateController } from './generate.contoller';
-import { AuthRoleSyncController } from './auth-role-sync.controller';
-import { AuthMemberSyncController } from './auth-member-sync.controller';
-import { TargetService } from '../services/target.service';
+
+import { TYPES } from '../inversify.types.js';
+import { GenerateController } from './generate.contoller.js';
+import { AuthRoleSyncController } from './auth-role-sync.controller.js';
+import { AuthMemberSyncController } from './auth-member-sync.controller.js';
+import { TargetService } from '../services/target.service.js';
 
 const MONITOR_INTERVAL_MS = 60 * 60 * 1000;
 const MONITOR_STARTUP_DELAY_MS = 5000;

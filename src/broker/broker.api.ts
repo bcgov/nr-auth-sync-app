@@ -1,8 +1,8 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { inject, injectable } from 'inversify';
-import { TYPES } from '../inversify.types';
-import { VertexSearchDto } from './dto/vertex-rest.dto';
-import { UpstreamResponseDto } from './dto/broker-upstream-response.dto';
+import { TYPES } from '../inversify.types.js';
+import { VertexSearchDto } from './dto/vertex-rest.dto.js';
+import { UpstreamResponseDto } from './dto/broker-upstream-response.dto.js';
 
 // Define a type that maps an array of keys to an object where those keys are the properties
 type ObjectWithKeys<K extends string> = {

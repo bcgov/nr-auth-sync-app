@@ -1,4 +1,4 @@
-import { SourceUser } from './services/source.service';
+import { SourceUser } from './services/source.service.js';
 
 export interface OutletMap {
   [key: string]: Set<string>;
@@ -17,6 +17,7 @@ interface BaseRoleMemberConfig {
 
 export interface BrokerRoleMemberConfig extends BaseRoleMemberConfig {
   broker: string;
+  brokerEdges?: string;
 }
 
 export interface StaticRoleMemberConfig extends BaseRoleMemberConfig {
@@ -37,13 +38,26 @@ export interface NotificationConfig {
   templateHtml: string;
 }
 
-export interface IntegrationConfig {
-  name: string;
+export interface TargetConfig {
+  type: string;
   idp: string;
+}
+
+export interface CssTargetConfig extends TargetConfig {
+  type: 'css';
+  name: string;
   id: number | string;
-  environments: string[];
+}
+
+export interface GitHubTargetConfig extends TargetConfig {
+  type: 'github';
+}
+
+export interface IntegrationConfig {
+  // environments: string[];
   notifyEnvironments: string[];
   roles: RoleConfig[];
+  target: CssTargetConfig | GitHubTargetConfig;
 }
 
 export interface IntegrationConfigTemplate

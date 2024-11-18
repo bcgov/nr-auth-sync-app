@@ -1,12 +1,12 @@
 import { inject, injectable, multiInject } from 'inversify';
 import { getLogger } from '@oclif/core';
 
-import { TYPES } from '../inversify.types';
-import { SourceService, SourceUser } from '../services/source.service';
-import { IntegrationConfig, RoleConfig, UserSummary } from '../types';
-import { TargetService } from '../services/target.service';
-import { SmtpNotificationService } from '../notification/smtp-notification.service';
-import { roleFromConfig } from '../util/role.util';
+import { TYPES } from '../inversify.types.js';
+import { SourceService, SourceUser } from '../services/source.service.js';
+import { IntegrationConfig, RoleConfig, UserSummary } from '../types.js';
+import { Integration, TargetService } from '../services/target.service.js';
+import { SmtpNotificationService } from '../notification/smtp-notification.service.js';
+import { roleFromConfig } from '../util/role.util.js';
 
 type OutletMap = Map<string, Map<string, SourceUser>>;
 
@@ -26,43 +26,45 @@ export class AuthMemberSyncController {
     private notificationService: SmtpNotificationService,
   ) {}
 
-  public async sync(integrationConfigs: IntegrationConfig[]) {
+  public async sync(integrationConfig: IntegrationConfig) {
     const sdate = new Date();
     const userMap: { [key in string]: OutletMap } = {};
-    for (const integrationConfig of integrationConfigs) {
-      const idp = integrationConfig.idp ?? 'idir';
-      this.console.info(`>>> ${integrationConfig.name} : Get users`);
-      userMap[integrationConfig.name] = await this.integrationMemberSync(
+    const idp = integrationConfig.target.idp ?? 'idir';
+    const integration =
+      await this.targetService.getIntegration(integrationConfig);
+    if (!integration) {
+      return;
+    }
+    this.console.info(`>>> ${integration.name} : Get users`);
+    userMap[integration.name] = await this.integrationMemberSync(
+      idp,
+      integrationConfig.roles,
+    );
+
+    for (const environment of integration.environments) {
+      const sEnvDate = new Date();
+      this.console.info(`>>> ${integration.name} - ${environment}: start`);
+      const summaryMap = await this.syncIntegrationRoleUsers(
+        integrationConfig,
+        integration,
+        environment,
+        userMap[integration.name],
         idp,
-        integrationConfig.roles,
       );
 
-      for (const environment of integrationConfig.environments) {
-        const sEnvDate = new Date();
-        this.console.info(
-          `>>> ${integrationConfig.name} - ${environment}: start`,
-        );
-        const summaryMap = await this.syncIntegrationRoleUsers(
-          integrationConfig,
-          environment,
-          userMap[integrationConfig.name],
-          idp,
-        );
-
-        if (
-          integrationConfig.notifyEnvironments &&
-          integrationConfig.notifyEnvironments.indexOf(environment) !== -1
-        ) {
-          this.notificationService.notifyUsers(integrationConfig, [
-            ...summaryMap.values(),
-          ]);
-        }
-
-        const eEnvDate = new Date();
-        this.console.info(
-          `>>> ${integrationConfig.name} - ${environment}: done - ${eEnvDate.getTime() - sEnvDate.getTime()} ms`,
-        );
+      if (
+        integrationConfig.notifyEnvironments &&
+        integrationConfig.notifyEnvironments.indexOf(environment) !== -1
+      ) {
+        this.notificationService.notifyUsers(integrationConfig, [
+          ...summaryMap.values(),
+        ]);
       }
+
+      const eEnvDate = new Date();
+      this.console.info(
+        `>>> ${integration.name} - ${environment}: done - ${eEnvDate.getTime() - sEnvDate.getTime()} ms`,
+      );
     }
     const edate = new Date();
 
@@ -70,16 +72,17 @@ export class AuthMemberSyncController {
   }
 
   private async syncIntegrationRoleUsers(
-    integrationConfig: IntegrationConfig,
+    config: IntegrationConfig,
+    integration: Integration,
     environment: string,
     userRoles: OutletMap,
     idp: string,
   ) {
     const userSummary = new Map<string, UserSummary>();
     for (const [roleName, roleUserGuidMap] of userRoles.entries()) {
-      this.console.info(`${integrationConfig.id} ${environment} ${roleName}`);
+      this.console.info(`${integration.id} ${environment} ${roleName}`);
       const existingUserGuidMap = await this.targetService.getRoleUsers(
-        integrationConfig.id,
+        integration.id,
         environment,
         idp,
         roleName,
@@ -99,14 +102,16 @@ export class AuthMemberSyncController {
       // this.console.info(usersToAdd);
       const [finalizedAdd, finalizedDel] = await Promise.all([
         this.targetService.alterIntegrationRoleUser(
-          integrationConfig,
+          config,
+          integration.id,
           environment,
           roleName,
           'add',
           usersToAdd,
         ),
         this.targetService.alterIntegrationRoleUser(
-          integrationConfig,
+          config,
+          integration.id,
           environment,
           roleName,
           'del',

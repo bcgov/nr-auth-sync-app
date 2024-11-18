@@ -1,4 +1,4 @@
-import { RoleMemberConfig } from '../types';
+import { RoleMemberConfig } from '../types.js';
 
 export interface SourceUser {
   guid: string;

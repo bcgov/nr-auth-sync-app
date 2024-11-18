@@ -18,4 +18,4 @@ VOLUME /app/config
 ENV NODE_ENV production
 ENV AUTH_SYNC_CONFIG_PATH /app/config
 
-ENTRYPOINT ["envconsul", "-config", "/app/config/env.hcl", "./bin/run", "monitor"]
+ENTRYPOINT ["envconsul", "-config", "/app/config/env.hcl", "./bin/run.js", "monitor"]
