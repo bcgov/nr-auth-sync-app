@@ -49,7 +49,10 @@
   "files": [
     "/bin",
     "/dist",
-    "/oclif.manifest.json"
+    "/oclif.manifest.json",
+    "!**/*.tsbuildinfo",
+    "LICENSE",
+    "README.md"
   ],
   "license": "UNLICENSED",
   "main": "dist/index.js",
