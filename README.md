@@ -1,8 +1,10 @@
 # Auth Sync App
 
-Auth Sync takes user group and "privilege information" from federated systems to grant users OIDC roles. The code is designed to support adding new sources and target systems.
+Auth Sync App takes user group and "privilege information" from federated source systems to grant roles in target systems. The code is designed to support adding new sources and target systems.
 
-It does not setup the client (aka applications or integrations). It is up to the application to interpret the roles a user is granted appropriately. The client (application) may have its own tool (like the [Vault Sync App](https://github.com/bcgov-nr/vault-sync-app)) for managing on the application side of interpreting the roles received from OIDC.
+Auth Sync App does not setup the source systems or the target systems. You are responsible for creating any required accounts and setting up access for the Auth Sync App in those systems.
+
+Auth Sync App does not directly grant user access. Instead, clients of the target systems are configured independely of interpret the role themselves. An OIDC target, for example, will have roles added or removed and those roles granted to users by Auth Sync App. It is up to the application to interpret the roles a user is granted appropriately. The client (application) may have its own tool (like the [Vault Sync App](https://github.com/bcgov-nr/vault-sync-app)) for managing on the application side of interpreting the roles received from OIDC.
 
  ### Supported Sources
 
@@ -12,6 +14,7 @@ It does not setup the client (aka applications or integrations). It is up to the
  ### Supported Targets
 
 * [BC Gov Common Hosted Single Sign-on (CSS)](https://developer.gov.bc.ca/docs/default/component/css-docs/)
+* GitHub Teams (in progress)
 
 <!-- toc -->
 * [Auth Sync App](#auth-sync-app)
@@ -25,7 +28,7 @@ It does not setup the client (aka applications or integrations). It is up to the
 The tool can be run from the source using Node.js or a container image by using Podman or Docker.
 
 ```
-./bin/dev generate
+./bin/dev.js generate
 ```
 
 ```
@@ -38,11 +41,11 @@ The sample command runs the [generate](#authtool-generate) command. All the comm
 
 The general pattern is to call the following commands:
 
-* [generate](#authtool-generate) - Create the final configuration file from a template
-* [role-sync](#authtool-role-sync) - Sync OIDC roles to target systems
-* [member-sync](#authtool-member-sync) - Sync membership in OIDC roles to target systems
+* [generate](#authtool-generate) - Create a configuration file from a template (if necessary)
+* [role-sync](#authtool-role-sync) - Sync roles to target system
+* [member-sync](#authtool-member-sync) - Sync membership in OIDC roles to target system
 
-The monitor command can be used to run this workflow to run this workflow.
+The monitor command can be used to automate running this workflow.
 
 * [monitor](#authtool-monitor)
 
