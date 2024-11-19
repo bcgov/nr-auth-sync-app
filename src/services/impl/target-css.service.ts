@@ -2,12 +2,13 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { injectable } from 'inversify';
 import { getLogger } from '@oclif/core';
 
-import { Integration, TargetService } from '../target.service';
+import { Integration, TargetService } from '../target.service.js';
 import {
+  CssTargetConfig,
   IntegrationConfig,
   IntegrationEnvironmentRoleUsersDto,
-} from '../../types';
-import { SourceUser } from '../source.service';
+} from '../../types.js';
+import { SourceUser } from '../source.service.js';
 
 const CSS_SSO_API_URL = 'https://api.loginproxy.gov.bc.ca/api/v1';
 const ROLE_USER_MAX = 50;
@@ -34,6 +35,13 @@ export class TargetCssService implements TargetService {
         Authorization: `Bearer ${this.token}`,
       },
     };
+  }
+
+  async getIntegration(
+    config: IntegrationConfig,
+  ): Promise<Integration | undefined> {
+    const target = this.narrowTargetConfig(config);
+    return (await this.getIntegrations()).find((i) => i.name === target.name);
   }
 
   public async getIntegrations(): Promise<Integration[]> {
@@ -120,6 +128,7 @@ export class TargetCssService implements TargetService {
 
   public async alterIntegrationRoleUser(
     integrationConfig: IntegrationConfig,
+    targetId: string,
     environment: string,
     roleName: string,
     operation: 'add' | 'del',
@@ -130,9 +139,13 @@ export class TargetCssService implements TargetService {
       this.console.debug(`No users to ${operation}`);
     }
     for (const user of users) {
-      const username = `${user.guid.toLowerCase()}@${integrationConfig.idp}`;
+      const username = `${user.guid.toLowerCase()}@${integrationConfig.target.idp}`;
       if (
-        await this.testIgnoreUser(integrationConfig.idp, environment, user.guid)
+        await this.testIgnoreUser(
+          integrationConfig.target.idp,
+          environment,
+          user.guid,
+        )
       ) {
         this.console.debug(`${operation}: ${username} (skip)`);
         continue;
@@ -140,7 +153,7 @@ export class TargetCssService implements TargetService {
       this.console.debug(`${operation}: ${username}`);
       if (operation === 'add') {
         await axios.post(
-          `/integrations/${integrationConfig.id}/${environment}/users/${username}/roles`,
+          `/integrations/${targetId}/${environment}/users/${username}/roles`,
           [
             {
               name: roleName,
@@ -150,7 +163,7 @@ export class TargetCssService implements TargetService {
         );
       } else if (operation === 'del') {
         await axios.delete(
-          `/integrations/${integrationConfig.id}/${environment}/users/${username}/roles/${roleName}`,
+          `/integrations/${targetId}/${environment}/users/${username}/roles/${roleName}`,
           this.axiosOptions,
         );
       }
@@ -195,5 +208,14 @@ export class TargetCssService implements TargetService {
 
     this.ignoreEnvGuids[environment].set(guid, false);
     return false;
+  }
+
+  private narrowTargetConfig(config: IntegrationConfig): CssTargetConfig {
+    const target = config.target;
+    if (target.type !== 'css') {
+      // Should not happen
+      throw new Error('Wrong type');
+    }
+    return target;
   }
 }

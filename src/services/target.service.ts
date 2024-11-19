@@ -1,5 +1,5 @@
-import { IntegrationConfig } from '../types';
-import { SourceUser } from './source.service';
+import { IntegrationConfig } from '../types.js';
+import { SourceUser } from './source.service.js';
 
 export interface Integration {
   id: number | string;
@@ -11,7 +11,11 @@ export interface Integration {
  * Service for interfacing with target
  */
 export interface TargetService {
+  /**
+   * Return the integrations (installations) that the target account has access to
+   */
   getIntegrations(): Promise<Integration[]>;
+  getIntegration(config: IntegrationConfig): Promise<Integration | undefined>;
   getIntegrationEnvironmentRoles(
     id: string | number,
     environment: string,
@@ -28,6 +32,7 @@ export interface TargetService {
   ): Promise<void>;
   alterIntegrationRoleUser(
     integrationConfig: IntegrationConfig,
+    targetId: string | number,
     environment: string,
     roleName: string,
     operation: 'add' | 'del',

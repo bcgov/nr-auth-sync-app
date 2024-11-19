@@ -3,9 +3,9 @@ import { getLogger } from '@oclif/core';
 import nodemailer from 'nodemailer';
 import ejs from 'ejs';
 
-import { TYPES } from '../inversify.types';
-import { IntegrationConfig, UserSummary } from '../types';
-import { roleFromConfig } from '../util/role.util';
+import { TYPES } from '../inversify.types.js';
+import { IntegrationConfig, UserSummary } from '../types.js';
+import { roleFromConfig } from '../util/role.util.js';
 
 @injectable()
 /**

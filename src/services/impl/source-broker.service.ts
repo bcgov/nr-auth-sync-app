@@ -1,9 +1,9 @@
 import { inject, injectable } from 'inversify';
-import { SourceService, SourceUser } from '../source.service';
-import { TYPES } from '../../inversify.types';
-import { RoleMemberConfig } from '../../types';
-import { isBrokerRoleMemberConfig } from '../../util/config.util';
-import { BrokerApi } from '../../broker/broker.api';
+import { SourceService, SourceUser } from '../source.service.js';
+import { TYPES } from '../../inversify.types.js';
+import { RoleMemberConfig } from '../../types.js';
+import { isBrokerRoleMemberConfig } from '../../util/config.util.js';
+import { BrokerApi } from '../../broker/broker.api.js';
 
 @injectable()
 /**

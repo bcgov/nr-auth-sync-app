@@ -5,19 +5,17 @@ import {
   configPath,
   brokerApiUrl,
   brokerToken,
-  cssClientId,
-  cssClientSecret,
-  cssTokenUrl,
   sourceBrokerIdp,
-} from '../flags';
-import { TYPES } from '../inversify.types';
+  targetFlags,
+} from '../flags.js';
+import { TYPES } from '../inversify.types.js';
 import {
   bindBroker,
   bindConstants,
   bindTarget,
   vsContainer,
-} from '../inversify.config';
-import { GenerateController } from '../controller/generate.contoller';
+} from '../inversify.config.js';
+import { GenerateController } from '../controller/generate.contoller.js';
 
 /**
  * Generate configuration file command
@@ -32,10 +30,8 @@ export default class Generate extends Command {
     ...brokerApiUrl,
     ...brokerToken,
     ...configPath,
-    ...cssTokenUrl,
-    ...cssClientId,
-    ...cssClientSecret,
     ...sourceBrokerIdp,
+    ...targetFlags,
   };
 
   /**
@@ -46,12 +42,7 @@ export default class Generate extends Command {
 
     bindConstants(flags['config-path'], flags['source-broker-idp']);
     bindBroker(flags['broker-api-url'], flags['broker-token']);
-    await bindTarget(
-      flags['css-token-url'],
-      flags['css-client-id'],
-      flags['css-client-secret'],
-    );
-
+    await bindTarget(flags);
     await vsContainer
       .get<GenerateController>(TYPES.GenerateController)
       .generate();

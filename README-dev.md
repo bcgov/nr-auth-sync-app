@@ -13,9 +13,10 @@ See: [Oclif CLI](https://oclif.io)
 
 ## Supported NPM commands
 
+* npm run build - Build js files in dist (required for pack)
 * npm run lint - lint source code
 * npm run test - Run unit tests
-* npm run prepack - Build and update CLI README
+* npm run pack - Build and update CLI README
 
 ## Getting Started
 
@@ -29,5 +30,12 @@ podman build . -t auth-sync-app
 
 The built container can be substituted for the released container.
 
-## Configuration
+## Configure Debug Statements
 
+The tool will not output much output by default. The console output can be tuned by setting the `DEBUG` environment variable.
+
+```
+DEBUG=* ./bin/dev member-sync
+DEBUG=oclif:* ./bin/dev member-sync
+DEBUG=*Controller\|*Service ./bin/dev member-sync
+```

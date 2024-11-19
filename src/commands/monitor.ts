@@ -4,9 +4,6 @@ import {
   brokerApiUrl,
   brokerToken,
   configPath,
-  cssClientId,
-  cssClientSecret,
-  cssTokenUrl,
   help,
   notificationOptionFrom,
   notificationOptionSubject,
@@ -16,16 +13,17 @@ import {
   notificationSmtpPort,
   notificationSmtpSecure,
   sourceBrokerIdp,
-} from '../flags';
+  targetFlags,
+} from '../flags.js';
 import {
   bindBroker,
   bindConstants,
   bindNotification,
   bindTarget,
   vsContainer,
-} from '../inversify.config';
-import { TYPES } from '../inversify.types';
-import { AuthMonitorController } from '../controller/auth-monitor.controller';
+} from '../inversify.config.js';
+import { TYPES } from '../inversify.types.js';
+import { AuthMonitorController } from '../controller/auth-monitor.controller.js';
 
 /**
  * Monitor and sync on demand
@@ -38,9 +36,6 @@ export default class Monitor extends Command {
     ...brokerApiUrl,
     ...brokerToken,
     ...configPath,
-    ...cssTokenUrl,
-    ...cssClientId,
-    ...cssClientSecret,
     ...notificationSmtpHost,
     ...notificationSmtpPort,
     ...notificationSmtpSecure,
@@ -49,6 +44,7 @@ export default class Monitor extends Command {
     ...notificationOptionTemplateText,
     ...notificationOptionTemplateHtml,
     ...sourceBrokerIdp,
+    ...targetFlags,
   };
 
   /**
@@ -74,11 +70,7 @@ export default class Monitor extends Command {
         html: flags['notification-option-template-html'],
       },
     );
-    await bindTarget(
-      flags['css-token-url'],
-      flags['css-client-id'],
-      flags['css-client-secret'],
-    );
+    await bindTarget(flags);
 
     await vsContainer
       .get<AuthMonitorController>(TYPES.AuthMonitorController)

@@ -28,28 +28,99 @@ export const brokerToken = {
   }),
 };
 
+// CSS Target
+export const cssTokenUrlDefault = 'url';
 export const cssTokenUrl = {
   'css-token-url': Flags.string({
-    default: 'url',
+    default: cssTokenUrlDefault,
     description: 'The css token url',
     env: 'CSS_TOKEN_URL',
   }),
 };
 
+export const cssClientIdDefault = 'id';
 export const cssClientId = {
   'css-client-id': Flags.string({
-    default: 'id',
+    default: cssClientIdDefault,
     description: 'The css keycloak client id',
     env: 'CSS_CLIENT_ID',
   }),
 };
 
+export const cssClientSecretDefault = 'password';
 export const cssClientSecret = {
   'css-client-secret': Flags.string({
-    default: 'password',
+    default: cssClientSecretDefault,
     description: 'The css keycloak client secret',
     env: 'CSS_CLIENT_SECRET',
   }),
+};
+
+// GitHub Target
+export const githubClientTypeDefault = undefined;
+export const githubClientType = {
+  'github-client-type': Flags.string({
+    default: githubClientTypeDefault,
+    description: 'The GitHub client type',
+    env: 'GITHUB_CLIENT_TYPE',
+  }),
+};
+
+export const githubAppIdDefault = 'id';
+export const githubAppId = {
+  'github-app-id': Flags.string({
+    default: githubAppIdDefault,
+    description: 'The GitHub app id',
+    env: 'GITHUB_APP_ID',
+  }),
+};
+
+export const githubClientIdDefault = 'id';
+export const githubClientId = {
+  'github-client-id': Flags.string({
+    default: githubClientIdDefault,
+    description: 'The GitHub client id',
+    env: 'GITHUB_CLIENT_ID',
+  }),
+};
+
+export const githubClientSecretDefault = 'password';
+export const githubClientSecret = {
+  'github-client-secret': Flags.string({
+    default: githubClientSecretDefault,
+    description: 'The GitHub client secret',
+    env: 'GITHUB_CLIENT_SECRET',
+  }),
+};
+
+export const githubPrivateKeyDefault = 'key';
+export const githubPrivateKey = {
+  'github-private-key': Flags.string({
+    default: githubPrivateKeyDefault,
+    description: 'The GitHub private key for signing requests',
+    env: 'GITHUB_PRIVATE_KEY',
+  }),
+};
+
+export const githubTokenDefault = 'token';
+export const githubToken = {
+  'github-token': Flags.string({
+    default: githubTokenDefault,
+    description: 'A GitHub PAT',
+    env: 'GITHUB_TOKEN',
+  }),
+};
+
+export const targetFlags = {
+  ...cssTokenUrl,
+  ...cssClientId,
+  ...cssClientSecret,
+  ...githubClientType,
+  ...githubAppId,
+  ...githubClientId,
+  ...githubClientSecret,
+  ...githubPrivateKey,
+  ...githubToken,
 };
 
 export const sourceBrokerIdp = {
@@ -102,20 +173,7 @@ export const notificationOptionSubject = {
 
 export const notificationOptionTemplateText = {
   'notification-option-template-text': Flags.string({
-    default: `Hi <%= summary.user.name %>,
-
-This report shows changes to your account access to <%= config.name %>. The following account changes have occurred.
-<% summary.addRoles.forEach(function(role) { %>
-Add: <%= role %><% if (addRoleMap[role]) { %>
-
-<%- addRoleMap[role] %>
-<% }}); %>
-
-<% summary.delRoles.forEach(function(role) { %>
-Remove: <%= role %>
-<% }); %>
-
-This service uses your connections in Broker's graph to enable (and disable) access by altering your roles in Common Hosted Single Sign-On (CSS).`,
+    default: '',
     description: 'The notification template in text',
     env: 'NOTIFICATION_OPTION_TEMPLATE_TEXT',
   }),
@@ -123,22 +181,7 @@ This service uses your connections in Broker's graph to enable (and disable) acc
 
 export const notificationOptionTemplateHtml = {
   'notification-option-template-html': Flags.string({
-    default: `<html><body><p>Hi <%= summary.user.name %>,</p>
-
-<p>This report shows changes to your account access to <%= config.name %>. The following account changes have occurred.</p>
-<% summary.addRoles.forEach(function(role) { %>
-<p>Add: <%= role %></p><% if (addRoleMap[role]) { %>
-
-<%- addRoleMap[role] %>
-<% }}); %>
-
-<% summary.delRoles.forEach(function(role) { %>
-<p>Remove: <%= role %></p>
-<% }); %>
-
-<p>This service uses your connections in Broker's graph to enable (and disable) access by altering your roles in Common Hosted Single Sign-On (CSS).</p>
-</body>
-</html>`,
+    default: '',
     description: 'The notification template in html',
     env: 'NOTIFICATION_OPTION_TEMPLATE_HTML',
   }),

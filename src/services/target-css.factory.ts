@@ -1,7 +1,12 @@
 import axios from 'axios';
 import qs from 'querystring';
-import { TargetCssService } from './impl/target-css.service';
 import { getLogger } from '@oclif/core';
+import { TargetCssService } from './impl/target-css.service.js';
+import {
+  cssClientIdDefault,
+  cssClientSecretDefault,
+  cssTokenUrlDefault,
+} from '../flags.js';
 
 const CSS_API_TOKEN_RENEWAL_MS = 250000;
 const console = getLogger('factory');
@@ -21,28 +26,29 @@ let CSS_API_INSTANCE: TargetCssService | null = null;
  * @param cssClientSecret
  * @returns
  */
-export async function cssAdminApiFactory(
-  cssTokenUrl: string,
-  cssClientId: string,
-  cssClientSecret: string,
-): Promise<TargetCssService> {
+export async function cssServiceFactory(
+  tokenUrl: string,
+  clientId: string,
+  clientSecret: string,
+): Promise<TargetCssService | null> {
+  if (
+    tokenUrl === cssTokenUrlDefault ||
+    clientId === cssClientIdDefault ||
+    clientSecret === cssClientSecretDefault
+  ) {
+    return null;
+  }
   if (CSS_API_INSTANCE) {
     return CSS_API_PROMISE;
   }
   CSS_API_INSTANCE = new TargetCssService();
-  const accessToken = await requestToken(
-    cssTokenUrl,
-    cssClientId,
-    cssClientSecret,
-  );
+  const accessToken = await requestToken(tokenUrl, clientId, clientSecret);
   CSS_API_INSTANCE.setToken(accessToken);
 
   const timeoutId = setInterval(() => {
-    void requestToken(cssTokenUrl, cssClientId, cssClientSecret).then(
-      (accessToken) => {
-        CSS_API_INSTANCE?.setToken(accessToken);
-      },
-    );
+    void requestToken(tokenUrl, clientId, clientSecret).then((accessToken) => {
+      CSS_API_INSTANCE?.setToken(accessToken);
+    });
   }, CSS_API_TOKEN_RENEWAL_MS);
   // Use unref so that node quits
   timeoutId.unref();

@@ -4,9 +4,6 @@ import path from 'path';
 import { Command } from '@oclif/core';
 import {
   help,
-  cssTokenUrl,
-  cssClientId,
-  cssClientSecret,
   configPath,
   brokerToken,
   brokerApiUrl,
@@ -18,16 +15,17 @@ import {
   notificationSmtpHost,
   notificationSmtpPort,
   notificationSmtpSecure,
-} from '../flags';
-import { TYPES } from '../inversify.types';
+  targetFlags,
+} from '../flags.js';
+import { TYPES } from '../inversify.types.js';
 import {
   bindBroker,
   bindConstants,
   bindNotification,
   bindTarget,
   vsContainer,
-} from '../inversify.config';
-import { AuthMemberSyncController } from '../controller/auth-member-sync.controller';
+} from '../inversify.config.js';
+import { AuthMemberSyncController } from '../controller/auth-member-sync.controller.js';
 
 /**
  * Syncs roles to css command
@@ -42,9 +40,6 @@ export default class MemberSync extends Command {
     ...brokerApiUrl,
     ...brokerToken,
     ...configPath,
-    ...cssTokenUrl,
-    ...cssClientId,
-    ...cssClientSecret,
     ...notificationSmtpHost,
     ...notificationSmtpPort,
     ...notificationSmtpSecure,
@@ -53,6 +48,7 @@ export default class MemberSync extends Command {
     ...notificationOptionTemplateText,
     ...notificationOptionTemplateHtml,
     ...sourceBrokerIdp,
+    ...targetFlags,
   };
 
   /**
@@ -76,11 +72,7 @@ export default class MemberSync extends Command {
         html: flags['notification-option-template-html'],
       },
     );
-    await bindTarget(
-      flags['css-token-url'],
-      flags['css-client-id'],
-      flags['css-client-secret'],
-    );
+    await bindTarget(flags);
 
     this.log(`Syncing member roles`);
 
@@ -89,13 +81,11 @@ export default class MemberSync extends Command {
       'integration-roles.json',
     );
     if (fs.existsSync(configPath)) {
-      const integrationConfigs = JSON.parse(
-        fs.readFileSync(configPath, 'utf8'),
-      );
+      const integrationConfig = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 
       await vsContainer
         .get<AuthMemberSyncController>(TYPES.AuthMemberSyncController)
-        .sync(integrationConfigs);
+        .sync(integrationConfig);
     } else {
       console.log(`Could not find config: ${configPath}`);
     }

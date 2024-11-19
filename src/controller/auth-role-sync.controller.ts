@@ -1,10 +1,10 @@
 import { inject, injectable } from 'inversify';
 import { getLogger } from '@oclif/core';
 
-import { IntegrationConfig } from '../types';
-import { TYPES } from '../inversify.types';
-import { TargetService } from '../services/target.service';
-import { roleFromConfig } from '../util/role.util';
+import { IntegrationConfig } from '../types.js';
+import { TYPES } from '../inversify.types.js';
+import { Integration, TargetService } from '../services/target.service.js';
+import { roleFromConfig } from '../util/role.util.js';
 
 @injectable()
 /**
@@ -23,16 +23,18 @@ export class AuthRoleSyncController {
    *
    * @returns
    */
-  public async sync(integrationConfigs: IntegrationConfig[]): Promise<void> {
+  public async sync(config: IntegrationConfig): Promise<void> {
     const sdate = new Date();
-    if (integrationConfigs) {
-      for (const integration of integrationConfigs) {
-        const roles = integration.roles.map((roleConfig) =>
-          roleFromConfig(roleConfig),
-        );
+    if (config) {
+      const roles = config.roles.map((roleConfig) =>
+        roleFromConfig(roleConfig),
+      );
+      const integration = await this.targetService.getIntegration(config);
+
+      if (integration) {
         await Promise.all(
           integration.environments.map((environment) =>
-            this.syncIntegrationRoles(integration, environment, roles),
+            this.syncIntegrationRoles(config, integration, environment, roles),
           ),
         );
       }
@@ -43,7 +45,8 @@ export class AuthRoleSyncController {
   }
 
   private async syncIntegrationRoles(
-    integration: IntegrationConfig,
+    config: IntegrationConfig,
+    integration: Integration,
     environment: string,
     roles: string[],
   ) {
