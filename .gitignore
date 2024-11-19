@@ -14,4 +14,3 @@ VAULT_UNSEAL_KEY
 /setenv*
 !/setenv-local.sh
 /config*
-/tsconfig.build.json
