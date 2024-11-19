@@ -1,10 +1,10 @@
 {
-  "name": "authtool",
+  "name": "auth-sync-app",
   "version": "1.0.0",
   "author": "Matthew Bystedt <matthew.bystedt@gov.bc.ca>",
-  "description": "Auth sync tool for IIT",
+  "description": "Auth Sync App keeps target system roles up-to-date",
   "bin": {
-    "mynewcli": "./bin/run.js"
+    "auth-sync-app": "./bin/run.js"
   },
   "type": "module",
   "dependencies": {
