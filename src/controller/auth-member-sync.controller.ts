@@ -40,6 +40,8 @@ export class AuthMemberSyncController {
       idp,
       integrationConfig.roles,
     );
+    // console.log(idp);
+    // console.log(integrationConfig.roles);
 
     for (const environment of integration.environments) {
       const sEnvDate = new Date();
@@ -139,7 +141,7 @@ export class AuthMemberSyncController {
       roleFromConfig(roleConfig),
     );
 
-    const outletMap = await this.addUserToRoleWithServices(roleConfigs);
+    const outletMap = await this.addUserToRoleWithServices(idp, roleConfigs);
     // Copy members from other roles (does not recursively copy)
     this.manipulateUsersInOutlet(
       roleConfigs,
@@ -216,11 +218,14 @@ export class AuthMemberSyncController {
     }
   }
 
-  private async addUserToRoleWithServices(roleConfigs: RoleConfig[]) {
+  private async addUserToRoleWithServices(
+    idp: string,
+    roleConfigs: RoleConfig[],
+  ) {
     const outletMap = new Map<string, Map<string, SourceUser>>();
     for (const roleConfig of roleConfigs) {
       const role = roleFromConfig(roleConfig);
-      const users = await this.getUserMapFromServices(roleConfig);
+      const users = await this.getUserMapFromServices(idp, roleConfig);
       if (users.size > 0) {
         outletMap.set(role, users);
       }
@@ -228,11 +233,18 @@ export class AuthMemberSyncController {
     return outletMap;
   }
 
-  private async getUserMapFromServices(roleConfig: RoleConfig) {
+  private async getUserMapFromServices(idp: string, roleConfig: RoleConfig) {
     const userMap = new Map<string, SourceUser>();
     for (const sourceService of this.sourceServices) {
       const users = await sourceService.getUsers(roleConfig.members);
-      users.forEach((user) => userMap.set(user.guid, user));
+      // console.log(users);
+      if (idp === 'azueridir') {
+        users.forEach((user) => userMap.set(user.guid, user));
+      } else if (idp === 'github') {
+        users
+          .filter((user) => user.alias?.github)
+          .forEach((user) => userMap.set(user.alias?.github ?? '', user));
+      }
     }
     return userMap;
   }

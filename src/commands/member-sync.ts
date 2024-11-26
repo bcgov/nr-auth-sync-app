@@ -26,6 +26,8 @@ import {
   vsContainer,
 } from '../inversify.config.js';
 import { AuthMemberSyncController } from '../controller/auth-member-sync.controller.js';
+import { plainToInstance } from 'class-transformer';
+import { IntegrationConfig } from '../types.js';
 
 /**
  * Syncs roles to css command
@@ -81,7 +83,8 @@ export default class MemberSync extends Command {
       'integration-roles.json',
     );
     if (fs.existsSync(configPath)) {
-      const integrationConfig = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+      const plainConfig = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+      const integrationConfig = plainToInstance(IntegrationConfig, plainConfig);
 
       await vsContainer
         .get<AuthMemberSyncController>(TYPES.AuthMemberSyncController)

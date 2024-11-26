@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { getLogger } from '@oclif/core';
 
-import { IntegrationConfig } from '../types.js';
+import { IntegrationConfig, RoleSpec } from '../types.js';
 import { TYPES } from '../inversify.types.js';
 import { Integration, TargetService } from '../services/target.service.js';
 import { roleFromConfig } from '../util/role.util.js';
@@ -26,8 +26,13 @@ export class AuthRoleSyncController {
   public async sync(config: IntegrationConfig): Promise<void> {
     const sdate = new Date();
     if (config) {
-      const roles = config.roles.map((roleConfig) =>
-        roleFromConfig(roleConfig),
+      const roles = config.roles.map<RoleSpec>(
+        (roleConfig) =>
+          new RoleSpec(
+            roleFromConfig(roleConfig),
+            roleConfig.parentName,
+            roleConfig.description,
+          ),
       );
       const integration = await this.targetService.getIntegration(config);
 
@@ -48,20 +53,28 @@ export class AuthRoleSyncController {
     config: IntegrationConfig,
     integration: Integration,
     environment: string,
-    roles: string[],
+    roles: RoleSpec[],
   ) {
     const sdate = new Date();
+    // const roleNames = roles.map((spec) => spec.name);
     const existingRoles =
       await this.targetService.getIntegrationEnvironmentRoles(
+        config,
         integration.id,
         environment,
       );
     const delRoles = existingRoles.filter(
-      (existingRole: string) => roles.indexOf(existingRole) === -1,
+      (existingRole) =>
+        roles.findIndex((role) => role.name === existingRole.name) === -1,
     );
     const addRoles = roles.filter(
-      (role: string) => existingRoles.indexOf(role) === -1,
+      (role) =>
+        existingRoles.findIndex(
+          (existingRole) => existingRole.name === role.name,
+        ) === -1,
     );
+    // console.log(addRoles);
+    // console.log(delRoles);
 
     if (delRoles.length === 0) {
       this.console.debug(
@@ -70,6 +83,7 @@ export class AuthRoleSyncController {
     }
     for (const role of delRoles) {
       await this.targetService.deleteIntegrationEnvironmentRole(
+        config,
         integration.id,
         environment,
         role,
@@ -86,6 +100,7 @@ export class AuthRoleSyncController {
     }
     for (const role of addRoles) {
       await this.targetService.addIntegrationEnvironmentRole(
+        config,
         integration.id,
         environment,
         role,

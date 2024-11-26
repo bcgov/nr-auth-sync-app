@@ -62,10 +62,10 @@ export class AuthMonitorController {
         exhaustMap(async () => {
           try {
             const startMs = Date.now();
-            const integrationConfigs = await this.generate.generate();
-            if (integrationConfigs) {
-              await this.role.sync(integrationConfigs);
-              await this.member.sync(integrationConfigs);
+            const integrationConfig = await this.generate.generate();
+            if (integrationConfig) {
+              await this.role.sync(integrationConfig);
+              await this.member.sync(integrationConfig);
             }
             this.console.info(`---- sync end [${Date.now() - startMs}]`);
           } catch (e) {

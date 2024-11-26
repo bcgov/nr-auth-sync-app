@@ -18,6 +18,8 @@ import {
   vsContainer,
 } from '../inversify.config.js';
 import { AuthRoleSyncController } from '../controller/auth-role-sync.controller.js';
+import { IntegrationConfig } from '../types.js';
+import { plainToInstance } from 'class-transformer';
 
 /**
  * Syncs roles to css command
@@ -53,7 +55,9 @@ export default class RoleSync extends Command {
       'integration-roles.json',
     );
     if (fs.existsSync(configPath)) {
-      const integrationConfig = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+      const plainConfig = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+      const integrationConfig = plainToInstance(IntegrationConfig, plainConfig);
+
       await vsContainer
         .get<AuthRoleSyncController>(TYPES.AuthRoleSyncController)
         .sync(integrationConfig);

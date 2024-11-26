@@ -7,6 +7,7 @@ import {
   CssTargetConfig,
   IntegrationConfig,
   IntegrationEnvironmentRoleUsersDto,
+  RoleSpec,
 } from '../../types.js';
 import { SourceUser } from '../source.service.js';
 
@@ -55,20 +56,22 @@ export class TargetCssService implements TargetService {
   }
 
   public async getIntegrationEnvironmentRoles(
+    config: IntegrationConfig,
     id: string | number,
     environment: string,
-  ): Promise<string[]> {
+  ): Promise<RoleSpec[]> {
     return (
       await axios.get(
         `/integrations/${id}/${environment}/roles`,
         this.axiosOptions,
       )
-    ).data.data.map((roleObj: any) => roleObj.name);
+    ).data.data.map((roleObj: any) => new RoleSpec(roleObj.name));
   }
   public async addIntegrationEnvironmentRole(
+    config: IntegrationConfig,
     id: string | number,
     environment: string,
-    role: string,
+    role: RoleSpec,
   ): Promise<void> {
     return axios.post(
       `/integrations/${id}/${environment}/roles`,
@@ -79,9 +82,10 @@ export class TargetCssService implements TargetService {
     );
   }
   public async deleteIntegrationEnvironmentRole(
+    config: IntegrationConfig,
     id: string | number,
     environment: string,
-    role: string,
+    role: RoleSpec,
   ): Promise<void> {
     return axios.delete(
       `/integrations/${id}/${environment}/roles/${role}`,
