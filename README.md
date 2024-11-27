@@ -6,15 +6,30 @@ Auth Sync App does not setup the source systems or the target systems. You are r
 
 Auth Sync App does not directly grant user access. Instead, clients of the target systems are configured independely of interpret the role themselves. An OIDC target, for example, will have roles added or removed and those roles granted to users by Auth Sync App. It is up to the application to interpret the roles a user is granted appropriately. The client (application) may have its own tool (like the [Vault Sync App](https://github.com/bcgov-nr/vault-sync-app)) for managing on the application side of interpreting the roles received from OIDC.
 
- ### Supported Sources
+### Supported Sources
+
+Sources return a group of users for each role in the configuration.
 
 * [Broker](https://bcgov-nr.github.io/nr-broker/#/)
 * Static files
 
- ### Supported Targets
+### Supported Targets
 
-* [BC Gov Common Hosted Single Sign-on (CSS)](https://developer.gov.bc.ca/docs/default/component/css-docs/)
-* GitHub Teams (in progress)
+A target is kept in sync with the configured roles.
+
+#### BC Gov Common Hosted Single Sign-on (CSS)
+
+The CSS target lets you sync the roles and role membership of an integration.
+
+To use this target, you must have a CSS API Account with access to the integration you want to manage.
+
+See: [CSS Documentation](https://developer.gov.bc.ca/docs/default/component/css-docs/)
+
+#### GitHub
+
+The GitHub target lets you sync teams and team membership to a GitHub organization.
+
+To use this target, you must have a fine-grained PAT with read and write access to members in the organization.
 
 <!-- toc -->
 * [Auth Sync App](#auth-sync-app)
@@ -43,7 +58,7 @@ The general pattern is to call the following commands:
 
 * [generate](#authtool-generate) - Create a configuration file from a template (if necessary)
 * [role-sync](#authtool-role-sync) - Sync roles to target system
-* [member-sync](#authtool-member-sync) - Sync membership in OIDC roles to target system
+* [member-sync](#authtool-member-sync) - Sync membership in roles to target system
 
 The monitor command can be used to automate running this workflow.
 

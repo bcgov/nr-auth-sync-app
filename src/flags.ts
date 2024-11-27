@@ -165,7 +165,7 @@ export const notificationOptionFrom = {
 
 export const notificationOptionSubject = {
   'notification-option-subject': Flags.string({
-    default: 'Your Access Report (<%= config.name %>)',
+    default: 'Your Access Report (<%= config.target.name %>)',
     description: 'The notification subject',
     env: 'NOTIFICATION_OPTION_SUBJECT',
   }),
