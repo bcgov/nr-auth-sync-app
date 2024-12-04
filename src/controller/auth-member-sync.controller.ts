@@ -42,6 +42,7 @@ export class AuthMemberSyncController {
     );
     // console.log(idp);
     // console.log(integrationConfig.roles);
+    // console.log(userMap[integration.name]);
 
     for (const environment of integration.environments) {
       const sEnvDate = new Date();
@@ -237,9 +238,12 @@ export class AuthMemberSyncController {
     const userMap = new Map<string, SourceUser>();
     for (const sourceService of this.sourceServices) {
       const users = await sourceService.getUsers(roleConfig.members);
+      // console.log(idp);
       // console.log(users);
-      if (idp === 'azueridir') {
-        users.forEach((user) => userMap.set(user.guid, user));
+      if (idp === 'azureidir' || idp === 'idir') {
+        users
+          .filter((user) => user.domain === 'azureidir')
+          .forEach((user) => userMap.set(user.guid, user));
       } else if (idp === 'github') {
         users
           .filter((user) => user.alias?.github)

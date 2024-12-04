@@ -87,7 +87,6 @@ export class TargetCssService implements TargetService {
     environment: string,
     role: RoleSpec,
   ): Promise<void> {
-    console.log(`/integrations/${id}/${environment}/roles/${role}`);
     return axios.delete(
       `/integrations/${id}/${environment}/roles/${role.name}`,
       this.axiosOptions,
