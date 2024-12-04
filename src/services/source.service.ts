@@ -5,6 +5,9 @@ export interface SourceUser {
   domain: string;
   name?: string;
   email?: string;
+  alias?: {
+    github: string;
+  };
 }
 
 /**

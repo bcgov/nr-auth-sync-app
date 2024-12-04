@@ -18,6 +18,17 @@ import {
   IntegrationConfigTemplate,
   RoleConfig,
 } from '../types.js';
+import { plainToInstance } from 'class-transformer';
+
+function nameToGitHubSlug(name: string) {
+  return name
+    .toLowerCase() // Convert to lowercase
+    .trim() // Trim whitespace
+    .replace(/[^\w\s-]/g, '') // Remove special characters
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-') // Collapse multiple hyphens
+    .replace(/^-|-$/g, ''); // Remove leading and trailing hyphens
+}
 
 @injectable()
 /**
@@ -73,7 +84,7 @@ export class GenerateController {
     const edate = new Date();
 
     this.console.info(`Done - ${edate.getTime() - sdate.getTime()} ms`);
-    return rval;
+    return plainToInstance(IntegrationConfig, rval);
   }
 
   private async generateRoles(
@@ -114,7 +125,10 @@ export class GenerateController {
       );
     });
     const nameRender = ejs.compile(gen.roleMap.name);
-    const brokerRender = ejs.compile(roleConfig.broker);
+    const brokerRender = ejs.compile(roleConfig.broker as string);
+    const parentNameRender = gen.roleMap.parentName
+      ? ejs.compile(gen.roleMap.parentName)
+      : undefined;
 
     return vertices.map((vertex) => {
       let staticMembers = {};
@@ -125,11 +139,14 @@ export class GenerateController {
       }
 
       return {
-        name: nameRender({ vertex }),
+        ...(parentNameRender
+          ? { parentName: parentNameRender({ vertex, nameToGitHubSlug }) }
+          : {}),
+        name: nameRender({ vertex, nameToGitHubSlug }),
         members: {
           broker: brokerRender({ vertex }),
-          ...(roleConfig.brokerEdges
-            ? { brokerEdges: roleConfig.brokerEdges }
+          ...(roleConfig.brokerUpstreamEdge
+            ? { brokerUpstreamEdge: roleConfig.brokerUpstreamEdge }
             : {}),
           copy: gen.roleMap.members.copy ? gen.roleMap.members.copy : [],
           exclude: gen.roleMap.members.exclude

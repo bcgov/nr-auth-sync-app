@@ -31,6 +31,7 @@ export class SourceBrokerService implements SourceService {
         'guid',
         'email',
         'name',
+        'alias',
       ]);
 
       return response
@@ -44,10 +45,14 @@ export class SourceBrokerService implements SourceService {
           domain: collection.domain,
           email: collection.email,
           name: collection.name,
+          ...(collection.alias
+            ? { alias: { github: collection.alias[0].username } }
+            : {}),
         }));
     } else {
       const response = await this.brokerApi.getVertexUpstreamUser(
-        config.broker,
+        config.broker as string,
+        config.brokerUpstreamEdge?.join(),
       );
       return response
         .filter(
@@ -60,6 +65,9 @@ export class SourceBrokerService implements SourceService {
           domain: up.collection.domain,
           email: up.collection.email,
           name: up.collection.name,
+          ...(up.collection.alias
+            ? { alias: { github: up.collection.alias[0].username } }
+            : {}),
         }));
     }
   }

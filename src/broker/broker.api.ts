@@ -2,7 +2,10 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../inversify.types.js';
 import { VertexSearchDto } from './dto/vertex-rest.dto.js';
-import { UpstreamResponseDto } from './dto/broker-upstream-response.dto.js';
+import {
+  UpstreamResponseDto,
+  UserAliasRestDto,
+} from './dto/broker-upstream-response.dto.js';
 
 // Define a type that maps an array of keys to an object where those keys are the properties
 type ObjectWithKeys<K extends string> = {
@@ -54,7 +57,9 @@ export class BrokerApi {
   public async exportCollection<K extends string>(
     collection: string,
     fields: K[],
-  ): Promise<ObjectWithKeys<K>[]> {
+  ): Promise<
+    (Omit<ObjectWithKeys<K>, 'alias'> & { alias?: UserAliasRestDto[] })[]
+  > {
     const response = await axios.post(
       `v1/collection/${collection}/export?${fields.map((field) => `fields=${field}`).join('&')}`,
       {},
@@ -65,10 +70,11 @@ export class BrokerApi {
 
   public async getVertexUpstreamUser(
     id: string,
+    matchEdgeNames?: string,
   ): Promise<UpstreamResponseDto[]> {
     return (
       await axios.post(
-        `v1/graph/vertex/${id}/upstream/4`,
+        `v1/graph/vertex/${id}/upstream/4${matchEdgeNames ? '?matchEdgeNames=' + matchEdgeNames : ''}`,
         {},
         this.axiosOptions,
       )

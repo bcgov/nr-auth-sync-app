@@ -12,8 +12,16 @@ export interface VertexPointerDto {
   vertex: string;
 }
 
+export class UserAliasRestDto {
+  domain!: string;
+  guid!: string;
+  name!: string;
+  username!: string;
+}
+
 export interface UserDto extends VertexPointerDto {
   id: string;
+  alias?: UserAliasRestDto[];
   domain: string;
   email: string;
   guid: string;

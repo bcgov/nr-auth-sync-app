@@ -15,6 +15,6 @@ export class SourceStaticService implements SourceService {
     if (!isStaticRoleMemberConfig(config)) {
       return Promise.resolve([]);
     }
-    return Promise.resolve(config.static);
+    return Promise.resolve(config.static as SourceUser[]);
   }
 }

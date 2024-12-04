@@ -1,17 +1,13 @@
-import {
-  BrokerRoleMemberConfig,
-  RoleMemberConfig,
-  StaticRoleMemberConfig,
-} from '../types.js';
+import { RoleMemberConfig } from '../types.js';
 
 export function isBrokerRoleMemberConfig(
   config: RoleMemberConfig | undefined,
-): config is BrokerRoleMemberConfig {
-  return !!config && (config as BrokerRoleMemberConfig).broker !== undefined;
+): boolean {
+  return !!config && config.broker !== undefined;
 }
 
 export function isStaticRoleMemberConfig(
   config: RoleMemberConfig | undefined,
-): config is StaticRoleMemberConfig {
-  return !!config && (config as StaticRoleMemberConfig).static !== undefined;
+): boolean {
+  return !!config && config.static !== undefined;
 }

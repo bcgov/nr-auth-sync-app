@@ -35,7 +35,7 @@ The built container can be substituted for the released container.
 The tool will not output much output by default. The console output can be tuned by setting the `DEBUG` environment variable.
 
 ```
-DEBUG=* ./bin/dev member-sync
-DEBUG=oclif:* ./bin/dev member-sync
-DEBUG=*Controller\|*Service ./bin/dev member-sync
+DEBUG=* ./bin/dev.js member-sync
+DEBUG=oclif:* ./bin/dev.js member-sync
+DEBUG=*Controller\|*Service ./bin/dev.js member-sync
 ```
