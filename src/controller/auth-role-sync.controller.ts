@@ -89,7 +89,7 @@ export class AuthRoleSyncController {
         role,
       );
       this.console.debug(
-        `Sync: ${integration.name} - ${environment}: Delete: ${role}`,
+        `Sync: ${integration.name} - ${environment}: Delete: ${role.name}`,
       );
     }
 
@@ -106,7 +106,7 @@ export class AuthRoleSyncController {
         role,
       );
       this.console.debug(
-        `Sync: ${integration.name} - ${environment}: Add: ${role}`,
+        `Sync: ${integration.name} - ${environment}: Add: ${role.name}`,
       );
     }
     const edate = new Date();
