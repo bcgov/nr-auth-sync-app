@@ -25,7 +25,7 @@ First, checkout the code. Next run, npm i to install the npm packages. The Oclif
 ## Build with Podman
 
 ```
-podman build . -t auth-sync-app
+podman build . -t nr-auth-sync-app
 ```
 
 The built container can be substituted for the released container.

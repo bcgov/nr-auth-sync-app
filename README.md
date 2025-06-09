@@ -47,7 +47,7 @@ The tool can be run from the source using Node.js or a container image by using 
 ```
 
 ```
-podman run --rm ghcr.io/bcgov-nr/auth-sync-app:v1.0.0 generate
+podman run --rm ghcr.io/bcgov/nr-auth-sync-app:v1.0.0 generate
 ```
 
 The sample command runs the [generate](#authtool-generate) command. All the commands will require authentication and configuration to function.
@@ -87,11 +87,11 @@ See: [Development](README-dev.md)
 # Usage
 <!-- usage -->
 ```sh-session
-$ npm install -g authtool
+$ npm install -g nr-auth-sync-app
 $ authtool COMMAND
 running command...
 $ authtool (--version)
-authtool/1.0.0 darwin-x64 node-v20.17.0
+nr-auth-sync-app/1.0.0 darwin-x64 node-v22.14.0
 $ authtool --help [COMMAND]
 USAGE
   $ authtool COMMAND
@@ -168,7 +168,7 @@ DESCRIPTION
   Display help for authtool.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v6.2.18/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v6.2.28/src/commands/help.ts)_
 
 ## `authtool member-sync`
 
@@ -200,7 +200,8 @@ FLAGS
       --github-private-key=<value>                 [default: key] The GitHub private key for signing requests
       --github-token=<value>                       [default: token] A GitHub PAT
       --notification-option-from=<value>           The notification from address
-      --notification-option-subject=<value>        [default: Your Access Report (authtool)] The notification subject
+      --notification-option-subject=<value>        [default: Your Access Report (nr-auth-sync-app)] The notification
+                                                   subject
       --notification-option-template-html=<value>  The notification template in html
       --notification-option-template-text=<value>  The notification template in text
       --notification-smtp-host=<value>             The SMTP Host
@@ -245,7 +246,8 @@ FLAGS
       --github-private-key=<value>                 [default: key] The GitHub private key for signing requests
       --github-token=<value>                       [default: token] A GitHub PAT
       --notification-option-from=<value>           The notification from address
-      --notification-option-subject=<value>        [default: Your Access Report (authtool)] The notification subject
+      --notification-option-subject=<value>        [default: Your Access Report (nr-auth-sync-app)] The notification
+                                                   subject
       --notification-option-template-html=<value>  The notification template in html
       --notification-option-template-text=<value>  The notification template in text
       --notification-smtp-host=<value>             The SMTP Host
