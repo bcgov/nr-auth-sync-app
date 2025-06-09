@@ -37,5 +37,5 @@ The tool will not output much output by default. The console output can be tuned
 ```
 DEBUG=* ./bin/dev.js member-sync
 DEBUG=oclif:* ./bin/dev.js member-sync
-DEBUG=*Controller\|*Service ./bin/dev.js member-sync
+DEBUG=*Controller,*Service ./bin/dev.js member-sync
 ```
