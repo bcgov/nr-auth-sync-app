@@ -44,12 +44,16 @@ export class BrokerApi {
     edgeTarget?: string,
   ): Promise<VertexSearchDto[]> {
     const response = await axios.post(
-      `v1/graph/vertex/search?collection=${collection}` +
-        (edgeName !== undefined && edgeTarget !== undefined
-          ? `&edgeName=${edgeName}&edgeTarget=${edgeTarget}`
-          : ''),
+      'v1/graph/vertex/search',
       {},
-      this.axiosOptions,
+      {
+        params: {
+          collection,
+          ...(edgeName ? { edgeName } : {}),
+          ...(edgeTarget ? { edgeTarget } : {}),
+        },
+        ...this.axiosOptions,
+      },
     );
     return response.data;
   }
@@ -74,9 +78,14 @@ export class BrokerApi {
   ): Promise<UpstreamResponseDto[]> {
     return (
       await axios.post(
-        `v1/graph/vertex/${id}/upstream/4${matchEdgeNames ? '?matchEdgeNames=' + matchEdgeNames : ''}`,
+        `v1/graph/vertex/${id}/upstream/4`,
         {},
-        this.axiosOptions,
+        {
+          ...(matchEdgeNames
+            ? { params: { matchEdgeNames } }
+            : ({} as AxiosRequestConfig)),
+          ...this.axiosOptions,
+        },
       )
     ).data;
   }
