@@ -48,15 +48,8 @@
   "overrides": {
     "serialize-javascript": "7.0.5",
     "babel-plugin-istanbul": "^8.0.2",
-    "@istanbuljs/load-nyc-config": {
-      "js-yaml": "^4.1.1"
-    },
-    "mocha": {
-      "diff": "^8.0.2"
-    },
-    "ts-node": {
-      "diff": "^4.0.4"
-    }
+    "glob": "^10.5.0",
+    "js-yaml": "^4.2.0"
   },
   "engines": {
     "node": ">=18.0.0"
