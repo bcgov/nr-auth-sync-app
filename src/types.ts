@@ -47,7 +47,6 @@ export class RoleSpec {
 }
 
 export class TargetConfig {
-  type!: string;
   idp!: string;
 }
 
