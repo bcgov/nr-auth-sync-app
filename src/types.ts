@@ -83,8 +83,10 @@ export class IntegrationConfig {
   target!: CssTargetConfig | GitHubTargetConfig;
 }
 
-export interface IntegrationConfigTemplate
-  extends Omit<IntegrationConfig, 'id' | 'environments'> {
+export interface IntegrationConfigTemplate extends Omit<
+  IntegrationConfig,
+  'id' | 'environments'
+> {
   roleGenerators?: RoleGenerator[];
 }
 
