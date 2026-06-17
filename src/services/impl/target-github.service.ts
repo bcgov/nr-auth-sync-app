@@ -123,7 +123,7 @@ export class TargetGitHubService implements TargetService {
       return descendantTeams;
     } catch (error) {
       this.console.error('Error fetching teams:', error);
-      throw new Error('Error fetching teams');
+      throw new Error('Error fetching teams', { cause: error });
     }
   }
 
