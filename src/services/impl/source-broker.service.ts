@@ -45,7 +45,7 @@ export class SourceBrokerService implements SourceService {
           domain: collection.domain,
           email: collection.email,
           name: collection.name,
-          ...(collection.alias
+          ...(collection.alias && collection.alias[0]
             ? { alias: { github: collection.alias[0].username } }
             : {}),
         }));
@@ -65,7 +65,7 @@ export class SourceBrokerService implements SourceService {
           domain: up.collection.domain,
           email: up.collection.email,
           name: up.collection.name,
-          ...(up.collection.alias
+          ...(up.collection.alias && up.collection.alias[0]
             ? { alias: { github: up.collection.alias[0].username } }
             : {}),
         }));
