@@ -113,7 +113,7 @@ export class TargetCssService implements TargetService {
             ...this.axiosOptions,
           },
         )
-      ).data.data;
+      ).data.data.filter((user) => user.attributes && user.attributes.idir_user_guid);
       for (const user of fetchedUsers) {
         if (
           user.username.endsWith('@' + idp) ||
