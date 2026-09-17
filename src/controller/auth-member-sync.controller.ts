@@ -227,9 +227,7 @@ export class AuthMemberSyncController {
     for (const roleConfig of roleConfigs) {
       const role = roleFromConfig(roleConfig);
       const users = await this.getUserMapFromServices(idp, roleConfig);
-      if (users.size > 0) {
-        outletMap.set(role, users);
-      }
+      outletMap.set(role, users);
     }
     return outletMap;
   }
