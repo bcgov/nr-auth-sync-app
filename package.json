@@ -8,43 +8,43 @@
   },
   "type": "module",
   "dependencies": {
-    "@oclif/core": "^4.11.7",
-    "@oclif/plugin-help": "^6.2.50",
-    "@oclif/plugin-plugins": "^5.4.74",
-    "@octokit/auth-app": "^8.2.0",
-    "@octokit/core": "^7.0.6",
-    "@octokit/oauth-app": "^8.0.3",
-    "@octokit/plugin-paginate-rest": "^14.0.0",
-    "@octokit/plugin-rest-endpoint-methods": "^17.0.0",
-    "axios": "^1.18.0",
+    "@oclif/core": "^4.13.3",
+    "@oclif/plugin-help": "^6.2.58",
+    "@oclif/plugin-plugins": "^5.4.86",
+    "@octokit/auth-app": "^8.3.0",
+    "@octokit/core": "^7.0.7",
+    "@octokit/oauth-app": "^8.0.4",
+    "@octokit/plugin-paginate-rest": "^15.0.0",
+    "@octokit/plugin-rest-endpoint-methods": "^18.0.0",
+    "axios": "^1.19.0",
     "class-transformer": "^0.5.1",
-    "inversify": "^8.1.0",
-    "nodemailer": "^9.0.1",
+    "inversify": "^8.2.3",
+    "nodemailer": "^9.0.5",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2"
   },
   "devDependencies": {
-    "@types/eslint__js": "^9.14.0",
-    "@oclif/test": "^4.1.19",
+    "@eslint/js": "^9.39.5",
+    "@oclif/test": "^4.1.22",
     "@types/chai": "file:@types/chai",
     "@types/ejs": "^3.1.5",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^25.9.3",
+    "@types/node": "^25.9.5",
     "@types/nodemailer": "^8.0.1",
     "@typescript-eslint/eslint-plugin": "^8.61.1",
     "@typescript-eslint/parser": "^8.61.1",
     "chai": "^6.2.2",
-    "eslint": "^10.5.0",
+    "eslint": "^10.8.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.6",
     "jest": "^30.4.2",
-    "mocha": "^11.7.6",
-    "oclif": "^4.23.16",
+    "mocha": "^11.8.0",
+    "oclif": "^4.23.30",
     "shx": "^0.4.0",
     "ts-node": "^10.9.2",
     "tslib": "^2.8.1",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.61.1"
+    "typescript-eslint": "^8.67.0"
   },
   "engines": {
     "node": ">=18.0.0"
@@ -81,5 +81,9 @@
     "type": "git",
     "url": "https://apps.nrs.gov.bc.ca/int/stash/scm/appdev/vault-policy.git"
   },
-  "types": "dist/index.d.ts"
+  "types": "dist/index.d.ts",
+  "allowScripts": {
+    "unrs-resolver@1.12.2": true,
+    "yarn@1.22.22": true
+  }
 }
