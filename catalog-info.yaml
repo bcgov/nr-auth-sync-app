@@ -1,18 +1,30 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 spec:
-  system: vault
+  system: oneteam-auth-sync
   type: service
   lifecycle: production
   owner: Oscar
 metadata:
-  name: nr-auth-sync-app
-  description: NodeJS Tool that updates Keycloak gold roles
+  name: oneteam-auth-sync
+  description: "The Auth Sync Tool takes user privilege information from federated
+    systems to generate client roles and group membership"
   title: Auth Sync App
   tags:
     - ""
   annotations:
     license: Apache-2.0
-    github.com/project-slug: bcgov/nr-auth-sync-app
-    playbook.io.nrs.gov.bc.ca/instances: '[{"env":"development"},{"env":"test"},{"env":"production"}]'
-    composer.io.nrs.gov.bc.ca/generators: backstage
+    github.com/project-slug: bcgov-c/tenant-gitops-7e553b
+  links:
+    - type: instance
+      env: development
+      title: development
+      url: https://console.apps.emerald.devops.gov.bc.ca
+    - type: instance
+      env: test
+      title: test
+      url: https://console.apps.emerald.devops.gov.bc.ca
+    - type: instance
+      env: production
+      title: production
+      url: https://console.apps.emerald.devops.gov.bc.ca
