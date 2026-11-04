@@ -17,14 +17,6 @@ metadata:
     github.com/project-slug: bcgov-c/tenant-gitops-7e553b
   links:
     - type: instance
-      env: development
-      title: development
-      url: https://console.apps.emerald.devops.gov.bc.ca
-    - type: instance
-      env: test
-      title: test
-      url: https://console.apps.emerald.devops.gov.bc.ca
-    - type: instance
       env: production
       title: production
       url: https://console.apps.emerald.devops.gov.bc.ca
