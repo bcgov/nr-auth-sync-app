@@ -1,0 +1,22 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+spec:
+  system: oneteam-auth-sync
+  type: service
+  lifecycle: production
+  owner: Oscar
+metadata:
+  name: oneteam-auth-sync
+  description: "The Auth Sync Tool takes user privilege information from federated
+    systems to generate client roles and group membership"
+  title: Auth Sync App
+  tags:
+    - ""
+  annotations:
+    license: Apache-2.0
+    github.com/project-slug: bcgov/nr-auth-sync-app
+  links:
+    - type: instance
+      env: production
+      title: production
+      url: https://console.apps.emerald.devops.gov.bc.ca
